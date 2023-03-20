@@ -40,7 +40,7 @@ app.layout = html.Div([
                                 dcc.Dropdown(
                                     id="scatter-dropdown-1",
                                     options=dropdown_options,
-                                    value="max_air_acc",
+                                    value="max_air_speed",
                                 )
                         ], 
                         style={"width": "100%", "color": "black"})
@@ -54,7 +54,7 @@ app.layout = html.Div([
                                 dcc.Dropdown(
                                     id="scatter-dropdown-2",
                                     options=dropdown_options,
-                                    value="fast-fall_speed",
+                                    value="max_run_speed",
                                 )
                         ], 
                         style={"width": "100%", "color": "black"})
@@ -71,7 +71,7 @@ app.layout = html.Div([
                                 dcc.Dropdown(
                                     id="bar-dropdown",
                                     options=dropdown_options,
-                                    value="max_run_speed",
+                                    value="weight",
                                 )
                         ], 
                         style={"width": "100%", "color": "black"})
@@ -115,10 +115,13 @@ def update_scatter_plot(
     if scatter_var_1 is None or scatter_var_2 is None:
          plot = alt.Chart().mark_point().properties(height=PLOT_HEIGHT, width=PLOT_WIDTH)
          return plot.to_html(), "Scatter Plot of Chosen Attributes"
-    if scatter_var_1 == scatter_var_2:
-         plot = alt.Chart().mark_point().properties(height=PLOT_HEIGHT, width=PLOT_WIDTH)
-         return plot.to_html(), "Scatter Plot of Chosen Attributes"
     
+    if scatter_var_2 == scatter_var_1:
+         plot_df = attributes_df[['character_name', scatter_var_1]]
+    else:
+        plot_df = attributes_df[['character_name', scatter_var_1, scatter_var_2]]
+    plot_df = plot_df.dropna()
+
     scatter_atr_name_1 = attribute_labels_df.query(
          "value == @scatter_var_1"
     ).iloc[0].loc['label']
@@ -126,18 +129,16 @@ def update_scatter_plot(
          "value == @scatter_var_2"
     ).iloc[0].loc['label']
 
-    plot_df = attributes_df[['character_name', scatter_var_1, scatter_var_2]]
-    plot_df = plot_df.dropna()
 
     plot = alt.Chart(plot_df).encode(
         alt.X(scatter_var_1, title=scatter_atr_name_1),
         alt.Y(scatter_var_2, title=scatter_atr_name_2),
         alt.Tooltip(['character_name', scatter_var_1, scatter_var_2]),
-    ).mark_point()
+    ).mark_point(size=35)
     
     plot = plot.configure_axis(
         labelFontSize=17,
-        titleFontSize=22
+        titleFontSize=21
     ).properties(
         height=PLOT_HEIGHT, 
         width=PLOT_WIDTH
@@ -160,8 +161,7 @@ def update_bar_chart(
     PLOT_WIDTH = 300
 
     if bar_var is None:
-        plot = alt.Chart().mark_point().properties(height=PLOT_HEIGHT, width=PLOT_WIDTH)
-        return plot.to_html(), "Bar Chart of Chosen Attribute"
+        bar_var = "weight"
     
     bar_atr_name = attribute_labels_df.query(
          "value == @bar_var"
@@ -171,7 +171,7 @@ def update_bar_chart(
     plot_df = plot_df.dropna()
 
     plot = alt.Chart(plot_df).encode(
-        alt.X(bar_var, title=bar_atr_name),
+        alt.X(bar_var, title=bar_atr_name, axis=alt.Axis(orient='bottom')),
         alt.Y('character_name', title="Character", sort='x'),
         alt.Tooltip(['character_name', bar_var]),
         # alt.Color(
@@ -181,10 +181,13 @@ def update_bar_chart(
         # title=bar_var
         # ),
     ).mark_bar()
+    plot = plot + plot.encode(
+        alt.X(bar_var, title=bar_atr_name, axis=alt.Axis(orient='top'))
+    )
     
     plot = plot.configure_axis(
         labelFontSize=15,
-        titleFontSize=22
+        titleFontSize=21
     ).properties(
         height=PLOT_HEIGHT, 
         width=PLOT_WIDTH
