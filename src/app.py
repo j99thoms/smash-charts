@@ -130,10 +130,18 @@ def update_scatter_plot(
     plot_df = plot_df.dropna()
 
     plot = alt.Chart(plot_df).encode(
-        alt.X(scatter_var_1),
-        alt.Y(scatter_var_2),
+        alt.X(scatter_var_1, title=scatter_atr_name_1),
+        alt.Y(scatter_var_2, title=scatter_atr_name_2),
         alt.Tooltip(['character_name', scatter_var_1, scatter_var_2]),
-    ).mark_point().properties(height=PLOT_HEIGHT, width=PLOT_WIDTH)
+    ).mark_point()
+    
+    plot = plot.configure_axis(
+        labelFontSize=17,
+        titleFontSize=22
+    ).properties(
+        height=PLOT_HEIGHT, 
+        width=PLOT_WIDTH
+    )
 
     title = f"Scatter Plot of {scatter_atr_name_1} vs. {scatter_atr_name_2}"
 
@@ -163,8 +171,8 @@ def update_bar_chart(
     plot_df = plot_df.dropna()
 
     plot = alt.Chart(plot_df).encode(
-        alt.X(bar_var),
-        alt.Y('character_name', sort='x'),
+        alt.X(bar_var, title=bar_atr_name),
+        alt.Y('character_name', title="Character", sort='x'),
         alt.Tooltip(['character_name', bar_var]),
         # alt.Color(
         # bar_var,
@@ -172,7 +180,15 @@ def update_bar_chart(
         # scale=alt.Scale(scheme='dark2'),
         # title=bar_var
         # ),
-    ).mark_bar().properties(height=PLOT_HEIGHT, width=PLOT_WIDTH)
+    ).mark_bar()
+    
+    plot = plot.configure_axis(
+        labelFontSize=15,
+        titleFontSize=22
+    ).properties(
+        height=PLOT_HEIGHT, 
+        width=PLOT_WIDTH
+    )
 
     title = f"Bar Chart of {bar_atr_name}s"
 
