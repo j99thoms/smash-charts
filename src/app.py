@@ -1,8 +1,9 @@
 import pandas as pd
 import altair as alt
+# alt.themes.enable('dark')
 import dash_bootstrap_components as dbc
 from dash import dash, dcc, html, Input, Output, dash_table
-# alt.themes.enable('dark')
+
 # Load dataset
 attributes_df = pd.read_csv("../data/attributes.csv")
 attributes_df = attributes_df.rename(columns={'character': 'character_name'})
@@ -16,15 +17,17 @@ attribute_labels = attribute_labels.str.title()
 dropdown_options = zip(attributes, attribute_labels)
 dropdown_options = [{'value': val, 'label': label} for val, label in dropdown_options]
 
-attribute_labels_df = pd.DataFrame(dropdown_options)
+attribute_labels_df = pd.DataFrame(dropdown_options) # Useful for plot axis labels
 
 # Setup the dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.JOURNAL])
 server = app.server
 
+
 # UI
 app.layout = html.Div([
     dbc.Row(
+        # App Title
         dbc.Col([
             html.Div(style={"height": "2px"}),
             html.H1("The Super Smash Dashboard!", style={"text-align": "center"}),
@@ -32,68 +35,68 @@ app.layout = html.Div([
         ])
     ),
     dbc.Row([
+        # Scatter plot variable selection (dropdown lists)
         dbc.Col([
-                html.H4("Choose two attributes for scatter plot:"),
                 html.Div([
                     html.Div([
-                        html.Div([
-                                dcc.Dropdown(
-                                    id="scatter-dropdown-1",
-                                    options=dropdown_options,
-                                    value="max_air_speed",
-                                )
-                        ], 
-                        style={"width": "100%", "color": "black"})
+                        html.H4("Choose two attributes for scatter plot:", style={"width": "98%", "float": "right", "text-align": "left"}),
+                        dcc.Dropdown(
+                            id="scatter-dropdown-1",
+                            options=dropdown_options,
+                            value="max_air_speed",
+                        )
                     ], 
-                    style={"display": "flex", "width": "75%",  "float": "left"})
+                    style={"width": "63.1%", "color": "black", "float": "left"})
                 ], 
-                style={"display": "flex", "width": "100%"}),
+                style={"width": "95%",  "float": "right"}),
+                html.Div(style={"height": "8px"}),  # Spacer
                 html.Div([
                     html.Div([
-                        html.Div([
-                                dcc.Dropdown(
-                                    id="scatter-dropdown-2",
-                                    options=dropdown_options,
-                                    value="max_run_speed",
-                                )
-                        ], 
-                        style={"width": "100%", "color": "black"})
+                        dcc.Dropdown(
+                            id="scatter-dropdown-2",
+                            options=dropdown_options,
+                            value="max_run_speed",
+                        )
                     ], 
-                    style={"display": "flex", "width": "75%",  "float": "left"})
+                    style={"width": "63.1%", "color": "black", "float": "left"})
                 ], 
-                style={"display": "flex", "width": "100%"}),
+                style={"width": "95%",  "float": "right"}),
         ]),
+        # Bar chart variable selection (dropdown list)
         dbc.Col([
-                html.H4("Choose one attribute for bar chart:"),
                 html.Div([
                     html.Div([
-                        html.Div([
-                                dcc.Dropdown(
-                                    id="bar-dropdown",
-                                    options=dropdown_options,
-                                    value="weight",
-                                )
-                        ], 
-                        style={"width": "100%", "color": "black"})
+                        html.H4("Choose one attribute for bar chart:", style={"width": "98%", "float": "right", "text-align": "left"}),
+                        dcc.Dropdown(
+                            id="bar-dropdown",
+                            options=dropdown_options,
+                            value="weight",
+                        )
                     ], 
-                    style={"display": "flex", "width": "75%",  "float": "left"})
-                ],
-                style={"display": "flex", "width": "100%"}),
+                    style={"width": "85%", "color": "black",  "float": "left"})
+                ], 
+                style={"width": "70.5%", "float": "right"})
         ]), 
     ]),
     dbc.Row(
+        # Spacer
         dbc.Col([
             html.Div(style={"height": "10px"}),
         ])
     ),
     dbc.Row([
+            # Scatter plot
             dbc.Col([
-                    html.H3(id='scatter-title', style={"height": "6%", "margin-top": "10px"}),
+                    html.Div([
+                        html.H3(id='scatter-title', style={"height": "6%", "width": "95%", "float": "left", "margin-top": "10px"}),
+                    ], 
+                    style={"width": "98%", "float": "right"}),
                     html.Iframe(id="scatter-plot", width="100%", height="500px"),
             ]),
+            # Bar chart
             dbc.Col([
-                    html.H3(id='bar-title', style={"height": "6%", "margin-top": "10px"}),
-                    html.Iframe(id="bar-chart", width="100%", height="1200px"),
+                    html.H3(id='bar-title', style={"height": "6%", "width": "82.5%", "float": "right", "margin-top": "10px"}),
+                    html.Iframe(id="bar-chart", width="100%", height="1250px", style={"width": "90%", "float": "right"}),
             ]),
         ]),
 ], style={"width": "97%", "height": "97%", "margin": "auto"})
