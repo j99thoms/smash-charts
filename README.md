@@ -17,13 +17,16 @@ With this dashboard, users are able to choose which attributes to visualize as w
 
 Interested in contributing? Check out the [contributing guidelines](CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
-## Credits
+## Credits and References
 
-TO-DO
+Character attribute data is not directly accessible within the game itself, and I was unable to find a nice data file (e.g. `.csv` or `.json`) with the dataset. The best I could find were websites with the data in tabular format (i.e. `HTML` tables).
+As a result, I had to create the dataset myself by scraping data from one of these websites. I used [kuroganehammer.com](http://kuroganehammer.com/Ultimate/) for this since the tables on this site are in a fairly consistent format, which makes scraping data easier. The resulting dataset can be found [here](data/attributes.csv), and the script used for scraping the data can be found [here](src/scrape_data.py).
+Please note that it appears that the website's SSL certificate has expired.
 
-## Reference
+The dataset includes various quantitative attributes that control a character's in-game physics.
+A more in-depth description for each of these attributes can be found on the main page of the dashboard.
+The attribute descriptions provided on the dashboard are based on the descriptions which can be found on [SmashWiki](https://www.ssbwiki.com/).
 
-TO-DO
 
 ## License
 
