@@ -13,10 +13,6 @@ I ([@J99thoms](https://github.com/J99thoms)) am a graduate student at the Univer
 
 With this dashboard, users are able to choose which attributes to visualize as well as how to visualize those attributes. Users can quickly see which characters have the highest/lowest value in any given attribute by using a bar chart, and can also see how any given attribute relates to any other attribute by using a scatter plot. The visualizations include tooltips so that one is able to determine the exact values of a character's attributes by simply hovering their mouse over the relevant section of the visualization.
 
-## Contributing
-
-Interested in contributing? Check out the [contributing guidelines](CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
-
 ## Credits and References
 
 Character attribute data is not directly accessible within the game itself, and I was unable to find a nice data file (e.g. `.csv` or `.json`) with the dataset. The best I could find were websites with the data in tabular format (i.e. `HTML` tables).
@@ -27,6 +23,9 @@ The dataset includes various quantitative attributes that control a character's 
 A more in-depth description for each of these attributes can be found on the main page of the dashboard.
 The attribute descriptions provided on the dashboard are based on the descriptions which can be found on [SmashWiki](https://www.ssbwiki.com/).
 
+## Contributing
+
+Interested in contributing? Check out the [contributing guidelines](CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
 ## License
 
