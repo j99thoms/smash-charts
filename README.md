@@ -1,4 +1,4 @@
-# The Super Smash Dashboard
+# The Super Smash Dashboard!
 
 #### Try it out at [the-super-smash-dashboard.onrender.com](https://the-super-smash-dashboard.onrender.com)!
 
