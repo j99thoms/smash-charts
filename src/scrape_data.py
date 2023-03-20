@@ -166,7 +166,7 @@ attributes_df = attributes_df.rename(columns = {
     'BASE VALUE': 'base_air_acc', 
     'TOTAL': 'max_air_acc', 
     'MAX AIR SPEED VALUE': 'max_air_speed',
-    'MAX FALL SPEED': 'max_normal-fall_speed', 
+    'MAX FALL SPEED': 'max_fall_speed', 
     'FAST FALL SPEED': 'fast-fall_speed', 
     'SPEED INCREASE': 'percent_incr_fall_speed',
     'INITIAL DASH VALUE': 'initial_dash_speed', 
@@ -181,7 +181,7 @@ attributes_df = attributes_df.set_index('character')
 
 # Rearrange columns
 cols = attributes_df.columns.tolist()
-cols = [cols[-1]] + cols[-4:-1] + cols[3:-4] + cols[:3]
+cols = [cols[-1]] + cols[4:-4] + cols[-4:-1] + [cols[3]] + [cols[1]] + [cols[0]] + [cols[2]]
 attributes_df = attributes_df[cols]
 
 # Determine which characters have special formes
