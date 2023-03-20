@@ -1,4 +1,4 @@
-character,weight,initial_dash_speed,max_run_speed,max_walk_speed,max_air_speed,max_normal_fall_speed,fast_fall_speed,percent_incr_fall_speed,delta_air_acc,base_air_acc,max_air_acc
+character,weight,initial_dash_speed,max_run_speed,max_walk_speed,max_air_speed,max_normal-fall_speed,fast-fall_speed,percent_incr_fall_speed,delta_air_acc,base_air_acc,max_air_acc
 Bayonetta,81.0,1.936,1.76,0.945,1.019,1.77,2.832,60.0,0.085,0.01,0.095
 Bowser,135.0,2.255,1.971,0.901,1.155,1.77,2.832,60.0,0.04,0.01,0.05
 Bowser Jr,108.0,1.76,1.566,0.924,1.134,1.65,2.64,60.0,0.07,0.01,0.08
