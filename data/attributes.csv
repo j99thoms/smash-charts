@@ -1,4 +1,4 @@
-CHARACTER,weight,initial_dash_speed,max_run_speed,max_walk_speed,max_air_speed,max_normal_fall_speed,fast_fall_speed,percent_incr_fall_speed,delta_air_acc,base_air_acc,max_air_acc
+character,weight,initial_dash_speed,max_run_speed,max_walk_speed,max_air_speed,max_normal_fall_speed,fast_fall_speed,percent_incr_fall_speed,delta_air_acc,base_air_acc,max_air_acc
 Bayonetta,81.0,1.936,1.76,0.945,1.019,1.77,2.832,60.0,0.085,0.01,0.095
 Bowser,135.0,2.255,1.971,0.901,1.155,1.77,2.832,60.0,0.04,0.01,0.05
 Bowser Jr,108.0,1.76,1.566,0.924,1.134,1.65,2.64,60.0,0.07,0.01,0.08
@@ -76,7 +76,6 @@ Wii Fit Trainer,96.0,2.024,1.866,1.224,1.019,1.3,2.08,60.0,0.08,0.01,0.09
 Wolf,92.0,2.09,1.54,1.208,1.281,1.8,2.88,60.0,0.08,0.01,0.09
 Yoshi,104.0,1.98,2.046,1.208,1.344,1.29,2.064,60.0,0.068,0.03,0.098
 Young Link,88.0,2.09,1.749,1.26,0.966,1.8,2.88,60.0,0.04,0.02,0.06
-Zelda,85.0,1.958,1.43,0.914,1.092,1.35,2.16,60.0,0.055,0.01,0.065
 Zelda,85.0,1.958,1.43,0.914,1.092,1.35,2.16,60.0,0.055,0.01,0.065
 Zero Suit Samus,80.0,2.42,2.31,1.47,1.26,1.7,2.72,60.0,0.085,0.01,0.095
 Cloud (limit break),,2.3595,2.3837,1.32825,,,,,,,

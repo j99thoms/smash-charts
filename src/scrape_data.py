@@ -66,7 +66,8 @@ def get_character_attributes_data(attribute_type, clean=True):
     page_text = get_html(url, verify=False) # SSL certificate of the website has expired...
 
     attributes_data_table_text = get_character_attribute_table(page_text)
-    attributes_df = html_table_to_df(attributes_data_table_text).drop(columns="RANK").set_index("CHARACTER")
+    attributes_df = html_table_to_df(attributes_data_table_text)
+    attributes_df = attributes_df.drop(columns='RANK').set_index('CHARACTER')
 
     if clean==False:
         return attributes_df
@@ -156,8 +157,11 @@ attributes_df = attributes_df.drop(index=[
         'Mythra', 'Pyra', 'Sephiroth', 'Steve', 'Terry', ''
 ])
 
+
 # Clean column names
+attributes_df = attributes_df.reset_index()
 attributes_df = attributes_df.rename(columns = {
+    'CHARACTER': 'character',
     'MAX ADDITIONAL': 'delta_air_acc',
     'BASE VALUE': 'base_air_acc', 
     'TOTAL': 'max_air_acc', 
@@ -170,6 +174,10 @@ attributes_df = attributes_df.rename(columns = {
     'MAX WALK SPEED VALUE': 'max_walk_speed',
     'WEIGHT VALUE': 'weight'
 })
+
+# Drop duplicates
+attributes_df = attributes_df.drop_duplicates(subset=['character'])
+attributes_df = attributes_df.set_index('character')
 
 # Rearrange columns
 cols = attributes_df.columns.tolist()
