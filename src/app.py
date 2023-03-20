@@ -54,7 +54,7 @@ app.layout = html.Div([
                                 dcc.Dropdown(
                                     id="scatter-dropdown-2",
                                     options=dropdown_options,
-                                    value="fast_fall_speed",
+                                    value="fast-fall_speed",
                                 )
                         ], 
                         style={"width": "100%", "color": "black"})
