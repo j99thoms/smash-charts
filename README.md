@@ -5,7 +5,7 @@ Welcome to The Super Smash Dashboard! This is a resource for Super Smash Bros. p
 
 ## Proposal
 
-I (@j99thoms) am a graduate student at the University of British Columbia who is enrolled in their Master of Data Science program (UBC MDS). I am also a huge fan of Super Smash Bros. As a result, The Super Smash Dashboard was created as both a personal project as well as to satisfiy part of the requirements of the UBC MDS program. The project proposal can be found [here](proposal.md).
+I ([@J99thoms](https://github.com/J99thoms)) am a graduate student at the University of British Columbia who is enrolled in their Master of Data Science program (UBC MDS). I am also a huge fan of Super Smash Bros. As a result, The Super Smash Dashboard was created as both a personal project as well as to satisfiy part of the requirements of the UBC MDS program. The project proposal can be found [here](proposal.md).
 
 ## Usage
 
