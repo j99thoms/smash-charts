@@ -85,13 +85,83 @@ app.layout = html.Div([
         ])
     ),
     dbc.Row([
-            # Scatter plot
+            # Scatter plot and attribute info
             dbc.Col([
+                    # Scatter plot
                     html.Div([
                         html.H3(id='scatter-title', style={"height": "6%", "width": "95%", "float": "left", "margin-top": "10px"}),
                     ], 
                     style={"width": "98%", "float": "right"}),
                     html.Iframe(id="scatter-plot", width="100%", height="500px"),
+
+                    # Attribute info
+                    html.Div([
+                        html.Div([
+                            html.Div([
+                                html.H3(children=[html.U("Attribute Info")], style={"text-align": "center"}),
+                                html.P(children=[
+                                    html.B("Weight "), 
+                                    "is a measurement of how much a character can resist knockback, and ",
+                                    "is one of several factors used in calculating the amount of knockback a character receives. ",
+                                    "Holding all other factors constant, characters with a higher weight (heavy) tend to suffer less knockback, and ",
+                                    "characters with a lower weight (light) tend to suffer more knockback."
+                                ], style={"text-indent": "20px"}),
+                                html.P(children=[
+                                    "A character's movement ",
+                                    html.B("speed "), 
+                                    "is measured in distance units per frame. A ",
+                                    html.B("distance unit "),
+                                    "(often shortened to ",
+                                    html.B("unit"),
+                                    "), refers to an arbitrary unit of measurement that determines the in-game position and size of objects. ",
+                                    "A unit is roughly equivalent to one decimeter, i.e. 1 unit = 0.1 meters."
+                                ], style={"text-indent": "20px"}),
+                                html.P(children=[
+                                    html.B("Falling speed "),
+                                    "is the rate at which a character can move downward in mid-air. ",
+                                    "All characters can also ",
+                                    html.B("fast-fall "),
+                                    "at any time during a descent (by tilting down on the control stick) to increase their falling speed. ",
+                                    "The vast majority of characters receive a 60% increase in downwards movement speed while fast-falling, ",
+                                    "although there are a few exceptions (e.g. Ken and Ryu)."
+                                ], style={"text-indent": "20px"}),
+                                html.P(children=[
+                                    "While walking, a character's speed is controlled by their ",
+                                    html.B("max walk speed"),
+                                    ", and while running, a character's speed is controlled by their ",
+                                    html.B("max run speed"),
+                                    ". The ",
+                                    html.B("initial dash "), 
+                                    "is the first part of a character's dash, during which a character gains a quick burst of speed before transitioning into their run. ",
+                                    "Many characters have a higher ",
+                                    html.B("initial dash speed "),
+                                    "than their max run speed, although some do not. ",
+                                ], style={"text-indent": "20px"}),
+                                html.P(children=[
+                                    "While airborne, a character's horizontal (left/right) speed is controlled by their ",
+                                    html.B("max air speed"),
+                                    ", and the rate at which a character can change their horizontal velocity is controlled by their ",
+                                    html.B("air acceleration"),
+                                    ", which is measured in units/frame^2. ",
+                                    "A character's air acceleration is controlled by two values: a base value (",
+                                    html.B("base air acceleration"),
+                                    ") that determines their minimum acceleration, and an additional value (",
+                                    html.B("delta air acceleration"),
+                                    ") that is scaled based on how much the player's control stick is tilted. A character's ",
+                                    html.B("max air acceleration "),
+                                    "is the sum of these two values. ",
+                                    "It is most beneficial for a character to have a low base value with a high additional value, ",
+                                    "as this combination offers the most precise aerial control."
+                                ], style={"text-indent": "20px"}),
+                            ],
+                            style={"width": "98%", "float": "right", }),
+                        ],
+                        style={"width": "98%", "float": "left", "margin-top": "10px", }),
+                    ],
+                    style={
+                        "width": "95%", "float": "left", "margin-top": "20px", 
+                        "background-color": "#5A8EC7", "border-radius": "10px", "border": "3px solid black"
+                    }),
             ]),
             # Bar chart
             dbc.Col([
