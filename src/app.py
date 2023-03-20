@@ -153,6 +153,11 @@ app.layout = html.Div([
                                     "It is most beneficial for a character to have a low base value with a high additional value, ",
                                     "as this combination offers the most precise aerial control."
                                 ], style={"text-indent": "20px"}),
+                                html.Div([
+                                    "These attribute descriptions are based on the descriptions which can be found on ",
+                                    html.A("SmashWiki", href="https://www.ssbwiki.com/", target="_blank"),
+                                    "."
+                                ], style={"margin-top": "30px", "font-size": "85%"})
                             ],
                             style={"width": "98%", "float": "right", }),
                         ],
@@ -186,7 +191,7 @@ app.layout = html.Div([
                         target="_blank"
                     ),
                     "."
-                ], style={"float": "right", "width": "30%"}),
+                ], style={"float": "right", "width": "30%"," font-size": "90%"}),
             ], style={"width": "100%", "margin-top": "20px",}),
         ]),
 ], style={"width": "97%", "height": "97%", "margin": "auto"})
