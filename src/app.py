@@ -2,7 +2,7 @@ import pandas as pd
 import altair as alt
 import dash_bootstrap_components as dbc
 from dash import dash, dcc, html, Input, Output, dash_table
-
+# alt.themes.enable('dark')
 # Load dataset
 attributes_df = pd.read_csv("../data/attributes.csv")
 attributes_df = attributes_df.rename(columns={'character': 'character_name'})
@@ -19,7 +19,7 @@ dropdown_options = [{'value': val, 'label': label} for val, label in dropdown_op
 attribute_labels_df = pd.DataFrame(dropdown_options)
 
 # Setup the dash app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.JOURNAL])
 server = app.server
 
 # UI
