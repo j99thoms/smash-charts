@@ -163,11 +163,31 @@ app.layout = html.Div([
                         "background-color": "#5A8EC7", "border-radius": "10px", "border": "3px solid black"
                     }),
             ]),
+
             # Bar chart
             dbc.Col([
                     html.H3(id='bar-title', style={"height": "6%", "width": "82.5%", "float": "right", "margin-top": "10px"}),
                     html.Iframe(id="bar-chart", width="100%", height="1250px", style={"width": "90%", "float": "right"}),
             ]),
+        ]),
+        dbc.Row([
+             # Credits
+            html.Div([
+                html.Div([
+                    html.A(
+                        "The Super Smash Dashboard", 
+                        href="https://github.com/J99thoms/Super-Smash-Dashboard",
+                        target="_blank"
+                    ), 
+                    " was created by ",
+                    html.A(
+                        "Jakob Thoms", 
+                        href="https://github.com/J99thoms", 
+                        target="_blank"
+                    ),
+                    "."
+                ], style={"float": "right", "width": "30%"}),
+            ], style={"width": "100%", "margin-top": "20px",}),
         ]),
 ], style={"width": "97%", "height": "97%", "margin": "auto"})
 
