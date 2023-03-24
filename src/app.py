@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 from dash import dash, dcc, html, Input, Output, dash_table
 
 # Load dataset
-attributes_df = pd.read_csv("../data/attributes.csv")
+attributes_df = pd.read_csv("../data/character_data.csv")
 attributes_df = attributes_df.rename(columns={'character': 'character_name'})
 attributes_df = attributes_df.drop(columns=['percent_incr_fall_speed'])
 
@@ -171,8 +171,11 @@ app.layout = html.Div([
 
             # Bar chart
             dbc.Col([
-                    html.H3(id='bar-title', style={"height": "6%", "width": "82.5%", "float": "right", "margin-top": "10px"}),
-                    html.Iframe(id="bar-chart", width="100%", height="1250px", style={"width": "90%", "float": "right"}),
+                    html.Div([
+                        html.H3(id='bar-title', style={"height": "6%", "width": "82.5%", "float": "right", "margin-top": "10px"}),
+                    ], 
+                    style={"width": "98%", "float": "right"}),
+                    html.Iframe(id="bar-chart", width="100%", height="1450px", style={"width": "90%", "float": "right"}),
             ]),
         ]),
         dbc.Row([
@@ -215,9 +218,9 @@ def update_scatter_plot(
          return plot.to_html(), "Scatter Plot of Chosen Attributes"
     
     if scatter_var_2 == scatter_var_1:
-         plot_df = attributes_df[['character_name', scatter_var_1]]
+         plot_df = attributes_df[['character_name', 'img_url', scatter_var_1]]
     else:
-        plot_df = attributes_df[['character_name', scatter_var_1, scatter_var_2]]
+        plot_df = attributes_df[['character_name', 'img_url', scatter_var_1, scatter_var_2]]
     plot_df = plot_df.dropna()
 
     scatter_atr_name_1 = attribute_labels_df.query(
@@ -226,14 +229,19 @@ def update_scatter_plot(
     scatter_atr_name_2 = pd.DataFrame(dropdown_options).query(
          "value == @scatter_var_2"
     ).iloc[0].loc['label']
-
-
-    plot = alt.Chart(plot_df).encode(
-        alt.X(scatter_var_1, title=scatter_atr_name_1),
-        alt.Y(scatter_var_2, title=scatter_atr_name_2),
-        alt.Tooltip(['character_name', scatter_var_1, scatter_var_2]),
-    ).mark_point(size=35)
     
+    plot = alt.Chart(plot_df).encode(
+        alt.X(scatter_var_1, title=scatter_atr_name_1, axis=alt.Axis(orient='bottom'), scale=alt.Scale(zero=False)),
+        alt.Y(scatter_var_2, title=scatter_atr_name_2, scale=alt.Scale(zero=False)),
+        alt.Tooltip(['character_name', scatter_var_1, scatter_var_2]),
+        alt.Url('img_url')
+    ).mark_image(  
+        width=30,
+        height=30
+    ).interactive()
+    # plot = plot + plot.encode(
+    #     alt.X(scatter_var_1, title=scatter_atr_name_1, axis=alt.Axis(orient='top'))
+    # )
     plot = plot.configure_axis(
         labelFontSize=17,
         titleFontSize=21
@@ -241,6 +249,7 @@ def update_scatter_plot(
         height=PLOT_HEIGHT, 
         width=PLOT_WIDTH
     )
+    
 
     title = f"Scatter Plot of {scatter_atr_name_1} vs. {scatter_atr_name_2}"
 
@@ -255,7 +264,7 @@ def update_scatter_plot(
 def update_bar_chart(
     bar_var
 ):
-    PLOT_HEIGHT = 1100
+    PLOT_HEIGHT = 1300
     PLOT_WIDTH = 300
 
     if bar_var is None:
@@ -265,9 +274,9 @@ def update_bar_chart(
          "value == @bar_var"
     ).iloc[0].loc['label']
     
-    plot_df = attributes_df[['character_name', bar_var]]
+    plot_df = attributes_df[['character_name', 'img_url', bar_var]]
     plot_df = plot_df.dropna()
-
+    
     plot = alt.Chart(plot_df).encode(
         alt.X(bar_var, title=bar_atr_name, axis=alt.Axis(orient='bottom')),
         alt.Y('character_name', title="Character", sort='x'),
@@ -281,6 +290,17 @@ def update_bar_chart(
     ).mark_bar()
     plot = plot + plot.encode(
         alt.X(bar_var, title=bar_atr_name, axis=alt.Axis(orient='top'))
+    )
+    offset_plot_df = plot_df.copy()
+    offset_plot_df[bar_var] = offset_plot_df[bar_var] / 1.5
+    plot = plot + alt.Chart(offset_plot_df).encode(
+        alt.X(bar_var, title=None, axis=None),
+        alt.Y('character_name', title=None, sort='x'),
+        alt.Url('img_url'),
+        alt.Tooltip(['character_name']),
+    ).mark_image(  
+        width=30,
+        height=30
     )
     
     plot = plot.configure_axis(
