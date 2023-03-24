@@ -1,0 +1,86 @@
+character,weight,max_fall_speed,fast-fall_speed,percent_incr_fall_speed,initial_dash_speed,max_run_speed,max_walk_speed,max_air_speed,base_air_acc,delta_air_acc,max_air_acc,img_url
+Bayonetta,81,1.77,2.832,60,1.936,1.76,0.945,1.019,0.01,0.085,0.095,https://ssb.wiki.gallery/images/2/27/BayonettaHeadSSBUWebsite.png
+Bowser,135,1.77,2.832,60,2.255,1.971,0.901,1.155,0.01,0.04,0.05,https://ssb.wiki.gallery/images/0/0b/BowserHeadSSBUWebsite.png
+Bowser Jr,108,1.65,2.64,60,1.76,1.566,0.924,1.134,0.01,0.07,0.08,https://ssb.wiki.gallery/images/3/3e/BowserJrHeadSSBUWebsite.png
+Captain Falcon,104,1.865,2.984,60,1.98,2.552,0.987,1.218,0.01,0.065,0.075,https://ssb.wiki.gallery/images/6/6b/CaptainFalconHeadSSBUWebsite.png
+Charizard,116,1.52,2.432,60,2.288,2.2,1.187,1.103,0.01,0.05,0.06,https://ssb.wiki.gallery/images/c/c9/CharizardHeadSSBU.png
+Chrom,95,1.8,2.88,60,2.2,2.145,1.208,1.302,0.02,0.03,0.05,https://ssb.wiki.gallery/images/7/70/ChromHeadSSBUWebsite.png
+Cloud,100,1.68,2.688,60,2.145,2.167,1.155,1.155,0.01,0.06,0.07,https://ssb.wiki.gallery/images/c/cb/CloudHeadSSBUWebsite.png
+Corrin,98,1.65,2.64,60,1.892,1.595,1.208,1.019,0.01,0.04,0.05,https://ssb.wiki.gallery/images/6/6a/CorrinHeadSSBUWebsite.png
+Daisy,89,1.19,1.904,60,1.826,1.595,0.924,1.029,0.04,0.08,0.12,https://ssb.wiki.gallery/images/2/2d/DaisyHeadSSBUWebsite.png
+Dark Pit,96,1.48,2.368,60,2.09,1.828,1.259,0.935,0.01,0.065,0.075,https://ssb.wiki.gallery/images/8/8b/DarkPitHeadSSBUWebsite.png
+Dark Samus,108,1.33,2.168,60,1.87,1.654,1.115,1.103,0.04,0.05,0.09,https://ssb.wiki.gallery/images/2/24/DarkSamusHeadSSBUWebsite.png
+Diddy Kong,90,1.75,2.8,60,2.09,2.006,1.313,0.924,0,0.05,0.05,https://ssb.wiki.gallery/images/5/5d/DiddyKongHeadSSBUWebsite.png
+Donkey Kong,127,1.63,2.608,60,2.09,1.873,1.365,1.208,0.01,0.05,0.06,https://ssb.wiki.gallery/images/2/21/DonkeyKongHeadSSBUWebsite.png
+Dr. Mario,98,1.5,2.4,60,1.5375712,1.397792,0.917301,0.9238784,0.007648,0.053536,0.061184,https://ssb.wiki.gallery/images/c/c8/DrMarioHeadSSBUWebsite.png
+Duck Hunt,86,1.65,2.64,60,1.76,1.793,1.213,1.155,0.01,0.07,0.08,https://ssb.wiki.gallery/images/3/38/DuckHuntHeadSSBUWebsite.png
+Falco,82,1.8,2.88,60,2.035,1.619,1.344,0.977,0.01,0.09,0.1,https://ssb.wiki.gallery/images/6/6e/FalcoHeadSSBUWebsite.png
+Fox,77,2.1,3.36,60,2.09,2.402,1.523,1.11,0.01,0.08,0.09,https://ssb.wiki.gallery/images/c/c9/FoxHeadSSBUWebsite.png
+Ganondorf,118,1.65,2.64,60,1.87,1.34,0.767,0.83,0.01,0.03,0.04,https://ssb.wiki.gallery/images/b/b6/GanondorfHeadSSBUWebsite.png
+Greninja,88,1.85,2.96,60,2.178,2.288,1.502,1.239,0.01,0.07,0.08,https://ssb.wiki.gallery/images/7/79/GreninjaHeadSSBUWebsite.png
+Ice Climbers,92,1.3,2.08,60,1.68,,,,,,,https://ssb.wiki.gallery/images/0/0c/IceClimbersHeadSSBUWebsite.png
+Ice Climbers (leader),,,,,,1.53,1.008,0.83,0.01,0.08,0.09,https://ssb.wiki.gallery/images/0/0c/IceClimbersHeadSSBUWebsite.png
+Ice Climbers (partner),,,,,,1.683,1.1088,0.8715,0.0105,0.084,0.0945,https://ssb.wiki.gallery/images/0/0c/IceClimbersHeadSSBUWebsite.png
+Ike,107,1.65,2.64,60,1.815,1.507,0.912,1.134,0.01,0.04,0.05,https://ssb.wiki.gallery/images/2/25/IkeHeadSSBUWebsite.png
+Incineroar,116,1.76,2.816,60,1.76,1.18,0.62,0.88,0.01,0.06,0.07,https://ssb.wiki.gallery/images/e/e3/IncineroarHeadSSBUWebsite.png
+Inkling,94,1.58,2.528,60,2.118,1.925,1.134,1.208,0.01,0.07,0.08,https://ssb.wiki.gallery/images/0/04/InklingHeadSSBUWebsite.png
+Isabelle,88,1.3,2.08,60,1.815,1.48,1.14,1.02,0.01,0.05,0.06,https://ssb.wiki.gallery/images/2/2e/IsabelleHeadSSBUWebsite.png
+Ivysaur,96,1.38,2.208,60,1.903,1.595,1.103,0.998,0.01,0.085,0.095,https://ssb.wiki.gallery/images/b/b4/IvysaurHeadSSBU.png
+Jigglypuff,68,0.98,1.568,60,1.65,1.271,0.735,1.332,0.05,0.08,0.13,https://ssb.wiki.gallery/images/9/90/JigglypuffHeadSSBUWebsite.png
+Ken,103,1.6,2.24,40,1.936,1.76,0.825,1.12,0.01,0.025,0.035,https://ssb.wiki.gallery/images/e/ef/KenHeadSSBUWebsite.png
+King Dedede,127,1.95,3.12,60,1.815,1.496,1.029,0.735,0.01,0.04,0.05,https://ssb.wiki.gallery/images/f/fe/KingDededeHeadSSBUWebsite.png
+King K. Rool,133,1.7,2.72,60,1.936,1.485,0.903,0.945,0.01,0.04,0.05,https://ssb.wiki.gallery/images/3/35/KingKRoolHeadSSBUWebsite.png
+Kirby,79,1.23,1.968,60,1.9,1.727,0.977,0.84,0.03,0.065,0.095,https://ssb.wiki.gallery/images/1/15/KirbyHeadSSBUWebsite.png
+Link,104,1.6,3.04,90,1.98,1.534,1.247,0.924,0.01,0.04,0.05,https://ssb.wiki.gallery/images/2/2b/LinkHeadSSBUWebsite.png
+Little Mac,87,1.95,3.12,60,2.365,2.464,1.386,1.208,0.01,0.03,0.04,https://ssb.wiki.gallery/images/8/87/LittleMacHeadSSBUWebsite.png
+Lucario,92,1.68,2.688,60,2.255,1.705,1.103,1.281,0.01,0.08,0.09,https://ssb.wiki.gallery/images/2/20/LucarioHeadSSBUWebsite.png
+Lucas,94,1.37,2.192,60,1.815,1.65,0.893,1.155,0.01,0.085,0.095,https://ssb.wiki.gallery/images/3/31/LucasHeadSSBUWebsite.png
+Lucina,90,1.58,2.528,60,2.255,1.964,1.575,1.071,0.01,0.07,0.08,https://ssb.wiki.gallery/images/d/d8/LucinaHeadSSBUWebsite.png
+Luigi,97,1.32,2.112,60,1.815,1.65,1.134,0.77,0,0.075,0.075,https://ssb.wiki.gallery/images/9/9d/LuigiHeadSSBUWebsite.png
+Mario,98,1.5,2.4,60,1.936,1.76,1.155,1.208,0.01,0.07,0.08,https://ssb.wiki.gallery/images/9/9e/MarioHeadSSBUWebsite.png
+Marth,90,1.58,2.528,60,2.255,1.964,1.575,1.071,0.01,0.07,0.08,https://ssb.wiki.gallery/images/a/ae/MarthHeadSSBUWebsite.png
+Mega Man,102,1.8,2.88,60,1.958,1.602,1.132,1.155,0.01,0.1,0.11,https://ssb.wiki.gallery/images/2/26/MegaManHeadSSBUWebsite.png
+Meta Knight,80,1.66,2.656,60,2.211,2.09,1.239,1.04,0.01,0.065,0.075,https://ssb.wiki.gallery/images/3/3d/MetaKnightHeadSSBUWebsite.png
+Mewtwo,79,1.55,2.48,60,2.255,2.255,1.26,1.313,0.02,0.05,0.07,https://ssb.wiki.gallery/images/7/7e/MewtwoHeadSSBUWebsite.png
+Mii Brawler,94,1.92,3.072,60,1.87,1.92,1.26,1.15,0.01,0.058,0.068,https://ssb.wiki.gallery/images/d/d8/MiiBrawlerHeadSSBU.png
+Mii Gunner,104,1.45,2.32,60,1.63,1.37,1,0.93,0.01,0.043,0.053,https://ssb.wiki.gallery/images/3/3d/MiiGunnerHeadSSBU.png
+Mii Swordfighter,100,1.55,2.48,60,1.74,1.58,1.07,1.17,0.01,0.05,0.06,https://ssb.wiki.gallery/images/e/ef/MiiSwordfighterHeadSSBU.png
+Mr. Game & Watch,75,1.24,1.984,60,1.98,1.679,1.18,1.176,0.07,0.03,0.1,https://ssb.wiki.gallery/images/1/15/MrGame%26WatchHeadSSBUWebsite.png
+Ness,94,1.31,2.096,60,1.826,1.609,0.907,1.007,0.01,0.09,0.1,https://ssb.wiki.gallery/images/d/d5/NessHeadSSBUWebsite.png
+Olimar,79,1.35,2.16,60,1.606,1.617,0.945,0.861,0.01,0.07,0.08,https://ssb.wiki.gallery/images/9/97/OlimarHeadSSBUWebsite.png
+PAC-MAN,95,1.35,2.16,60,1.87,1.672,1.097,1.092,0.01,0.07,0.08,https://ssb.wiki.gallery/images/3/3d/Pac-ManHeadSSBUWebsite.png
+Palutena,91,1.55,2.48,60,2.035,2.077,1.271,1,0.01,0.105,0.115,https://ssb.wiki.gallery/images/d/d7/PalutenaHeadSSBUWebsite.png
+Peach,89,1.19,1.904,60,1.826,1.595,0.924,1.029,0.04,0.08,0.12,https://ssb.wiki.gallery/images/1/14/PeachHeadSSBUWebsite.png
+Pichu,62,1.9,2.5,31.579,1.98,1.892,1.302,1.029,0.01,0.09,0.1,https://ssb.wiki.gallery/images/5/50/PichuHeadSSBUWebsite.png
+Pikachu,79,1.55,2.48,60,1.98,2.039,1.302,0.957,0.01,0.09,0.1,https://ssb.wiki.gallery/images/5/52/PikachuHeadSSBUWebsite.png
+Piranha Plant,112,1.95,2.73,40,1.82,1.72,0.76,1,0.01,0.05,0.06,https://ssb.wiki.gallery/images/c/cf/PiranhaPlantHeadSSBUWebsite.png
+Pit,96,1.48,2.368,60,2.09,1.828,1.259,0.935,0.01,0.065,0.075,https://ssb.wiki.gallery/images/d/d7/PitHeadSSBUWebsite.png
+R.O.B.,106,1.6,2.56,60,2.002,1.725,1.178,1.134,0.04,0.045,0.085,https://ssb.wiki.gallery/images/b/be/ROBHeadSSBUWebsite.png
+Richter,107,1.85,2.96,60,1.73,1.52,0.76,0.94,0.01,0.02,0.03,https://ssb.wiki.gallery/images/a/ab/RichterHeadSSBUWebsite.png
+Ridley,107,1.78,2.848,60,1.8,2.2,1.1,1.05,0.01,0.06,0.07,https://ssb.wiki.gallery/images/7/7c/RidleyHeadSSBUWebsite.png
+Robin,95,1.5,2.4,60,1.815,1.265,0.936,1.05,0.01,0.07,0.08,https://ssb.wiki.gallery/images/4/43/RobinHeadSSBUWebsite.png
+Rosalina,82,1.2,1.92,60,2.035,1.795,1.138,1.05,0.01,0.1,0.11,https://ssb.wiki.gallery/images/6/63/RosalinaHeadSSBUWebsite.png
+Roy,95,1.8,2.88,60,2.2,2.145,1.208,1.302,0.02,0.03,0.05,https://ssb.wiki.gallery/images/2/22/RoyHeadSSBUWebsite.png
+Ryu,103,1.6,2.24,40,1.76,1.6,0.75,1.12,0.01,0.025,0.035,https://ssb.wiki.gallery/images/2/20/RyuHeadSSBUWebsite.png
+Samus,108,1.33,2.168,60,1.87,1.654,1.115,1.103,0.04,0.05,0.09,https://ssb.wiki.gallery/images/d/d0/SamusHeadSSBUWebsite.png
+Sheik,78,1.75,2.8,60,2.178,2.42,1.47,1.155,0.01,0.08,0.09,https://ssb.wiki.gallery/images/1/1e/SheikHeadSSBUWebsite.png
+Shulk,97,1.58,2.528,60,1.87,1.672,1.155,1.113,0.01,0.04,0.05,https://ssb.wiki.gallery/images/b/bf/ShulkHeadSSBUWebsite.png
+Simon,107,1.85,2.96,60,1.73,1.52,0.76,0.94,0.01,0.02,0.03,https://ssb.wiki.gallery/images/5/52/SimonHeadSSBUWebsite.png
+Snake,106,1.73,2.768,60,1.76,1.595,0.882,0.987,0.01,0.02,0.03,https://ssb.wiki.gallery/images/9/9f/SnakeHeadSSBUWebsite.png
+Sonic,86,1.65,2.64,60,2.31,3.85,1.444,1.208,0.01,0.04,0.05,https://ssb.wiki.gallery/images/b/b7/SonicHeadSSBUWebsite.png
+Squirtle,75,1.35,2.16,60,1.936,1.76,1.281,1.01,0.01,0.095,0.105,https://ssb.wiki.gallery/images/4/40/SquirtleHeadSSBU.png
+Toon Link,91,1.38,2.208,60,1.914,1.906,1.288,1.05,0.01,0.08,0.09,https://ssb.wiki.gallery/images/b/bf/ToonLinkHeadSSBUWebsite.png
+Villager,92,1.32,2.112,60,1.815,1.397,1.092,0.987,0.01,0.05,0.06,https://ssb.wiki.gallery/images/f/f9/VillagerHeadSSBUWebsite.png
+Wario,107,1.61,2.576,60,1.837,1.65,0.889,1.271,0.04,0.08,0.12,https://ssb.wiki.gallery/images/7/7f/WarioHeadSSBUWebsite.png
+Wii Fit Trainer,96,1.3,2.08,60,2.024,1.866,1.224,1.019,0.01,0.08,0.09,https://ssb.wiki.gallery/images/f/fc/WiiFitTrainerHeadSSBUWebsite.png
+Wolf,92,1.8,2.88,60,2.09,1.54,1.208,1.281,0.01,0.08,0.09,https://ssb.wiki.gallery/images/0/06/WolfHeadSSBUWebsite.png
+Yoshi,104,1.29,2.064,60,1.98,2.046,1.208,1.344,0.03,0.068,0.098,https://ssb.wiki.gallery/images/9/93/YoshiHeadSSBUWebsite.png
+Young Link,88,1.8,2.88,60,2.09,1.749,1.26,0.966,0.02,0.04,0.06,https://ssb.wiki.gallery/images/c/c0/YoungLinkHeadSSBUWebsite.png
+Zelda,85,1.35,2.16,60,1.958,1.43,0.914,1.092,0.01,0.055,0.065,https://ssb.wiki.gallery/images/c/c8/ZeldaHeadSSBUWebsite.png
+Zero Suit Samus,80,1.7,2.72,60,2.42,2.31,1.47,1.26,0.01,0.085,0.095,https://ssb.wiki.gallery/images/5/5a/ZeroSuitSamusHeadSSBUWebsite.png
+Cloud (limit break),,,,,2.3595,2.3837,1.32825,,,,,https://ssb.wiki.gallery/images/c/cb/CloudHeadSSBUWebsite.png
+Kirby (speed),,,,,3.8,3.454,,,,,,https://ssb.wiki.gallery/images/1/15/KirbyHeadSSBUWebsite.png
+Kirby (shield),,,,,1.273,1.15709,,,,,,https://ssb.wiki.gallery/images/1/15/KirbyHeadSSBUWebsite.png
+Shulk (speed),,,,,3.74,3.344,,,,,,https://ssb.wiki.gallery/images/b/bf/ShulkHeadSSBUWebsite.png
+Shulk (shield),,,,,1.2529,1.12024,,,,,,https://ssb.wiki.gallery/images/b/bf/ShulkHeadSSBUWebsite.png
+Wii Fit Trainer (deep breathing),,,,,2.28712,2.10858,1.4688,,,,,https://ssb.wiki.gallery/images/f/fc/WiiFitTrainerHeadSSBUWebsite.png
