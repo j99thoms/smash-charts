@@ -1,6 +1,9 @@
 # The Super Smash Dashboard!
 
-#### Try it out at [the-super-smash-dashboard.onrender.com](https://the-super-smash-dashboard.onrender.com)!
+#### Try it out at [the-super-smash-dashboard.onrender.com](https://the-super-smash-dashboard.onrender.com
+   > Please note that the dashboard will take a couple of minutes to load each time you start a new session.
+   > 
+   > This is because it is currently being hosted using a "free-tier" plan, which does not support 24/7 uptime. 
 
 Welcome to The Super Smash Dashboard! This is a resource for Super Smash Bros. players who are interested in exploring the various quantitative attributes that control a character's in-game physics, such a character's weight, a character's maximum movement speed (in various forms, e.g. walking, running, and airborne), and a character's airborne acceleration.
 
