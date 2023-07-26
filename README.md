@@ -1,6 +1,6 @@
 # The Super Smash Dashboard!
 
-#### Try it out at [the-super-smash-dashboard.onrender.com](https://the-super-smash-dashboard.onrender.com)
+#### Try it out at [the-super-smash-dashboard.onrender.com](https://the-super-smash-dashboard.onrender.com)!
    > Please note that the dashboard will take a couple of minutes to load each time you start a new session.
    > 
    > This is because it is currently being hosted using a "free-tier" plan, which does not support 24/7 uptime. 
