@@ -10,7 +10,7 @@ attributes_df = attributes_df.rename(columns={'character': 'character_name'})
 attributes_df = attributes_df.drop(columns=['percent_incr_fall_speed'])
 
 # Prepare options for dropdown lists
-attributes = attributes_df.columns.to_series().iloc[1:] # The first column is 'character'
+attributes = attributes_df.columns.to_series().iloc[1:-1] # The first column is 'character', the last column is 'img_url'
 attribute_labels = attributes.str.replace('_', ' ')
 attribute_labels = attribute_labels.str.replace('acc', 'acceleration')
 attribute_labels = attribute_labels.str.title()
