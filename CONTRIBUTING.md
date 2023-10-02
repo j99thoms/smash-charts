@@ -2,6 +2,11 @@
 
 Contributions to [The Super Smash Dashboard](https://github.com/J99thoms/Super-Smash-Dashboard) are welcome and highly appreciated. I value any feedback, input, or bug reports you might have. Even the smallest contribution counts, and I will always give proper credit and acknowledgement to your contributions.
 
+- [Types of Contributions](#types-of-contributions)
+- [Setting Up for Local Development](#setting-up-for-local-development)
+- [Contributor Guidelines](#contributor-guidelines)
+- [Code of Conduct](#code-of-conduct)
+
 ## Types of Contributions
 
 ### Report Bugs
@@ -37,7 +42,7 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-## Get Started
+## Setting Up for Local Development
 
 Ready to contribute? Here's how to set up The Super Smash Dashboard for local development.
 
@@ -52,7 +57,7 @@ Ready to contribute? Here's how to set up The Super Smash Dashboard for local de
 4. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
 5. Commit your changes and open a pull request.
 
-## Pull Request Guidelines
+## Contributor Guidelines
 
 Before you submit a pull request, check that it meets these guidelines:
 
