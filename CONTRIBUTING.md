@@ -1,6 +1,11 @@
 # Contributing
 
-Contributions to [The Super Smash Dashboard](https://github.com/J99thoms/Super-Smash-Dashboard) are welcome and highly appreciated. We value any feedback, input, or bug reports you might have. Even the smallest contribution counts, and we will always give proper credit and acknowledgement to your contributions.
+Contributions to [The Super Smash Dashboard](https://github.com/J99thoms/Super-Smash-Dashboard) are welcome and highly appreciated. I value any feedback, input, or bug reports you might have. Even the smallest contribution counts, and I will always give proper credit and acknowledgement to your contributions.
+
+- [Types of Contributions](#types-of-contributions)
+- [Setting Up for Local Development](#setting-up-for-local-development)
+- [Contributor Guidelines](#contributor-guidelines)
+- [Code of Conduct](#code-of-conduct)
 
 ## Types of Contributions
 
@@ -14,13 +19,12 @@ If you are reporting a bug, please open an issue and include:
 
 ### Fix Bugs
 
-Look through the GitHub issues for bugs. Anything tagged with "bug" and "help
-wanted" is open to whoever wants to implement it.
+Look through the GitHub issues for bugs, which will be tagged as `bug`. Anything tagged with `help
+wanted` is open to whoever wants to implement it.
 
 ### Implement Features
 
-Look through the GitHub issues for features. Anything tagged with "enhancement"
-and "help wanted" is open to whoever wants to implement it.
+Look through the GitHub issues for features, which will be tagged with `enhancement` Anything tagged with `help wanted` is open to whoever wants to implement it.
 
 ### Write Documentation
 
@@ -29,8 +33,7 @@ part of the documentation, such as the official docs, docstrings, or even
 on the web in blog posts, articles, and such.
 
 ### Submit Feedback
-
-We are open to ideas and recommendations of enhancements to our app platform:
+I am open to ideas and recommendations for enhancements to the Super Smash Dashboard.
 
 If you are proposing a feature:
 
@@ -39,11 +42,11 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-## Get Started
+## Setting Up for Local Development
 
 Ready to contribute? Here's how to set up The Super Smash Dashboard for local development.
 
-1. Fork the [Super Smash Dashboard](https://github.com/samson-bakos/MacroMatch) repository on GitHub.
+1. Fork the [Super Smash Dashboard](https://github.com/J99thoms/Super-Smash-Dashboard) repository on GitHub.
 2. Clone your fork to download a copy of the `Super Smash Dashboard` locally.
 3. Use `git` (or similar) to create a branch for local development and make your changes:
 
@@ -54,7 +57,7 @@ Ready to contribute? Here's how to set up The Super Smash Dashboard for local de
 4. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
 5. Commit your changes and open a pull request.
 
-## Pull Request Guidelines
+## Contributor Guidelines
 
 Before you submit a pull request, check that it meets these guidelines:
 
