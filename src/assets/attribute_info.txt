@@ -1,0 +1,31 @@
+**Weight** is a measurement of how much a character can resist knockback, 
+and is one of several factors used in calculating the amount of knockback a character receives. 
+Holding all other factors constant, characters with a higher weight (heavy) tend to suffer less knockback, 
+and characters with a lower weight (light) tend to suffer more knockback.
+
+A character's movement **speed** is measured in distance units per frame. 
+A **distance unit** (often shortened to **unit**), refers to an arbitrary unit of 
+measurement that determines the in-game position and size of objects. 
+A unit is roughly equivalent to one decimeter, i.e. 1 unit = 0.1 meters.
+
+**Falling speed** is the rate at which a character can move downward in mid-air. 
+All characters can also **fast-fall** at any time during a descent (by tilting down on the control stick) 
+to increase their falling speed. The vast majority of characters receive a 60% increase in 
+downwards movement speed while fast-falling, although there are a few exceptions (e.g. Ken and Ryu).
+
+While walking, a character's speed is controlled by their **max walk speed**, 
+and while running, a character's speed is controlled by their **max run speed**. 
+The **initial dash** is the first part of a character's dash, during which a character 
+gains a quick burst of speed before transitioning into their run. 
+Many characters have a higher **initial dash speed** than their max run speed, although some do not.
+
+While airborne, a character's horizontal (left/right) speed is limited by 
+their **max air speed**, and the rate at which a character can change their horizontal 
+velocity is controlled by their **air acceleration**, which is measured in units/frame^2. 
+A character's air acceleration is controlled by two values: 
+a base value (**base air acceleration**) that determines their minimum acceleration, 
+and an additional value (**delta air acceleration**) that is scaled based on 
+how much the player's control stick is tilted. 
+A character's **max air acceleration** is the sum of these two values. 
+It is most beneficial for a character to have a low base value with a high additional value, 
+as this combination offers the most precise aerial control.

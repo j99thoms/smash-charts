@@ -1,0 +1,143 @@
+/* Scatter plot */
+.scatter-plot-frame {
+    height: 600px
+}
+
+.bar-chart-frame {
+    height: 400px;
+    width: 100%;
+    /* overflow: hidden; */
+}
+
+#header-image {
+    width: 100%;
+    height: 250px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    /* background-color: red; */
+}
+
+
+#header-image img {
+    width: 2000px;
+    height: 350px;
+    left: 50%;
+    margin-left: -1000px;
+    margin-top: -100px;
+    position: absolute;
+}
+
+.attribute-info-paragraph {
+    text-indent: 20px;
+}
+
+#wrapper-outer {
+    width: 100%;
+    height: 100%;
+    /* border: 3px dashed violet; */
+}
+
+#wrapper-inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+#app-container {
+    display: inline-block;
+    height: 98%;
+    white-space: normal;
+    /* background-color: rgba(0, 255, 0, 0.5); */
+}
+
+
+#header {
+    position: sticky;
+    top: 0px;
+    margin-top: 0px;
+    height: 60px;
+    z-index: 9999;
+    background-color: white;
+}
+
+
+.logo {
+    width: 150px;
+    height: 50px;
+    margin-left: 10px;
+    position: relative;
+    float: left;
+    z-index: 99999;
+    /* background-color: blue; */
+}
+
+.logo img {
+    width: 150px;
+    height: 50px;
+}
+
+#page-title-container {
+    text-align: center;
+    /* position: absolute;
+    width: 100vw; */
+    position: static;
+    width: 100%;
+    height: 60px;
+    right: 0;
+    /* background-color: rgba(200, 0, 0, 0.4); */
+}
+
+.page-container {
+    width: 98%;
+    height: 99%;
+    margin: auto;
+    /* background-color: rgba(255, 0, 0, 0.4); */
+}
+
+@media screen and (max-width: 1000px) {
+    .page-container {
+        width: 97%;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .page-container {
+        width: 96%;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .page-container {
+        width: 95%;
+    }
+}
+
+#introduction-container {
+    overflow: hidden;
+    background-color: rgba(12, 140, 196, 0.2);
+    border: 4px solid rgb(12, 140, 196);
+    /* width: calc(100vw - 272px); */
+    float: right;
+}
+
+#attribute-info-block {
+    overflow: hidden;
+    background-color: rgba(12, 140, 196, 0.2);
+    border: 4px solid rgb(12, 140, 196);
+    /* width: calc(100vw - 272px); */
+    float: right;
+}
+
+#footer {
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    height: 20px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    border-radius: 5px;
+}

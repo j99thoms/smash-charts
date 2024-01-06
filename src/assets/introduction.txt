@@ -1,0 +1,9 @@
+Welcome to Smash Charts - a dynamic hub where avid Super Smash Bros. players can unravel the details behind their favourite characters' physical attributes. This website empowers you to choose the attributes that interest you and visualize them in ways that resonate with your curiosity. Decide what piques your interest, from weight to air acceleration, and visualize it your way.
+
+On the "Attribute Distributions" page, check out bar charts and histograms to see who's dominating and who's lagging in any attribute. It's your go-to to see how your favourite fighter stacks up against the rest.
+
+Hop over to the "Attribute Correlations" page to explore relationships between different attributes with scatter plots. Not sure which attributes to plot? Use the correlation matrix to help you decide! 
+
+And the magic touch? Hover over any part of a chart, and voila! Tooltips appear, delivering precise attribute values at your fingertips. Smash Charts isn't just about visuals; it's a straightforward way to explore the quantitative values that make Super Smash Bros. characters tick.
+
+Dive into Smash Charts, where every click sparks a new discovery. Unravelling the mysteries of the Super Smash Bros. universe has never been easier.
