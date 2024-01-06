@@ -1,5 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
+import dash_vega_components as dvc
 from dash import dcc, html, Input, Output, callback
 from utils import (
     get_dropdown_options
@@ -78,11 +79,10 @@ layout = html.Div(
                     "margin-top": "10px"
                 }
             ),
-            html.Iframe(
-                id="bar-chart", 
+            dvc.Vega(
+                id="bar-chart",
                 className="bar-chart-frame",
-                width="100%", 
-                height="100%"
+                opt={"renderer": "svg", "actions": False}
             ),
         ]),
     ]
@@ -91,7 +91,7 @@ layout = html.Div(
 
 # Update the bar chart
 @callback(
-    Output("bar-chart", "srcDoc"),
+    Output("bar-chart", "spec"),
     Output('bar-title', 'children'),
     Input("bar-dropdown", "value"),
 )
@@ -109,4 +109,4 @@ def update_bar_chart(
     
     title = get_bar_chart_title(bar_var)
 
-    return plot.to_html(), title
+    return plot.to_dict(), title

@@ -1,5 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
+import dash_vega_components as dvc
 from dash import dcc, html, Input, Output, callback
 from utils import (
     get_dropdown_options
@@ -89,9 +90,11 @@ layout = html.Div(
                         ),
                     # ], 
                     # style={"width": "98%", "float": "right"}),
-                    html.Div([
-                        html.Iframe(id="scatter-plot", width="100%", height="800px"), #TODO: Dynamic height
-                    ], style={"width": "100%"}, className="scatter-plot-frame")
+                    dvc.Vega(
+                        id="scatter-plot",
+                        className="scatter-plot-frame",
+                        opt={"renderer": "svg", "actions": False}
+                    ), #TODO: Dynamic height
             ]), 
             dbc.Col([
                     # Correlation matrix plot
@@ -107,7 +110,11 @@ layout = html.Div(
                         ),
                     # ], 
                     # style={"width": "98%", "float": "right"}),
-                    html.Iframe(id="corr-matrix-plot", width="100%", height="800px"), #TODO: Dynamic height
+                    dvc.Vega(
+                        id="corr-matrix-plot",
+                        className="corr-matrix-plot-frame",
+                        opt={"renderer": "svg", "actions": False}
+                    ), #TODO: Dynamic height
             ]),           
         ]),
     ]
@@ -116,7 +123,7 @@ layout = html.Div(
 
 # Update the scatter plot
 @callback(
-    Output("scatter-plot", "srcDoc"),
+    Output("scatter-plot", "spec"),
     Output('scatter-title', 'children'),
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value")
@@ -135,11 +142,11 @@ def update_scatter_plot(
          plot_width=plot_width,
     )
     
-    return plot.to_html(), title
+    return plot.to_dict(), title
 
 # Update the correlation matrix plot
 @callback(
-    Output("corr-matrix-plot", "srcDoc"),
+    Output("corr-matrix-plot", "spec"),
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value"),
 )
@@ -165,4 +172,4 @@ def update_corr_matrix_plot(
         circle_size=circle_size
     )
     
-    return plot.to_html()
+    return plot.to_dict()
