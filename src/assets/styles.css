@@ -47,6 +47,20 @@
     white-space: nowrap;
 }
 
+#navbar {
+    border: none;
+    padding-top: 60px;
+    /* background-color: rgba(255, 0, 0, 0.5); */
+}
+
+#dummy-navbar {
+    display: inline-block;
+    padding-top: 60px;
+    height: 20px;
+    /* Doesn't matter, anything >= 1px works */
+    /* background-color: black; */
+}
+
 #app-container {
     display: inline-block;
     height: 98%;
@@ -64,6 +78,20 @@
     background-color: white;
 }
 
+#drawer-header {
+    height: 60px;
+}
+
+.hamburger-menu {
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    margin-left: 22px;
+    position: relative;
+    float: left;
+    z-index: 99999;
+    /* background-color: yellow; */
+}
 
 .logo {
     width: 150px;

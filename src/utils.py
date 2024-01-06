@@ -1,7 +1,11 @@
 from dash import html
+from dash_iconify import DashIconify
 import dash_bootstrap_components as dbc
 import pandas as pd
 import re
+
+def get_icon(icon, height=16):
+    return DashIconify(icon=icon, height=height)
 
 def Footer():
     return html.Div(
