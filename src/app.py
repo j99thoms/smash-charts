@@ -1,23 +1,15 @@
-import pandas as pd
-import altair as alt
-# alt.themes.enable('dark')
 import dash_bootstrap_components as dbc
-from dash import dash, dcc, html, Input, Output, dash_table
+from dash import dash, dcc, html, Input, Output
+from utils import (
+    get_dropdown_options
+)
+from plots import (
+    get_hori_bar_chart, 
+    get_bar_chart_title,
+    get_scatter_plot
+)
 
-# Load dataset
-attributes_df = pd.read_csv("../data/character_data.csv")
-attributes_df = attributes_df.rename(columns={'character': 'character_name'})
-attributes_df = attributes_df.drop(columns=['percent_incr_fall_speed'])
-
-# Prepare options for dropdown lists
-attributes = attributes_df.columns.to_series().iloc[1:-1] # The first column is 'character', the last column is 'img_url'
-attribute_labels = attributes.str.replace('_', ' ')
-attribute_labels = attribute_labels.str.replace('acc', 'acceleration')
-attribute_labels = attribute_labels.str.title()
-dropdown_options = zip(attributes, attribute_labels)
-dropdown_options = [{'value': val, 'label': label} for val, label in dropdown_options]
-
-attribute_labels_df = pd.DataFrame(dropdown_options) # Useful for plot axis labels
+dropdown_options = get_dropdown_options()
 
 # Setup the dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.JOURNAL])
@@ -43,7 +35,7 @@ app.layout = html.Div([
                         dcc.Dropdown(
                             id="scatter-dropdown-1",
                             options=dropdown_options,
-                            value="max_air_speed",
+                            value="Max Air Speed",
                         )
                     ], 
                     style={"width": "63.1%", "color": "black", "float": "left"})
@@ -55,7 +47,7 @@ app.layout = html.Div([
                         dcc.Dropdown(
                             id="scatter-dropdown-2",
                             options=dropdown_options,
-                            value="max_run_speed",
+                            value="Max Run Speed",
                         )
                     ], 
                     style={"width": "63.1%", "color": "black", "float": "left"})
@@ -70,7 +62,7 @@ app.layout = html.Div([
                         dcc.Dropdown(
                             id="bar-dropdown",
                             options=dropdown_options,
-                            value="weight",
+                            value="Weight",
                         )
                     ], 
                     style={"width": "85%", "color": "black",  "float": "left"})
@@ -213,45 +205,12 @@ def update_scatter_plot(
     PLOT_HEIGHT = 400
     PLOT_WIDTH = 400
 
-    if scatter_var_1 is None or scatter_var_2 is None:
-         plot = alt.Chart().mark_point().properties(height=PLOT_HEIGHT, width=PLOT_WIDTH)
-         return plot.to_html(), "Scatter Plot of Chosen Attributes"
-    
-    if scatter_var_2 == scatter_var_1:
-         plot_df = attributes_df[['character_name', 'img_url', scatter_var_1]]
-    else:
-        plot_df = attributes_df[['character_name', 'img_url', scatter_var_1, scatter_var_2]]
-    plot_df = plot_df.dropna()
-
-    scatter_atr_name_1 = attribute_labels_df.query(
-         "value == @scatter_var_1"
-    ).iloc[0].loc['label']
-    scatter_atr_name_2 = pd.DataFrame(dropdown_options).query(
-         "value == @scatter_var_2"
-    ).iloc[0].loc['label']
-    
-    plot = alt.Chart(plot_df).encode(
-        alt.X(scatter_var_1, title=scatter_atr_name_1, axis=alt.Axis(orient='bottom'), scale=alt.Scale(zero=False)),
-        alt.Y(scatter_var_2, title=scatter_atr_name_2, scale=alt.Scale(zero=False)),
-        alt.Tooltip(['character_name', scatter_var_1, scatter_var_2]),
-        alt.Url('img_url')
-    ).mark_image(  
-        width=30,
-        height=30
-    ).interactive()
-    # plot = plot + plot.encode(
-    #     alt.X(scatter_var_1, title=scatter_atr_name_1, axis=alt.Axis(orient='top'))
-    # )
-    plot = plot.configure_axis(
-        labelFontSize=17,
-        titleFontSize=21
-    ).properties(
-        height=PLOT_HEIGHT, 
-        width=PLOT_WIDTH
+    plot, title = get_scatter_plot(
+         var_1=scatter_var_1,
+         var_2=scatter_var_2,
+         plot_height=PLOT_HEIGHT,
+         plot_width=PLOT_WIDTH
     )
-    
-
-    title = f"Scatter Plot of {scatter_atr_name_1} vs. {scatter_atr_name_2}"
 
     return plot.to_html(), title
 
@@ -264,54 +223,16 @@ def update_scatter_plot(
 def update_bar_chart(
     bar_var
 ):
-    PLOT_HEIGHT = 1300
-    PLOT_WIDTH = 300
+    PLOT_HEIGHT = 300
+    PLOT_WIDTH = 1300
 
-    if bar_var is None:
-        bar_var = "weight"
-    
-    bar_atr_name = attribute_labels_df.query(
-         "value == @bar_var"
-    ).iloc[0].loc['label']
-    
-    plot_df = attributes_df[['character_name', 'img_url', bar_var]]
-    plot_df = plot_df.dropna()
-    
-    plot = alt.Chart(plot_df).encode(
-        alt.X(bar_var, title=bar_atr_name, axis=alt.Axis(orient='bottom')),
-        alt.Y('character_name', title="Character", sort='x'),
-        alt.Tooltip(['character_name', bar_var]),
-        # alt.Color(
-        # bar_var,
-        # bin=alt.Bin(maxbins=4), 
-        # scale=alt.Scale(scheme='dark2'),
-        # title=bar_var
-        # ),
-    ).mark_bar()
-    plot = plot + plot.encode(
-        alt.X(bar_var, title=bar_atr_name, axis=alt.Axis(orient='top'))
-    )
-    offset_plot_df = plot_df.copy()
-    offset_plot_df[bar_var] = offset_plot_df[bar_var] / 1.5
-    plot = plot + alt.Chart(offset_plot_df).encode(
-        alt.X(bar_var, title=None, axis=None),
-        alt.Y('character_name', title=None, sort='x'),
-        alt.Url('img_url'),
-        alt.Tooltip(['character_name']),
-    ).mark_image(  
-        width=30,
-        height=30
-    )
-    
-    plot = plot.configure_axis(
-        labelFontSize=15,
-        titleFontSize=21
-    ).properties(
-        height=PLOT_HEIGHT, 
-        width=PLOT_WIDTH
+    plot = get_hori_bar_chart(
+        var=bar_var, 
+        plot_height=PLOT_HEIGHT,
+        plot_width=PLOT_WIDTH
     )
 
-    title = f"Bar Chart of {bar_atr_name}s"
+    title = get_bar_chart_title(bar_var)
 
     return plot.to_html(), title
 
