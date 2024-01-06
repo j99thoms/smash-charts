@@ -5,7 +5,8 @@ from utils import (
     get_dropdown_options
 )
 from plots import (
-    get_scatter_plot
+    get_scatter_plot, 
+    get_corr_matrix_plot
 )
 
 # Prepare options for dropdown lists
@@ -91,7 +92,23 @@ layout = html.Div(
                     html.Div([
                         html.Iframe(id="scatter-plot", width="100%", height="800px"), #TODO: Dynamic height
                     ], style={"width": "100%"}, className="scatter-plot-frame")
-            ]),      
+            ]), 
+            dbc.Col([
+                    # Correlation matrix plot
+                    # html.Div([
+                        html.H3(
+                            "Correlations", 
+                            style={
+                                "height": "6%", 
+                                "width": "90%", 
+                                "float": "left", 
+                                "text-align": "center"
+                            }
+                        ),
+                    # ], 
+                    # style={"width": "98%", "float": "right"}),
+                    html.Iframe(id="corr-matrix-plot", width="100%", height="800px"), #TODO: Dynamic height
+            ]),           
         ]),
     ]
 )
@@ -119,3 +136,33 @@ def update_scatter_plot(
     )
     
     return plot.to_html(), title
+
+# Update the correlation matrix plot
+@callback(
+    Output("corr-matrix-plot", "srcDoc"),
+    Input("scatter-dropdown-1", "value"),
+    Input("scatter-dropdown-2", "value"),
+)
+def update_corr_matrix_plot(
+    scatter_var_1, scatter_var_2
+):
+    plot_width = 400
+    plot_height = plot_width
+
+    axis_label_size = 14
+
+    circle_radius = plot_width / 20
+    circle_size = int(3.14159 * (circle_radius ** 2))
+    print(f"corr_circle_size: {circle_size}")
+
+
+    plot = get_corr_matrix_plot(
+        var_1=scatter_var_1, 
+        var_2=scatter_var_2,
+        plot_height=plot_height,
+        plot_width=plot_width,
+        axis_label_size=axis_label_size,
+        circle_size=circle_size
+    )
+    
+    return plot.to_html()

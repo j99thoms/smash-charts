@@ -1,5 +1,5 @@
 import altair as alt
-from utils import get_character_data
+from utils import get_character_data, get_correlations_df
 
 def get_scatter_plot(
     var_1, 
@@ -47,6 +47,147 @@ def get_scatter_plot(
     title = f"{var_1} vs. {var_2}"
 
     return plot, title
+
+def get_corr_matrix_plot(
+    var_1, 
+    var_2, 
+    plot_height, 
+    plot_width, 
+    axis_label_size, 
+    circle_size
+):
+    corr_df = get_correlations_df()
+
+    base_plot = alt.Chart(corr_df).encode(
+        alt.X('Attribute 1:N').axis(
+            title=None, 
+            labelAngle=-45, 
+            labelColor=alt.condition(
+                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
+                alt.value('red'), 
+                alt.value('black')
+            ),
+            labelFontWeight=alt.condition(
+                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
+                alt.value('bold'), 
+                alt.value('normal')
+            )
+        ),
+        alt.Y('Attribute 2:N', axis=alt.Axis(title=None)).axis(
+            title=None, 
+            labelColor=alt.condition(
+                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
+                alt.value('red'), 
+                alt.value('black')
+            ),
+            labelFontWeight=alt.condition(
+                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
+                alt.value('bold'), 
+                alt.value('normal')
+            ),
+        ),
+    ).properties(
+        width=plot_width,
+        height=plot_height,
+    )
+    hover = alt.selection_point(
+        encodings=['x', 'y'], 
+        value={'x': [0,1], 'y': [0,1]}, 
+        on='mouseover', 
+        nearest=True
+    )
+    circles = base_plot.encode(
+        alt.Color('Correlation:Q').scale(
+            domain=[-1, 1], 
+            scheme='redblue'
+        ).legend(orient="top"),
+        alt.Tooltip(['Attribute 1', 'Attribute 2', 'Correlation']),
+        strokeWidth=alt.condition(
+            f"""
+                datum['Attribute 1'] == '{var_1}' 
+                && datum['Attribute 2'] == '{var_2}' 
+                || 
+                datum['Attribute 2'] == '{var_1}' 
+                && datum['Attribute 1'] == '{var_2}'
+            """, 
+            alt.value(3),
+            alt.value(1)
+        ),
+        # stroke=alt.condition(
+        #         f"""
+        #         datum['Attribute 1'] == '{var_1}' 
+        #         && datum['Attribute 2'] == '{var_2}' 
+        #         || 
+        #         datum['Attribute 2'] == '{var_1}' 
+        #         && datum['Attribute 1'] == '{var_2}'
+        #         """, 
+        #         alt.value('green'),
+        #         alt.value('black')
+        # ),
+        strokeDash=alt.condition(
+                f"""
+                datum['Attribute 1'] == '{var_1}' 
+                && datum['Attribute 2'] == '{var_2}' 
+                || 
+                datum['Attribute 2'] == '{var_1}' 
+                && datum['Attribute 1'] == '{var_2}'
+                """, 
+                alt.value((2,2)),
+                alt.value((1,0))
+        ),
+        # opacity=alt.condition(
+        #     alt.LogicalOrPredicate(
+        #         **{'or': [hover, f"""
+        #         datum['Attribute 1'] == '{var_1}' 
+        #         && datum['Attribute 2'] == '{var_2}' 
+        #         || 
+        #         datum['Attribute 2'] == '{var_1}' 
+        #         && datum['Attribute 1'] == '{var_2}'
+        #     """]}
+        #     ), 
+        #     alt.value(1),
+        #     alt.value(0.1)
+        # ),
+    ).mark_circle(
+        size=circle_size,
+        stroke='black'
+    ).add_params(
+        hover
+    )
+
+
+    if circle_size > 900:
+        corr_text = 'corr_text_2'
+    else:
+        corr_text = 'corr_text_1'
+        
+    if circle_size > 600:
+        corr_text_size = 11
+    elif circle_size > 500:
+        corr_text_size = 10
+    elif circle_size > 400:
+        corr_text_size = 9
+    elif circle_size > 300:
+        corr_text_size = 8
+    elif circle_size > 250:
+        corr_text_size = 7
+    else:
+        corr_text_size = 0
+
+    text = base_plot.encode(
+        alt.Text(corr_text),
+        alt.Tooltip(['Attribute 1', 'Attribute 2', 'Correlation']),
+    ).mark_text(fontSize=corr_text_size)
+
+    plot = (circles + text).configure_axis(
+        grid=False
+    ).configure_view(
+        stroke=None
+    ).configure_axis(
+        labelFontSize=axis_label_size
+    )
+
+    return plot
 
 
 def get_hori_bar_chart(var, plot_height, plot_width):

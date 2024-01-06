@@ -193,6 +193,25 @@ def get_character_data():
 
     return character_attributes_df
 
+def get_correlations_df():
+    attributes_df = get_character_data()
+
+    corr_df = attributes_df.corr(numeric_only=True, method='pearson')
+    corr_df = corr_df.reset_index().melt(id_vars='index').rename(
+        columns={
+            'index': 'Attribute 1',
+            'variable': 'Attribute 2', 
+            'value': 'Correlation'
+        }
+    )
+    
+    corr_df['Correlation'] = corr_df['Correlation'].round(4)
+    corr_df['corr_text_2'] = corr_df['Correlation'].round(2)
+    corr_df['corr_text_1'] = corr_df['Correlation'].round(1)
+    corr_df['abs_corr'] = corr_df['Correlation'].abs()
+
+    return corr_df
+
 def get_dropdown_options():
     character_attributes_df = get_character_data()
 
