@@ -6,9 +6,9 @@ def get_scatter_plot(
     var_2,
     plot_height, 
     plot_width,
-    image_size=30, 
-    axis_title_size=17, 
-    axis_label_size=21
+    image_size, 
+    axis_title_size, 
+    axis_label_size
 ):
     if var_1 is None or var_2 is None:
          plot = alt.Chart().mark_point().properties(
@@ -190,16 +190,25 @@ def get_corr_matrix_plot(
     return plot
 
 
-def get_hori_bar_chart(var, plot_height, plot_width):
-    IMAGE_SIZE = 30
-    AXIS_TITLE_SIZE = 21
-    AXIS_LABEL_SIZE = 15
 
-    image_size = IMAGE_SIZE
-    axis_title_size, axis_label_size = AXIS_TITLE_SIZE, AXIS_LABEL_SIZE
+def get_hori_bar_chart(var, screen_width, verbose=False):
+    plot_height, plot_width, image_size = get_hori_bar_chart_sizes(screen_width)
+    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
 
     if var is None:
         var = "Weight"
+
+    if verbose:
+        print("--bar_chart--")
+
+        print(f"bar_chart_var: {var}")
+
+        print(f"bar_chart_plot_width: {plot_width}")
+        print(f"bar_chart_plot_height: {plot_height}")
+        print(f"bar_chart_image_size: {image_size}")
+    
+        print(f"bar_chart_axis_title_size: {axis_title_size}")
+        print(f"bar_chart_axis_label_size: {axis_label_size}")
 
     plot_df = get_character_data()
     plot_df = plot_df[['Character', 'img_url', var]]
@@ -283,8 +292,126 @@ def get_hori_bar_chart(var, plot_height, plot_width):
 
     return plot
 
+def get_vert_bar_chart(var, screen_width, verbose=False):
+    plot_height, plot_width, image_size = get_vert_bar_chart_sizes(screen_width)
+    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
+
+    if var is None:
+        var = "Weight"
+
+    if verbose:
+        print(f"bar_chart_var: {var}")
+
+        print(f"bar_chart_plot_width: {plot_width}")
+        print(f"bar_chart_plot_height: {plot_height}")
+        print(f"bar_chart_image_size: {image_size}")
+    
+        print(f"bar_chart_axis_title_size: {axis_title_size}")
+        print(f"bar_chart_axis_label_size: {axis_label_size}")
+    
+    plot_df = get_character_data()
+    plot_df = plot_df[['Character', 'img_url', var]]
+    plot_df = plot_df.dropna()
+
+    sorted_df = plot_df.sort_values(by=var, ascending=False)
+    sorted_list = sorted_df.Character.to_list()
+    max_val = sorted_df[var].to_list()[0]
+
+    base_plot = alt.Chart(plot_df).encode(
+        alt.Y('Character', title=None, sort=sorted_list, axis=None),
+        alt.Tooltip(['Character', var])
+    )
+
+    bars = base_plot.mark_bar(opacity=0.7).encode(
+        alt.X(var).axis(
+            orient='bottom', titlePadding=2
+        ).scale(
+            domainMax = max_val * 1.15
+        ),
+        # alt.Color(
+            # var,
+            # bin=alt.Bin(maxbins=4), 
+            # scale=alt.Scale(scheme='dark2'),
+            # title=var
+        # ),
+    ).properties(
+        height=plot_height,
+        width=plot_width
+    )
+    
+    pics = base_plot.encode(
+        alt.Y('Character', title='Character', sort=sorted_list).axis(
+            domainOpacity=0, ticks=False, labels=False, titlePadding=-10
+        ),
+        alt.Url('img_url'),
+    ).mark_image(
+        height=image_size, 
+        width=image_size
+    ).properties(
+        height=plot_height
+    )
+
+    plot = alt.hconcat(
+        pics, bars
+    ).configure_concat(
+        spacing=-(32 - image_size) # idk lol
+    ).configure_view(
+        strokeOpacity=0
+    ).configure_axis(
+        labelFontSize=axis_label_size,
+        titleFontSize=axis_title_size
+    )
+
+    return plot
 
 def get_bar_chart_title(var):
     title = f"Distribution of {var}s"
 
     return title
+
+def get_bar_chart_font_sizes(plot_width):
+    MAX_AXIS_TITLE_SIZE = 20
+    MIN_AXIS_TITLE_SIZE = 12
+
+    MAX_AXIS_LABEL_SIZE = 16
+    MIN_AXIS_LABEL_SIZE = 10
+
+    axis_title_size = min(int(plot_width / 50), MAX_AXIS_TITLE_SIZE)
+    axis_title_size = max(axis_title_size, MIN_AXIS_TITLE_SIZE)
+
+    axis_label_size = min(int(plot_width / 60), MAX_AXIS_LABEL_SIZE)
+    axis_label_size = max(axis_label_size, MIN_AXIS_LABEL_SIZE)
+
+    return axis_title_size, axis_label_size
+
+
+def get_hori_bar_chart_sizes(screen_width):
+    PLOT_HEIGHT = 250
+    MAX_IMAGE_SIZE = 24
+    MIN_IMAGE_SIZE = 15
+
+    plot_height = PLOT_HEIGHT
+
+    plot_width = int(screen_width * 0.86)
+
+    image_size = min(int(plot_width / 62), MAX_IMAGE_SIZE)
+    image_size = max(image_size, MIN_IMAGE_SIZE)
+
+    return plot_height, plot_width, image_size
+
+def get_vert_bar_chart_sizes(screen_width):
+    PLOT_HEIGHT = 1200
+    MAX_PLOT_WIDTH = 550
+    IMAGE_SIZE = 20
+
+    plot_height = PLOT_HEIGHT
+
+    if screen_width > 550:
+        plot_width = int(screen_width * 0.8)
+    else:
+        plot_width = int(screen_width * 0.7)
+    plot_width = min(plot_width, MAX_PLOT_WIDTH)
+
+    image_size = IMAGE_SIZE
+
+    return plot_height, plot_width, image_size

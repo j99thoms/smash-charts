@@ -3,10 +3,12 @@ import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
 from dash import dcc, html, Input, Output, callback
 from utils import (
-    get_dropdown_options
+    get_dropdown_options, 
+    get_screen_width
 )
 from plots import (
     get_hori_bar_chart, 
+    get_vert_bar_chart, 
     get_bar_chart_title
 )
 
@@ -94,19 +96,18 @@ layout = html.Div(
     Output("bar-chart", "spec"),
     Output('bar-title', 'children'),
     Input("bar-dropdown", "value"),
+    Input("display-size", "children"),
 )
 def update_bar_chart(
-    bar_var
+    bar_var, display_size_str
 ):
-    PLOT_HEIGHT = 300
-    PLOT_WIDTH = 1300
+    screen_width = get_screen_width(display_size_str)
 
-    plot = get_hori_bar_chart(
-        var=bar_var, 
-        plot_height=PLOT_HEIGHT,
-        plot_width=PLOT_WIDTH
-    )
-    
+    if screen_width > 900:  # Horizontal bar chart
+        plot = get_hori_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
+    else:   # Vertical bar chart
+        plot = get_vert_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
+
     title = get_bar_chart_title(bar_var)
 
     return plot.to_dict(), title

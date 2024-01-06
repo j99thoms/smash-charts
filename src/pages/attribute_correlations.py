@@ -3,7 +3,8 @@ import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
 from dash import dcc, html, Input, Output, callback
 from utils import (
-    get_dropdown_options
+    get_dropdown_options, 
+    get_screen_width
 )
 from plots import (
     get_scatter_plot, 
@@ -126,20 +127,54 @@ layout = html.Div(
     Output("scatter-plot", "spec"),
     Output('scatter-title', 'children'),
     Input("scatter-dropdown-1", "value"),
-    Input("scatter-dropdown-2", "value")
+    Input("scatter-dropdown-2", "value"),
+    Input("display-size", "children"),
 )
 def update_scatter_plot(
-    scatter_var_1, scatter_var_2
+    scatter_var_1, scatter_var_2, display_size_str
 ):
     print("--scatter--")
-    plot_width = 400
+    screen_width = get_screen_width(display_size_str)
+    if screen_width > 1200:
+        plot_width = int(screen_width / 2.8)
+    elif screen_width > 900:
+        plot_width = int(screen_width / 3.2)
+    elif screen_width > 650:
+        plot_width = int(screen_width / 3.6)
+    elif screen_width > 450:
+        plot_width = int(screen_width / 4.0)
+    else:
+        plot_width = int(screen_width / 4.5)
+    print(f"scatter_plot_width: {plot_width}")
+
     plot_height = plot_width
+
+    MAX_IMAGE_SIZE = 40
+    MIN_IMAGE_SIZE = 15
+    image_size = min(int(plot_width / 14), MAX_IMAGE_SIZE)
+    image_size = max(image_size, MIN_IMAGE_SIZE)
+    print(f"scatter_image_size: {image_size}")
+
+    MAX_AXIS_TITLE_SIZE = 20
+    MIN_AXIS_TITLE_SIZE = 12
+    axis_title_size = min(int(plot_width / 19), MAX_AXIS_TITLE_SIZE)
+    axis_title_size = max(axis_title_size, MIN_AXIS_TITLE_SIZE)
+    print(f"scatter_axis_title_size: {axis_title_size}")
+
+    MAX_AXIS_LABEL_SIZE = 16
+    MIN_AXIS_LABEL_SIZE = 10
+    axis_label_size = min(int(plot_width / 24), MAX_AXIS_LABEL_SIZE)
+    axis_label_size = max(axis_label_size, MIN_AXIS_LABEL_SIZE)
+    print(f"scatter_axis_label_size: {axis_label_size}")
 
     plot, title = get_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,
          plot_height=plot_height,
          plot_width=plot_width,
+         image_size=image_size,
+         axis_title_size=axis_title_size,
+         axis_label_size=axis_label_size
     )
     
     return plot.to_dict(), title
@@ -149,14 +184,33 @@ def update_scatter_plot(
     Output("corr-matrix-plot", "spec"),
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value"),
+    Input("display-size", "children"),
 )
 def update_corr_matrix_plot(
-    scatter_var_1, scatter_var_2
+    scatter_var_1, scatter_var_2, display_size_str
 ):
-    plot_width = 400
+    screen_width = get_screen_width(display_size_str)
+
+    print("--corr_plot--")
+    if screen_width > 1200:
+        plot_width = int(screen_width / 3.2)
+    elif screen_width > 900:
+        plot_width = int(screen_width / 3.6)
+    elif screen_width > 650:
+        plot_width = int(screen_width / 4.0)
+    elif screen_width > 450:
+        plot_width = int(screen_width / 4.4)
+    else:
+        plot_width = int(screen_width / 4.5)
+    print(f"corr_plot_width: {plot_width}")
+
     plot_height = plot_width
 
-    axis_label_size = 14
+    MAX_AXIS_LABEL_SIZE = 16
+    MIN_AXIS_LABEL_SIZE = 10
+    axis_label_size = min(int(plot_width / 26), MAX_AXIS_LABEL_SIZE)
+    axis_label_size = max(axis_label_size, MIN_AXIS_LABEL_SIZE)
+    print(f"corr_axis_label_size: {axis_label_size}")
 
     circle_radius = plot_width / 20
     circle_size = int(3.14159 * (circle_radius ** 2))
