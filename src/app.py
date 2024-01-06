@@ -1,15 +1,16 @@
-from dash import Dash, html, Input, Output, State, dcc
+from dash import Dash, html, Input, Output, State, dcc, ctx
 import dash
+import dash_breakpoints
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from utils import Footer, get_logo
+from utils import Footer, get_icon, get_logo, get_screen_width
 from navigation import (
     get_hamburger_menu,
     get_navbar,
     get_drawer,
     get_navbar_style_outputs,
     get_app_container_style,
-    NAVBAR_WIDTH
+    EXPANDED_NAVBAR_WIDTH
 )
 
 google_fonts = "https://fonts.googleapis.com/css2"
@@ -52,7 +53,10 @@ hamburger_menu_navbar = get_hamburger_menu(
 navbar = get_navbar(pages)
 drawer = get_drawer(pages)
 
-
+window_size_breakpoints = dash_breakpoints.WindowBreakpoints(
+    id="breakpoints",
+    widthBreakpointThresholdsPx=[*range(400, 1800, 50)]
+)
 
 app.layout = dmc.MantineProvider(
     theme={
@@ -76,7 +80,7 @@ app.layout = dmc.MantineProvider(
             #         html.Img(src="assets/everyone_is_here_compressed.png")
             #     ]
             # ),
-             html.Div(
+            html.Div(
                 id='header',
                 children=[
                     logo,
@@ -110,31 +114,56 @@ app.layout = dmc.MantineProvider(
             ),
             Footer(),
             dcc.Location(id='url'),
+            html.Div(id="display-size"),
+            window_size_breakpoints
         ], id='user-window')
     ],
 )
 
-
 # Update the page title based on the current page url
 @app.callback(
     Output('page-title-container', 'children'),
-    Input('url', 'pathname')
+    Input('url', 'pathname'),
+    Input('display-size', 'children')
 )
-def update_page_title(pathname):
+def update_page_title(pathname, display_size_str):
 
     if pathname == "/":
-        title = "Explore Super Smash Bros Characters with Interactive Visualizations!"
-        return html.H1(title, id='page-title', style={"font-size": "1.7vw", "padding-top": "10px"})
+        # Use default title
+        pass
     elif pathname == "/attribute-correlations":
         return html.H1("Attribute Correlations", id='page_title')
     elif pathname == "/attribute-distributions":
         return html.H1("Attribute Distributions", id='page_title')
     elif pathname == "/attribute-info":
-        title = "Explore Super Smash Bros Characters with Interactive Visualizations!"
-        return html.H1(title, id='page-title', style={"font-size": "1.7vw", "padding-top": "10px"})
+        # Use default title
+        pass
     else:
         return html.H1("404 - Page not found", id='page-title')
     
+    # Choose size for default title based on the user's screen width
+    screen_width = get_screen_width(display_size_str)
+    if screen_width > 1400:
+        title = "Explore Super Smash Bros Characters with Interactive Visualizations!"
+        return html.H1(title, id='page-title', style={"font-size": "1.7vw", "padding-top": "10px"})
+    elif screen_width > 750:
+        title_upper = "Explore Super Smash Bros. Characters"
+        title_lower = "with Interactive Visualizations!"
+        return [
+            html.H1(title_upper, id='page-title-upper', style={"font-size": "24px"}),
+            html.H1(title_lower, id='page-title-lower', style={"font-size": "24px", "margin-top": "-10px"})]
+    elif screen_width > 650:
+        title_upper = "Explore Super Smash Bros. Characters"
+        title_lower = "with Interactive Visualizations!"
+        return [
+            html.H1(title_upper, id='page-title-upper', style={"font-size": "22px"}),
+            html.H1(title_lower, id='page-title-lower', style={"font-size": "22px", "margin-top": "-10px"})]
+    else:
+        title_upper = "Explore Super Smash Bros. Characters"
+        title_lower = "with Interactive Visualizations!"
+        return [
+            html.H1(title_upper, id='page-title-upper', style={"font-size": "19px"}),
+            html.H1(title_lower, id='page-title-lower', style={"font-size": "19px", "margin-top": "-10px"})]
 
 # Update the active navlink based on the current page url
 @app.callback(
@@ -165,7 +194,7 @@ def update_active_navlink(pathname):
     
     return 2 * (home_active, correlations_active, distributions_active, info_active)
 
-# Collapse / expand the navbar when the hamburger menu button is clicked
+# Collapse / expand the navbar based on screen size
 @app.callback(
     Output('navbar-navlink-/', 'styles'),
     Output('navbar-navlink-/attribute-correlations', 'styles'),
@@ -182,27 +211,53 @@ def update_active_navlink(pathname):
     Output('dummy-navbar-container', 'style'),
     # Output('hamburger-menu-button-navbar', 'style'),
     Output('hamburger-menu-button-drawer-outer', 'style'),
-    Input('url', 'pathname')
+    Input("display-size", "children"),
+    Input('url', 'pathname'),
+    State("navbar", "style")
 )
-def collapse_expand_navbar(pathname):
+def collapse_expand_navbar(display_size_str, pathname, current_navbar_style):
+    triggered_id = ctx.triggered_id
+    screen_width = get_screen_width(display_size_str)
 
     if pathname in navbar_pages:
-       return (
-            *get_navbar_style_outputs(num_pages=len(pages)),
-            get_app_container_style(navbar_status='shown'),
-            None, None, {"display": "none"}
-        )
+        # Collapse the navbar for small screen widths, expand for larger screen widths
+        if screen_width < 900:
+            # Collapse the navbar
+            return (
+                *get_navbar_style_outputs(is_collapsed=True, num_pages=len(pages)),
+                get_app_container_style(navbar_status='collapsed'),
+                None, None, {"display": "none"}
+            )
+        else:
+            # Expand the navbar
+            return (
+                *get_navbar_style_outputs(is_collapsed=False, num_pages=len(pages)),
+                get_app_container_style(navbar_status='expanded'),
+                None, None, {"display": "none"}
+            )
     elif pathname in drawer_pages:
-        return (
-            *get_navbar_style_outputs(num_pages=len(pages)),
-            get_app_container_style(navbar_status='hidden'),
-            {"display": "none"}, {"display": "none"}, None
-        )
+        # User is on a page in which the navbar is hidden
+        if screen_width < 900:
+            # Navbar is currently collapsed, leave it collapsed behind the scenes
+            return (
+                *get_navbar_style_outputs(is_collapsed=True, num_pages=len(pages)),
+                get_app_container_style(navbar_status='hidden'),
+                {"display": "none"}, {"display": "none"}, None
+            )
+        else:
+            # Navbar is currently expanded, leave it expanded behind the scenes
+            return (
+                *get_navbar_style_outputs(is_collapsed=False, num_pages=len(pages)),
+                get_app_container_style(navbar_status='hidden'),
+                {"display": "none"}, {"display": "none"}, None
+            )
     else:
         # This should never happen.
         print("Error updating navbar.")
+        print(f"display-size: {display_size_str}")
         print(f"pathname: {pathname}")
-
+        print(f"current_navbar_style: {current_navbar_style}")
+        print(f"triggered_id: {triggered_id}")
 
 # Open the drawer
 @app.callback(
@@ -234,6 +289,18 @@ def hide_drawer(pathname, opened):
         return False
     else:
         return opened
+
+# Keep track of the user's screen width
+app.clientside_callback(
+    """(wBreakpoint, w) => {
+        console.log("Width breakpoint threshold crossed.")
+        return `Breakpoint name: ${wBreakpoint}, width: ${w}px`
+    }""",
+    Output("display-size", "children"),
+    Input("breakpoints", "widthBreakpoint"),
+    State("breakpoints", "width"),
+)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

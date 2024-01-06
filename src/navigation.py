@@ -2,10 +2,18 @@ from dash import html
 import dash_mantine_components as dmc
 from utils import get_icon, get_logo
 
-NAVBAR_WIDTH = 240
-NAVBAR_NAVLINK_MARGIN = 12
+COLLAPSED_NAVBAR_WIDTH = 76
+EXPANDED_NAVBAR_WIDTH = 240
 
-navbar_navlink_width = NAVBAR_WIDTH - NAVBAR_NAVLINK_MARGIN
+COLLAPSED_NAVBAR_NAVLINK_MARGIN = 6
+EXPANDED_NAVBAR_NAVLINK_MARGIN = 12
+
+collapsed_navbar_navlink_width = (
+    COLLAPSED_NAVBAR_WIDTH - 0*COLLAPSED_NAVBAR_NAVLINK_MARGIN
+)
+expanded_navbar_navlink_width = (
+    EXPANDED_NAVBAR_WIDTH - EXPANDED_NAVBAR_NAVLINK_MARGIN
+)
 
 def get_navbar_contents(pages):
     navbar_contents = [
@@ -106,7 +114,7 @@ def get_drawer(pages):
         id="drawer",
         withCloseButton=False,
         transitionDuration=100,
-        size=(NAVBAR_WIDTH+NAVBAR_NAVLINK_MARGIN),
+        size=(EXPANDED_NAVBAR_WIDTH+EXPANDED_NAVBAR_NAVLINK_MARGIN),
         padding=0,
         zIndex=90000,
     )
@@ -114,64 +122,115 @@ def get_drawer(pages):
     return drawer
 
 
-def get_navlink_styles():
-    navlink_styles = {
+def get_navlink_styles(is_collapsed=False):
+    collapsed_navlink_styles = {
+        "label": {
+            "overflow": "visible",
+            "font-size": "11px",
+            # "background-color": "yellow"
+        },
+        "body": {
+            "overflow": "visible", 
+            "position": "relative", 
+            "left": "-48px", 
+            "top": "20px", 
+            "text-align" : "center", 
+            "min-height": "48px",
+            "min-width": f"{collapsed_navbar_navlink_width}px",
+            "line-height": "0.0em",
+            # "background-color": "red",
+        },
+        "icon": {
+            "position": "relative", 
+            "top": "-12px", 
+            "left": "12px",
+            # "background-color": "blue"
+        }
+    }
+    expanded_navlink_styles = {
         "label": {
             "overflow": "visible",
             "font-size": "15px",
             "position": "relative", 
-            "left": "6px",
+            "left": f"{COLLAPSED_NAVBAR_NAVLINK_MARGIN}px", # Line up with collapsed navlinks
         },
         "body": {
             "overflow": "visible"
         },
         "icon": {
             "position": "relative", 
-            "left": "6px", 
+            "left": f"{COLLAPSED_NAVBAR_NAVLINK_MARGIN}px",  # Line up with collapsed navlinks
         }
     }
 
-    return navlink_styles
+    if is_collapsed:
+        return collapsed_navlink_styles
+    else:
+        return expanded_navlink_styles
 
-def get_navlink_style():
-    navlink_style = {
-        "height": "48px", 
-        "width": f"{navbar_navlink_width}px",
+def get_navlink_style(is_collapsed=False):
+    collapsed_navlink_style = {
+        "height": "72px", 
+        "width": f"{collapsed_navbar_navlink_width}px",
         "border-radius": "10px", 
-        "margin-left": f"{NAVBAR_NAVLINK_MARGIN}px", 
-        "margin-right": f"{NAVBAR_NAVLINK_MARGIN}px", 
+        "margin-left": f"{COLLAPSED_NAVBAR_NAVLINK_MARGIN}px", 
+        "margin-right": f"{COLLAPSED_NAVBAR_NAVLINK_MARGIN}px", 
+    }
+    expanded_navlink_style = {
+        "height": "48px", 
+        "width": f"{expanded_navbar_navlink_width}px",
+        "border-radius": "10px", 
+        "margin-left": f"{EXPANDED_NAVBAR_NAVLINK_MARGIN}px", 
+        "margin-right": f"{EXPANDED_NAVBAR_NAVLINK_MARGIN}px", 
     }
 
-    return navlink_style
+    if is_collapsed:
+        return collapsed_navlink_style
+    else:
+        return expanded_navlink_style
 
-def get_navbar_style(initial_load=False):
+def get_navbar_style(is_collapsed=False, initial_load=False):
     if initial_load:
-        return {"display": "none", "width": f"{NAVBAR_WIDTH}px"}
+        return {"display": "none", "width": f"{EXPANDED_NAVBAR_WIDTH}px"}
 
-    navbar_style = {
-        "width": f"{NAVBAR_WIDTH}px",
+    collapsed_navbar_style = {
+        "width": f"{COLLAPSED_NAVBAR_WIDTH}px",
+        # "border-right": "2px solid black",
+    }
+    expanded_navbar_style = {
+        "width": f"{EXPANDED_NAVBAR_WIDTH}px",
         # "border-right": "2px solid black",
     }
     
-    return navbar_style
+    if is_collapsed:
+        return collapsed_navbar_style
+    else:
+        return expanded_navbar_style
     
 
-def get_dummy_navbar_style(initial_load=False):
+def get_dummy_navbar_style(is_collapsed=False, initial_load=False):
     if initial_load:
-        return {"display": "none", "width": f"{NAVBAR_WIDTH}px"}
+        return {"display": "none", "width": f"{EXPANDED_NAVBAR_WIDTH}px"}
     
-    dummy_navbar_style = {
-        "width": f"{NAVBAR_WIDTH}px",
+    collapsed_dummy_navbar_style = {
+        "width": f"{COLLAPSED_NAVBAR_WIDTH}px",
+        'float': 'left',
+    }
+    expanded_dummy_navbar_style = {
+        "width": f"{EXPANDED_NAVBAR_WIDTH}px",
         'float': 'left',
     }
     
-    return dummy_navbar_style
+    if is_collapsed:
+        return collapsed_dummy_navbar_style
+    else:
+        return expanded_dummy_navbar_style
 
-def get_navbar_style_outputs(num_pages):
-    navlink_styles = get_navlink_styles()
-    navlink_style = get_navlink_style()
-    navbar_style = get_navbar_style()
-    dummy_navbar_style = get_dummy_navbar_style()
+def get_navbar_style_outputs(is_collapsed, num_pages):
+    navlink_styles = get_navlink_styles(is_collapsed)
+    navlink_style = get_navlink_style(is_collapsed)
+    navbar_style = get_navbar_style(is_collapsed)
+    dummy_navbar_style = get_dummy_navbar_style(is_collapsed)
 
     return tuple(
             num_pages * [navlink_styles]
@@ -185,19 +244,27 @@ def get_navbar_style_outputs(num_pages):
         )
 
 def get_app_container_style(navbar_status):
-    navbar_offset = int(
-        NAVBAR_WIDTH + (2/3)*NAVBAR_NAVLINK_MARGIN # idk, it just works
+    collapsed_navbar_offset = int(
+        COLLAPSED_NAVBAR_WIDTH + (2/3)*COLLAPSED_NAVBAR_NAVLINK_MARGIN # idk, it just works
+    )
+    expanded_navbar_offset = int(
+        EXPANDED_NAVBAR_WIDTH + (2/3)*EXPANDED_NAVBAR_NAVLINK_MARGIN # idk, it just works
     )
 
-    app_container_style_with_navbar = {
-        "width": f"calc(100vw - {navbar_offset}px)"
+    app_container_style_collapsed_navbar = {
+        "width": f"calc(100vw - {collapsed_navbar_offset}px)"
+    }
+    app_container_style_expanded_navbar = {
+        "width": f"calc(100vw - {expanded_navbar_offset}px)"
     }
     app_container_style_hidden_navbar = {
         "width": "99%"
     }
 
-    if navbar_status == "shown":
-        return app_container_style_with_navbar
+    if navbar_status == "collapsed":
+        return app_container_style_collapsed_navbar
+    elif navbar_status == "expanded":
+        return app_container_style_expanded_navbar
     elif navbar_status == "hidden":
         return app_container_style_hidden_navbar
     else:
@@ -205,6 +272,6 @@ def get_app_container_style(navbar_status):
             """
                 Error during get_app_container_style. 
                 The input 'navbar_status' should be one of \
-                "shown" or "hidden".
+                "collapsed", "expanded", or "hidden".
             """
         )

@@ -4,4 +4,5 @@ dash~=2.9.1
 dash_bootstrap_components~=1.4.1
 dash-mantine-components~=0.12.1
 dash-iconify~=0.1.2
+dash_breakpoints~=0.1.0
 gunicorn~=20.1.0

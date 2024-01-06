@@ -11,7 +11,7 @@ def Footer():
     return html.Div(
         id="footer",
         children=[get_credits()]
-)
+    )
 
 def get_logo():
     logo = html.A(
@@ -44,7 +44,6 @@ def get_credits():
     )
     
     return credits
-
 
 def get_attribute_info_block():
     attribute_info_paragraphs = get_attribute_info()
@@ -186,6 +185,12 @@ def parse_bolds(line):
 
     return parsed_line
 
+def get_screen_width(display_size_str):
+    # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
+    screen_width = int(display_size_str.split(" ")[4].strip("px"))
+
+    return screen_width
+
 def get_character_data():
     character_attributes_df = pd.read_csv("../data/character_data.csv").drop(
         columns=['percent_incr_fall_speed']  # Unused column
@@ -235,4 +240,3 @@ def make_dash_table(df):
         table.append(html.Tr(html_row))
         
     return table
-
