@@ -1,20 +1,15 @@
-# The Super Smash Dashboard!
+# Smash Charts
 
-#### Try it out at [the-super-smash-dashboard.onrender.com](https://the-super-smash-dashboard.onrender.com)!
-   > Please note that the dashboard will take a couple of minutes to load each time you start a new session.
+#### Try it out at [smash-charts.onrender.com](https://smash-charts.onrender.com)!
+   > Please note that the app will take a minute or two to load each time you start a new session.
    > 
    > This is because it is currently being hosted using a "free-tier" plan, which does not support 24/7 uptime. 
 
-Welcome to The Super Smash Dashboard! This is a resource for Super Smash Bros. players who are interested in exploring the various quantitative attributes that control a character's in-game physics, such a character's weight, a character's maximum movement speed (in various forms, e.g. walking, running, and airborne), and a character's airborne acceleration.
-
-
-## Proposal
-
-I ([@J99thoms](https://github.com/J99thoms)) am a graduate student at the University of British Columbia who is enrolled in the Master of Data Science program ([UBC-MDS](https://github.com/UBC-MDS)). I am also a huge fan of Super Smash Bros. As a result, The Super Smash Dashboard was created as both a personal project as well as to satisfiy part of the requirements of the UBC MDS program. The project proposal can be found [here](docs/proposal.md).
+Welcome to Smash Charts! This is a resource for Super Smash Bros. players who are interested in exploring the various quantitative attributes that control a character's in-game physics, such as a character's weight, a character's maximum movement speed (in various forms, e.g. walking, running, and airborne), and a character's airborne acceleration.
 
 ## Usage
 
-With this dashboard, users are able to choose which attributes to visualize as well as how to visualize those attributes. Users can quickly see which characters have the highest/lowest value in any given attribute by using a bar chart, and can also see how any given attribute relates to any other attribute by using a scatter plot. The visualizations include tooltips so that one is able to determine the exact values of a character's attributes by simply hovering their mouse over the relevant section of the visualization.
+With this web app, users are able to choose which attributes to visualize as well as how to visualize those attributes. Users can quickly see which characters have the highest/lowest value in any given attribute by using a bar chart, and can also see how any given attribute relates to any other attribute by using a scatter plot. The visualizations include tooltips so that one can determine the exact values of a character's attributes by simply hovering their mouse over the relevant section of the visualization.
 
 ## Credits and References
 
@@ -23,7 +18,7 @@ As a result, I had to create the dataset myself by scraping data from one of the
 Please note that it appears that the website's SSL certificate has expired.
 
 The dataset includes various quantitative attributes that control a character's in-game physics.
-A more in-depth description for each of these attributes can be found on the main page of the dashboard.
+A more in-depth description for each of these attributes can be found on the "Attribute Info" page of the dashboard.
 The attribute descriptions provided on the dashboard are based on the descriptions which can be found on [SmashWiki](https://www.ssbwiki.com/).
 
 ## Contributing
@@ -32,6 +27,6 @@ Interested in contributing? Check out the [contributing guidelines](CONTRIBUTING
 
 ## License
 
-The Super Smash Dashboard was created by Jakob Thoms. It is licensed under the terms of the MIT license.
+Smash Charts was created by Jakob Thoms. It is licensed under the terms of the MIT license.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
