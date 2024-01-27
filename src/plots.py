@@ -189,8 +189,6 @@ def get_corr_matrix_plot(
 
     return plot
 
-
-
 def get_hori_bar_chart(var, screen_width, verbose=False):
     plot_height, plot_width, image_size = get_hori_bar_chart_sizes(screen_width)
     axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
@@ -383,7 +381,6 @@ def get_bar_chart_font_sizes(plot_width):
     axis_label_size = max(axis_label_size, MIN_AXIS_LABEL_SIZE)
 
     return axis_title_size, axis_label_size
-
 
 def get_hori_bar_chart_sizes(screen_width):
     PLOT_HEIGHT = 250

@@ -1,20 +1,14 @@
+import re
+import pandas as pd
+import dash_bootstrap_components as dbc
 from dash import html
 from dash_iconify import DashIconify
-import dash_bootstrap_components as dbc
-import pandas as pd
-import re
 
 IMG_DIR = "assets/img"
 TXT_DIR = "assets/txt"
 
 def get_icon(icon, height=16):
     return DashIconify(icon=icon, height=height)
-
-def Footer():
-    return html.Div(
-        id="footer",
-        children=[get_credits()]
-    )
 
 def get_logo():
     logo = html.A(
@@ -24,29 +18,6 @@ def get_logo():
         target="_self",
     )
     return logo
-
-def get_credits():
-    credits = html.Div(
-        [
-            html.A(
-                "Smash Charts", 
-                href="https://github.com/J99thoms/Super-Smash-Dashboard",
-                target="_blank",
-                style={"color": "white"}
-            ), 
-            " was created by ",
-            html.A(
-                "Jakob Thoms", 
-                href="https://github.com/J99thoms", 
-                target="_blank",
-                style={"color": "white"}
-            ),
-            "."
-        ], 
-        style={"text-align": "right", "padding-right": "10px", "padding-left": "10px", "font-size": "83%"}
-    )
-    
-    return credits
 
 def get_attribute_info_block():
     attribute_info_paragraphs = get_attribute_info()

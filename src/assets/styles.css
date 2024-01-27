@@ -53,13 +53,13 @@
     white-space: nowrap;
 }
 
-#navbar {
+#sidebar {
     border: none;
     padding-top: 60px;
     /* background-color: rgba(255, 0, 0, 0.5); */
 }
 
-#dummy-navbar {
+#dummy-sidebar {
     display: inline-block;
     padding-top: 60px;
     height: 20px;
@@ -67,7 +67,7 @@
     /* background-color: black; */
 }
 
-#app-container {
+#page-container {
     display: inline-block;
     height: 98%;
     white-space: normal;

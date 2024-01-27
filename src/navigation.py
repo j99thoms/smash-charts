@@ -8,46 +8,12 @@ EXPANDED_NAVBAR_WIDTH = 240
 COLLAPSED_NAVBAR_NAVLINK_MARGIN = 6
 EXPANDED_NAVBAR_NAVLINK_MARGIN = 12
 
-collapsed_navbar_navlink_width = (
+collapsed_sidebar_navlink_width = (
     COLLAPSED_NAVBAR_WIDTH - 0*COLLAPSED_NAVBAR_NAVLINK_MARGIN
 )
-expanded_navbar_navlink_width = (
+expanded_sidebar_navlink_width = (
     EXPANDED_NAVBAR_WIDTH - EXPANDED_NAVBAR_NAVLINK_MARGIN
 )
-
-def get_navbar_contents(pages):
-    navbar_contents = [
-        dmc.NavLink(
-            label=page['name'].title(),
-            href=page['relative_path'],
-            icon=get_icon(icon="bi:house-door-fill", height=24), #TODO: page icons
-            id="navbar-navlink-" + page['relative_path'],
-            color='dark',
-            variant="light",
-            style=get_navlink_style(),
-            styles=get_navlink_styles()
-        )
-        for page in pages
-    ]
-
-    return navbar_contents
-
-def get_drawer_contents(pages):
-    drawer_contents = [
-        dmc.NavLink(
-            label=page['name'].title(),
-            href=page['relative_path'],
-            icon=get_icon(icon="bi:house-door-fill", height=24), #TODO: page icons
-            id="drawer-navlink-" + page['relative_path'],
-            color='dark',
-            variant="light",
-            style=get_navlink_style(),
-            styles=get_navlink_styles()
-        )
-        for page in pages
-    ]
-
-    return drawer_contents
 
 def get_hamburger_menu(div_id, initial_load=False):
     if initial_load:
@@ -72,28 +38,63 @@ def get_hamburger_menu(div_id, initial_load=False):
 
     return hamburger_menu
 
-def get_navbar(pages):
+def get_sidebar_contents(pages):
+    sidebar_contents = [
+        dmc.NavLink(
+            label=page['name'].title(),
+            href=page['relative_path'],
+            icon=get_icon(icon="bi:house-door-fill", height=24), #TODO: page icons
+            id="sidebar-navlink-" + page['relative_path'],
+            color='dark',
+            variant="light",
+            style=get_navlink_style(),
+            styles=get_navlink_styles()
+        )
+        for page in pages
+    ]
+
+    return sidebar_contents
+
+def get_drawer_contents(pages):
+    drawer_contents = [
+        dmc.NavLink(
+            label=page['name'].title(),
+            href=page['relative_path'],
+            icon=get_icon(icon="bi:house-door-fill", height=24), #TODO: page icons
+            id="drawer-navlink-" + page['relative_path'],
+            color='dark',
+            variant="light",
+            style=get_navlink_style(),
+            styles=get_navlink_styles()
+        )
+        for page in pages
+    ]
+
+    return drawer_contents
+
+
+def get_sidebar(pages):
     hamburger_menu = get_hamburger_menu(
-        div_id="hamburger-menu-button-navbar"
+        div_id="hamburger-menu-button-sidebar"
     )
     logo=get_logo()
 
-    navbar_contents = get_navbar_contents(pages)
+    sidebar_contents = get_sidebar_contents(pages)
 
-    navbar = html.Div(
-        id='navbar-container',
+    sidebar = html.Div(
+        id='sidebar-container',
         children=[
             dmc.Navbar(
-                # children=[hamburger_menu, logo] + navbar_contents,
-                children=navbar_contents,
-                id="navbar",
-                style=get_navbar_style(initial_load=True),
+                # children=[hamburger_menu, logo] + sidebar_contents,
+                children=sidebar_contents,
+                id="sidebar",
+                style=get_sidebar_style(initial_load=True),
                 fixed=True,
             )
         ]
     )
 
-    return navbar
+    return sidebar
 
 def get_drawer(pages):
     hamburger_menu_drawer_inner = get_hamburger_menu(
@@ -136,7 +137,7 @@ def get_navlink_styles(is_collapsed=False):
             "top": "20px", 
             "text-align" : "center", 
             "min-height": "48px",
-            "min-width": f"{collapsed_navbar_navlink_width}px",
+            "min-width": f"{collapsed_sidebar_navlink_width}px",
             "line-height": "0.0em",
             # "background-color": "red",
         },
@@ -171,14 +172,14 @@ def get_navlink_styles(is_collapsed=False):
 def get_navlink_style(is_collapsed=False):
     collapsed_navlink_style = {
         "height": "72px", 
-        "width": f"{collapsed_navbar_navlink_width}px",
+        "width": f"{collapsed_sidebar_navlink_width}px",
         "border-radius": "10px", 
         "margin-left": f"{COLLAPSED_NAVBAR_NAVLINK_MARGIN}px", 
         "margin-right": f"{COLLAPSED_NAVBAR_NAVLINK_MARGIN}px", 
     }
     expanded_navlink_style = {
         "height": "48px", 
-        "width": f"{expanded_navbar_navlink_width}px",
+        "width": f"{expanded_sidebar_navlink_width}px",
         "border-radius": "10px", 
         "margin-left": f"{EXPANDED_NAVBAR_NAVLINK_MARGIN}px", 
         "margin-right": f"{EXPANDED_NAVBAR_NAVLINK_MARGIN}px", 
@@ -189,48 +190,48 @@ def get_navlink_style(is_collapsed=False):
     else:
         return expanded_navlink_style
 
-def get_navbar_style(is_collapsed=False, initial_load=False):
+def get_sidebar_style(is_collapsed=False, initial_load=False):
     if initial_load:
         return {"display": "none", "width": f"{EXPANDED_NAVBAR_WIDTH}px"}
 
-    collapsed_navbar_style = {
+    collapsed_sidebar_style = {
         "width": f"{COLLAPSED_NAVBAR_WIDTH}px",
         # "border-right": "2px solid black",
     }
-    expanded_navbar_style = {
+    expanded_sidebar_style = {
         "width": f"{EXPANDED_NAVBAR_WIDTH}px",
         # "border-right": "2px solid black",
     }
     
     if is_collapsed:
-        return collapsed_navbar_style
+        return collapsed_sidebar_style
     else:
-        return expanded_navbar_style
+        return expanded_sidebar_style
     
 
-def get_dummy_navbar_style(is_collapsed=False, initial_load=False):
+def get_dummy_sidebar_style(is_collapsed=False, initial_load=False):
     if initial_load:
         return {"display": "none", "width": f"{EXPANDED_NAVBAR_WIDTH}px"}
     
-    collapsed_dummy_navbar_style = {
+    collapsed_dummy_sidebar_style = {
         "width": f"{COLLAPSED_NAVBAR_WIDTH}px",
         'float': 'left',
     }
-    expanded_dummy_navbar_style = {
+    expanded_dummy_sidebar_style = {
         "width": f"{EXPANDED_NAVBAR_WIDTH}px",
         'float': 'left',
     }
     
     if is_collapsed:
-        return collapsed_dummy_navbar_style
+        return collapsed_dummy_sidebar_style
     else:
-        return expanded_dummy_navbar_style
+        return expanded_dummy_sidebar_style
 
-def get_navbar_style_outputs(is_collapsed, num_pages):
+def get_sidebar_style_outputs(is_collapsed, num_pages):
     navlink_styles = get_navlink_styles(is_collapsed)
     navlink_style = get_navlink_style(is_collapsed)
-    navbar_style = get_navbar_style(is_collapsed)
-    dummy_navbar_style = get_dummy_navbar_style(is_collapsed)
+    sidebar_style = get_sidebar_style(is_collapsed)
+    dummy_sidebar_style = get_dummy_sidebar_style(is_collapsed)
 
     return tuple(
             num_pages * [navlink_styles]
@@ -238,40 +239,40 @@ def get_navbar_style_outputs(is_collapsed, num_pages):
             num_pages * [navlink_style]
             +
             [
-                navbar_style,
-                dummy_navbar_style
+                sidebar_style,
+                dummy_sidebar_style
             ]
         )
 
-def get_app_container_style(navbar_status):
-    collapsed_navbar_offset = int(
+def get_page_container_style(sidebar_status):
+    collapsed_sidebar_offset = int(
         COLLAPSED_NAVBAR_WIDTH + (2/3)*COLLAPSED_NAVBAR_NAVLINK_MARGIN # idk, it just works
     )
-    expanded_navbar_offset = int(
+    expanded_sidebar_offset = int(
         EXPANDED_NAVBAR_WIDTH + (2/3)*EXPANDED_NAVBAR_NAVLINK_MARGIN # idk, it just works
     )
 
-    app_container_style_collapsed_navbar = {
-        "width": f"calc(100vw - {collapsed_navbar_offset}px)"
+    page_container_style_collapsed_sidebar = {
+        "width": f"calc(100vw - {collapsed_sidebar_offset}px)"
     }
-    app_container_style_expanded_navbar = {
-        "width": f"calc(100vw - {expanded_navbar_offset}px)"
+    page_container_style_expanded_sidebar = {
+        "width": f"calc(100vw - {expanded_sidebar_offset}px)"
     }
-    app_container_style_hidden_navbar = {
+    page_container_style_hidden_sidebar = {
         "width": "99%"
     }
 
-    if navbar_status == "collapsed":
-        return app_container_style_collapsed_navbar
-    elif navbar_status == "expanded":
-        return app_container_style_expanded_navbar
-    elif navbar_status == "hidden":
-        return app_container_style_hidden_navbar
+    if sidebar_status == "collapsed":
+        return page_container_style_collapsed_sidebar
+    elif sidebar_status == "expanded":
+        return page_container_style_expanded_sidebar
+    elif sidebar_status == "hidden":
+        return page_container_style_hidden_sidebar
     else:
         raise ValueError(
             """
-                Error during get_app_container_style. 
-                The input 'navbar_status' should be one of \
+                Error during get_page_container_style. 
+                The input 'sidebar_status' should be one of \
                 "collapsed", "expanded", or "hidden".
             """
         )
