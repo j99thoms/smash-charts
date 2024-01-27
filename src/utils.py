@@ -4,6 +4,9 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import re
 
+IMG_DIR = "assets/img"
+TXT_DIR = "assets/txt"
+
 def get_icon(icon, height=16):
     return DashIconify(icon=icon, height=height)
 
@@ -15,7 +18,7 @@ def Footer():
 
 def get_logo():
     logo = html.A(
-        children=[html.Img(src='assets/logo.png')],
+        children=[html.Img(src=f'{IMG_DIR}/logo.png')],
         className='logo',
         href="/",
         target="_self",
@@ -102,7 +105,7 @@ def get_introduction_block():
     return intro_block
 
 def get_attribute_info():
-    with open("assets/attribute_info.txt", "r") as text:
+    with open(f"{TXT_DIR}/attribute_info.txt", "r") as text:
         lines = text.readlines()
 
     paragraphs = []
@@ -136,7 +139,7 @@ def get_attribute_info():
     return paragraphs
 
 def get_introduction():
-    with open("assets/introduction.txt", "r") as text:
+    with open(f"{TXT_DIR}/introduction.txt", "r") as text:
         lines = text.readlines()
 
     paragraphs = []
