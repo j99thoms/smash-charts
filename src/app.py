@@ -20,6 +20,7 @@ app = Dash(
     suppress_callback_exceptions=True
 )
 app.title = "Smash Charts"
+server = app.server
 
 # Specify which pages should use a drawer (instead of a sidebar)
 # All pages which don't use a drawer will use a sidebar
