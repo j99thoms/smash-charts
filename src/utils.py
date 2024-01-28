@@ -22,7 +22,8 @@ def get_logo():
 def get_attribute_info_block():
     attribute_info_paragraphs = get_attribute_info()
 
-    smash_wiki_credits = "These attribute descriptions are based on the descriptions which can be found on "
+    smash_wiki_credits = "These attribute descriptions are based on "
+    smash_wiki_credits += "the descriptions which can be found on "
     smash_wiki_hyperlink = html.A(
                                 "SmashWiki", 
                                 href="https://www.ssbwiki.com/",
