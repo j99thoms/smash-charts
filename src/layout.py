@@ -17,11 +17,11 @@ def get_app_html(pages, dash_page_container):
         html.Div(
             id='user-window',
             children=[
-            header,
-            drawer,
-            sidebar,
-            page_container,
-            footer
+                header,
+                drawer,
+                sidebar,
+                page_container,
+                footer
             ]
         )
     ]
