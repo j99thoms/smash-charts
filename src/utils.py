@@ -1,144 +1,146 @@
 import re
 import pandas as pd
-import dash_bootstrap_components as dbc
 from dash import html
 from dash_iconify import DashIconify
 
 IMG_DIR = "assets/img"
 TXT_DIR = "assets/txt"
+DATA_DIR = "../data"
 
 def get_icon(icon, height=16):
     return DashIconify(icon=icon, height=height)
 
 def get_logo():
     logo = html.A(
-        children=[html.Img(src=f'{IMG_DIR}/logo.png')],
         className='logo',
+        children=[html.Img(src=f'{IMG_DIR}/logo.png')],
         href="/",
-        target="_self",
+        target="_self"
     )
+
     return logo
 
-def get_attribute_info_block():
-    attribute_info_paragraphs = get_attribute_info()
-
-    smash_wiki_credits = "These attribute descriptions are based on "
-    smash_wiki_credits += "the descriptions which can be found on "
-    smash_wiki_hyperlink = html.A(
-                                "SmashWiki", 
-                                href="https://www.ssbwiki.com/",
-                                target="_blank"
-                            )
-
-    attr_info = dbc.Col([
-        html.Div(
-            id="attribute-info-block",
-            children=[
-                html.Div([
-                    html.Div([
-                        html.H4(
-                            [html.U("Attribute Info")], 
-                            style={"text-align": "center"}
-                        ),
-                        *attribute_info_paragraphs,
-                        html.Div([
-                            smash_wiki_credits,
-                            smash_wiki_hyperlink,
-                            "."
-                        ], style={"margin-top": "30px", "font-size": "85%"})
-                    ],
-                    style={"width": "98%", "float": "right"}),
-                ],
-                style={"width": "98%", "float": "left", "margin-top": "10px"}),
-            ],
-        )
-    ])
-    
-    return attr_info
-
-def get_introduction_block():
-    introduction_paragraphs = get_introduction()
-
-    intro_block = html.Div(
-        id="introduction-container",
+def create_text_block(children):
+    text_block = html.Div(
+        className="text-block",
         children=[
             html.Div(
                 children=[
                     html.Div(
-                        children=introduction_paragraphs,
-                        style={"width": "98%", "height": "100%", "float": "right"}
+                        children=children,
+                        style={
+                            "width": "98%",
+                            "float": "right"
+                        }
                     )
                 ],
-                style={"width": "98%", "height": "100%", "float": "left", "margin-top": "10px"}
+                style={
+                    "width": "98%",
+                    "float": "left",
+                    "margin-top": "10px"
+                }
             )
         ]
     )
 
-    return intro_block
+    return text_block    
 
-def get_attribute_info():
+def get_attribute_info_block():
+    attribute_info_header = html.H4(
+        children=[html.U("Attribute Info")],
+        style={"text-align": "center"}
+    )
+    attribute_info_paragraphs = get_attribute_info_paragraphs()
+    smash_wiki_credits = get_smash_wiki_credits()
+
+    attribute_info_block = create_text_block(
+        children=[
+            attribute_info_header,
+            *attribute_info_paragraphs,
+            smash_wiki_credits
+        ]
+    )
+    
+    return attribute_info_block
+
+def get_introduction_block():
+    introduction_paragraphs = get_introduction_paragraphs()
+
+    introduction_block = create_text_block(
+        children=introduction_paragraphs
+    )
+
+    return introduction_block
+
+def get_attribute_info_paragraphs():
     with open(f"{TXT_DIR}/attribute_info.txt", "r") as text:
-        lines = text.readlines()
+        attribute_info_txt = text.readlines()
 
-    paragraphs = []
-    p_children = []
+    attribute_info_paragraphs = parse_paragraphs(
+        lines=attribute_info_txt,
+        paragraph_class_name="attribute-info-paragraph"
+    )
 
-    for line in lines:
-        if line.endswith("\n"):
-            if line.find("\n") != 0:
-                for segment in parse_bolds(line[:-1]):
-                    p_children.append(segment)
-            else:
-                paragraphs.append(
-                    html.P(
-                        children=p_children, 
-                        className="attribute-info-paragraph"
-                    )
-                )
-                p_children = []
-        else:
-            for segment in parse_bolds(line):
-                p_children.append(segment)
+    return attribute_info_paragraphs
 
-    if len(p_children) > 0:
-        paragraphs.append(
-            html.P(
-                children=p_children, 
-                className="attribute-info-paragraph"
-            )
-        )
-
-    return paragraphs
-
-def get_introduction():
+def get_introduction_paragraphs():
     with open(f"{TXT_DIR}/introduction.txt", "r") as text:
-        lines = text.readlines()
+        introduction_txt = text.readlines()
 
+    introduction_paragraphs = parse_paragraphs(
+        lines=introduction_txt,
+        paragraph_class_name="introduction-paragraph"
+    )
+
+    return introduction_paragraphs
+
+def get_smash_wiki_credits():
+    smash_wiki_hyperlink = html.A(
+        children="SmashWiki",
+        href="https://www.ssbwiki.com/",
+        target="_blank"
+    )
+    smash_wiki_credits = html.Div(
+        children=[
+            "These attribute descriptions are based on ",
+            "the descriptions which can be found on ",
+            smash_wiki_hyperlink,
+            "."
+        ],
+        style={
+            "margin-top": "30px",
+            "font-size": "85%"
+        }
+    )
+    
+    return smash_wiki_credits
+
+def parse_paragraphs(lines, paragraph_class_name):
     paragraphs = []
     p_children = []
 
     for line in lines:
-        if line.endswith("\n"):
-            if line.find("\n") != 0:
-                for segment in parse_bolds(line[:-1]):
-                    p_children.append(segment)
-            else:
-                paragraphs.append(
-                    html.P(
-                        children=p_children,
-                        className="introduction-paragraph"
-                    )
-                )
-                p_children = []
-        else:
+        if line != "\n":
+            if line.endswith("\n"):
+                line = line[:-1]
             for segment in parse_bolds(line):
                 p_children.append(segment)
+        else:
+            # Current line is "\n", so end the paragraph and start a new one
+            paragraphs.append(
+                html.P(
+                    className=paragraph_class_name,
+                    children=p_children
+                )
+            )
+            p_children = []
 
     if len(p_children) > 0:
+        # This only happens if there is no newline at the end of the txt file
         paragraphs.append(
             html.P(
-                children=p_children,
-                className="introduction-paragraph"
+                className=paragraph_class_name,
+                children=p_children
             )
         )
 
@@ -148,58 +150,74 @@ def parse_bolds(line):
     # Regex pattern to match text surrounded by '**'
     bold_pattern = r'(\*\*.*\*\*)'
     
-    if re.search(bold_pattern, line):
+    if not re.search(bold_pattern, line):
+        # There are no bold segments in the line,
+        # so the line has only one segment (the whole line)
+        line_segments = [line]
+    else:
+        # There is at least one bold segment in the line
+        line_segments = []
+
+        # Find the locations of the start and end of the first bold segment
         first_delim = line.find("**")
         second_delim = line[first_delim + 2:].find("**") + first_delim + 2
-        if first_delim > 0:
-            parsed_line = [line[:first_delim]] + [html.B(line[first_delim + 2:second_delim])] + parse_bolds(line[second_delim + 2:])
-        else:
-            parsed_line = [html.B(line[first_delim + 2:second_delim])] + parse_bolds(line[second_delim + 2:])
-    else:
-        parsed_line = [line]
 
-    return parsed_line
+        if first_delim > 0:
+            line_segments.append(line[:first_delim])
+            
+        line_segments.append(html.B(line[first_delim + 2:second_delim]))
+
+        for segment in parse_bolds(line[second_delim + 2:]):
+            line_segments.append(segment)
+
+    return line_segments
 
 def get_screen_width(display_size_str):
     # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
-    screen_width = int(display_size_str.split(" ")[4].strip("px"))
+    screen_width = display_size_str.split(" ")[4] # Looks like "1440px"
+    screen_width = int(screen_width.strip("px"))
 
     return screen_width
 
-def get_character_data():
-    character_attributes_df = pd.read_csv("../data/character_data.csv").drop(
+def get_character_attributes_df():
+    character_attributes_df = pd.read_csv(f"{DATA_DIR}/character_data.csv")
+    character_attributes_df = character_attributes_df.drop(
         columns=['percent_incr_fall_speed']  # Unused column
     )
 
     return character_attributes_df
 
 def get_correlations_df():
-    attributes_df = get_character_data()
+    # TODO: Pre-compute correlations (save in file and load when needed)
+    character_attributes_df = get_character_attributes_df()
 
-    corr_df = attributes_df.corr(numeric_only=True, method='pearson')
+    corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
     corr_df = corr_df.reset_index().melt(id_vars='index').rename(
         columns={
             'index': 'Attribute 1',
-            'variable': 'Attribute 2', 
+            'variable': 'Attribute 2',
             'value': 'Correlation'
         }
     )
     
     corr_df['Correlation'] = corr_df['Correlation'].round(4)
-    corr_df['corr_text_2'] = corr_df['Correlation'].round(2)
-    corr_df['corr_text_1'] = corr_df['Correlation'].round(1)
+    corr_df['corr_2dec'] = corr_df['Correlation'].round(2)
+    corr_df['corr_1dec'] = corr_df['Correlation'].round(1)
     corr_df['abs_corr'] = corr_df['Correlation'].abs()
 
     return corr_df
 
 def get_dropdown_options():
-    character_attributes_df = get_character_data()
+    character_attributes_df = get_character_attributes_df()
 
     # The first column is 'character', the last column is 'img_url'
     attribute_names = character_attributes_df.columns.to_series().iloc[1:-1]
 
     dropdown_options = [
-        {'value': attribute_name, 'label': attribute_name}
+        {
+            'value': attribute_name,
+            'label': attribute_name
+        }
         for attribute_name in attribute_names
     ]
     

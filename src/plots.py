@@ -1,6 +1,6 @@
 import altair as alt
 from utils import (
-    get_character_data, get_correlations_df
+    get_character_attributes_df, get_correlations_df
 )
 
 def get_scatter_plot(
@@ -29,7 +29,7 @@ def get_scatter_plot(
         return plot, title
 
     # Retrieve the data needed for the scatter plot
-    plot_df = get_character_data()
+    plot_df = get_character_attributes_df()
     if var_2 == var_1:
          plot_df = plot_df[['Character', 'img_url', var_1]]
     else:
@@ -144,9 +144,9 @@ def get_corr_matrix_plot(
     # Otherwise, only use 1 decimal for each correlation,
     # so that the text fits in the circle.
     if circle_size > 900:
-        corr_text = 'corr_text_2'
+        corr_text = 'corr_2dec'
     else:
-        corr_text = 'corr_text_1'
+        corr_text = 'corr_1dec'
     
     # Add the text to the base canvas for the correlation plot
     text = base_plot.encode(
@@ -207,7 +207,7 @@ def get_bar_chart(var, screen_width, verbose=False):
         print(f"bar_chart_image_size: {image_size}")
 
     # Retrieve the data needed for the bar chart
-    plot_df = get_character_data()
+    plot_df = get_character_attributes_df()
     plot_df = plot_df[['Character', 'img_url', var]]
     plot_df = plot_df.dropna()
 
