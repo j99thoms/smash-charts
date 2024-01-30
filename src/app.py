@@ -1,20 +1,22 @@
 import dash
 import dash_breakpoints
-import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import Dash, html, dcc
+from dash_bootstrap_components import themes
 from layout import get_app_html
 from callbacks import get_callbacks
 
-GOOGLE_FONTS = "https://fonts.googleapis.com/css2"
-GOOGLE_FONTS += "?family=Inter:wght@100;200;300;400;500;900&display=swap"
+GOOGLE_FONTS = (
+    "https://fonts.googleapis.com/css2"
+    "?family=Inter:wght@100;200;300;400;500;900&display=swap"
+)
 
 # Setup the dash app
 app = Dash(
     __name__,
     use_pages=True,
     external_stylesheets=[
-        dbc.themes.MATERIA,
+        themes.MATERIA,
         GOOGLE_FONTS # Include google fonts
     ],
     suppress_callback_exceptions=True
