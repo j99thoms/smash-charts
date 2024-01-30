@@ -1,22 +1,39 @@
 import altair as alt
-from utils import get_character_data, get_correlations_df
+from utils import (
+    get_character_data, get_correlations_df
+)
 
 def get_scatter_plot(
-    var_1, 
+    var_1,
     var_2,
-    plot_height, 
+    plot_height,
     plot_width,
-    image_size, 
-    axis_title_size, 
-    axis_label_size
+    image_size,
+    axis_title_size,
+    axis_label_size,
+    verbose=False
 ):
-    if var_1 is None or var_2 is None:
-         plot = alt.Chart().mark_point().properties(
-             plot_height=plot_height, plot_width=plot_width)
-         return plot, ""
-    print(f"var_1: {var_1}")
-    print(f"var_2: {var_2}")
+    if verbose:
+        print("--- Updating Scatter Plot ---")
 
+    if var_1 is None or var_2 is None:
+        # Return an empty plot and empty title
+        if verbose:
+            print("Empty scatter plot.")
+
+        plot = alt.Chart().mark_point().properties(
+             plot_height=plot_height,
+             plot_width=plot_width
+        )
+        title = ""
+
+        return plot, title
+    
+    if verbose:
+        print(f"var_1: {var_1}")
+        print(f"var_2: {var_2}")
+
+    # Retrieve the data needed for the scatter plot
     plot_df = get_character_data()
     if var_2 == var_1:
          plot_df = plot_df[['Character', 'img_url', var_1]]
@@ -24,161 +41,128 @@ def get_scatter_plot(
         plot_df = plot_df[['Character', 'img_url', var_1, var_2]]
     plot_df = plot_df.dropna()
     
+    # Create the scatter plot
     plot = alt.Chart(plot_df).encode(
-        alt.X(var_1, scale=alt.Scale(zero=False)),
-        alt.Y(var_2, scale=alt.Scale(zero=False)),
+        alt.X(var_1).scale(zero=False),
+        alt.Y(var_2).scale(zero=False),
         alt.Tooltip(['Character', var_1, var_2]),
         alt.Url('img_url')
     ).mark_image(  
-        width=image_size,
-        height=image_size
+        height=image_size, # TODO: Image size slider??
+        width=image_size
     ).properties(
         height=plot_height,
         width=plot_width
-    )
-    
-    plot = plot.configure_axis(
-        labelFontSize=axis_label_size,
-        titleFontSize=axis_title_size
-    )
-    plot = plot.interactive()
-    # TODO: Image size slider??
+    ).configure_axis(
+        titleFontSize=axis_title_size,
+        labelFontSize=axis_label_size
+    ).interactive()
 
     title = f"{var_1} vs. {var_2}"
 
     return plot, title
 
 def get_corr_matrix_plot(
-    var_1, 
-    var_2, 
-    plot_height, 
-    plot_width, 
-    axis_label_size, 
-    circle_size
+    var_1,
+    var_2,
+    plot_height,
+    plot_width,
+    circle_size,
+    axis_label_size
 ):
+    # Retrieve the data needed for the correlation plot
     corr_df = get_correlations_df()
 
+    # For the two selected attributes being plotted on the scatter plot,
+    # highlight their labels on the correlation plot by giving them
+    # red color and bold font.
+    selected_attributes_label_red_color = alt.condition(
+        f"datum.value == '{var_1}' || datum.value == '{var_2}'",
+        alt.value('red'),
+        alt.value('black')
+    )
+    selected_attributes_label_bold_font = alt.condition(
+        f"datum.value == '{var_1}' || datum.value == '{var_2}'",
+        alt.value('bold'),
+        alt.value('normal')
+    )
+
+    # Create the base canvas for the correlation plot
     base_plot = alt.Chart(corr_df).encode(
         alt.X('Attribute 1:N').axis(
-            title=None, 
-            labelAngle=-45, 
-            labelColor=alt.condition(
-                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
-                alt.value('red'), 
-                alt.value('black')
-            ),
-            labelFontWeight=alt.condition(
-                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
-                alt.value('bold'), 
-                alt.value('normal')
-            )
+            title=None,
+            labelAngle=-45,
+            labelColor=selected_attributes_label_red_color,
+            labelFontWeight=selected_attributes_label_bold_font
         ),
         alt.Y('Attribute 2:N', axis=alt.Axis(title=None)).axis(
-            title=None, 
-            labelColor=alt.condition(
-                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
-                alt.value('red'), 
-                alt.value('black')
-            ),
-            labelFontWeight=alt.condition(
-                f"datum.value == '{var_1}' || datum.value == '{var_2}'", 
-                alt.value('bold'), 
-                alt.value('normal')
-            ),
-        ),
+            title=None,
+            labelColor=selected_attributes_label_red_color,
+            labelFontWeight=selected_attributes_label_bold_font
+        )
     ).properties(
-        width=plot_width,
         height=plot_height,
+        width=plot_width
     )
-    hover = alt.selection_point(
-        encodings=['x', 'y'], 
-        value={'x': [0,1], 'y': [0,1]}, 
-        on='mouseover', 
-        nearest=True
+
+    # For the two selected attributes being plotted on the scatter plot,
+    # highlight their circles on the correlation plot by giving their outline
+    # a thicker stroke width and a dashed stroke.
+    selected_attributes_circle_thick_stroke = alt.condition(
+        f"""
+            datum['Attribute 1'] == '{var_1}' 
+            && datum['Attribute 2'] == '{var_2}' 
+            || 
+            datum['Attribute 2'] == '{var_1}' 
+            && datum['Attribute 1'] == '{var_2}'
+        """,
+        alt.value(3),
+        alt.value(1)
     )
-    circles = base_plot.encode(
-        alt.Color('Correlation:Q').scale(
-            domain=[-1, 1], 
-            scheme='redblue'
-        ).legend(orient="top"),
-        alt.Tooltip(['Attribute 1', 'Attribute 2', 'Correlation']),
-        strokeWidth=alt.condition(
+    selected_attributes_circle_dashed_outline = alt.condition(
             f"""
-                datum['Attribute 1'] == '{var_1}' 
-                && datum['Attribute 2'] == '{var_2}' 
-                || 
-                datum['Attribute 2'] == '{var_1}' 
-                && datum['Attribute 1'] == '{var_2}'
-            """, 
-            alt.value(3),
-            alt.value(1)
+            datum['Attribute 1'] == '{var_1}' 
+            && datum['Attribute 2'] == '{var_2}' 
+            || 
+            datum['Attribute 2'] == '{var_1}' 
+            && datum['Attribute 1'] == '{var_2}'
+            """,
+            alt.value((2,2)),
+            alt.value((1,0))
+    )
+
+    # Add the circles to the base canvas for the correlation plot
+    circles = base_plot.encode(
+        alt.Color('Correlation:Q').legend(orient="top").scale(
+            domain=[-1, 1],
+            scheme='redblue'
         ),
-        # stroke=alt.condition(
-        #         f"""
-        #         datum['Attribute 1'] == '{var_1}' 
-        #         && datum['Attribute 2'] == '{var_2}' 
-        #         || 
-        #         datum['Attribute 2'] == '{var_1}' 
-        #         && datum['Attribute 1'] == '{var_2}'
-        #         """, 
-        #         alt.value('green'),
-        #         alt.value('black')
-        # ),
-        strokeDash=alt.condition(
-                f"""
-                datum['Attribute 1'] == '{var_1}' 
-                && datum['Attribute 2'] == '{var_2}' 
-                || 
-                datum['Attribute 2'] == '{var_1}' 
-                && datum['Attribute 1'] == '{var_2}'
-                """, 
-                alt.value((2,2)),
-                alt.value((1,0))
-        ),
-        # opacity=alt.condition(
-        #     alt.LogicalOrPredicate(
-        #         **{'or': [hover, f"""
-        #         datum['Attribute 1'] == '{var_1}' 
-        #         && datum['Attribute 2'] == '{var_2}' 
-        #         || 
-        #         datum['Attribute 2'] == '{var_1}' 
-        #         && datum['Attribute 1'] == '{var_2}'
-        #     """]}
-        #     ), 
-        #     alt.value(1),
-        #     alt.value(0.1)
-        # ),
+        alt.Tooltip(['Attribute 1', 'Attribute 2', 'Correlation']),
+        strokeWidth=selected_attributes_circle_thick_stroke,
+        # strokeDash=selected_attributes_circle_dashed_outline
     ).mark_circle(
         size=circle_size,
         stroke='black'
-    ).add_params(
-        hover
     )
 
-
+    # If the circle size is > 900, display each correlation with 2 decimals.
+    # Otherwise, only use 1 decimal for each correlation, so that the 
+    # text fits in the circle.
     if circle_size > 900:
         corr_text = 'corr_text_2'
     else:
         corr_text = 'corr_text_1'
-        
-    if circle_size > 600:
-        corr_text_size = 11
-    elif circle_size > 500:
-        corr_text_size = 10
-    elif circle_size > 400:
-        corr_text_size = 9
-    elif circle_size > 300:
-        corr_text_size = 8
-    elif circle_size > 250:
-        corr_text_size = 7
-    else:
-        corr_text_size = 0
-
+    
+    # Add the text to the base canvas for the correlation plot
     text = base_plot.encode(
         alt.Text(corr_text),
         alt.Tooltip(['Attribute 1', 'Attribute 2', 'Correlation']),
-    ).mark_text(fontSize=corr_text_size)
+    ).mark_text(
+        # Smaller circle --> smaller font size
+        fontSize=get_corr_text_size(circle_size)
+    )
 
+    # Overlay the text plot on top of the circles plot
     plot = (circles + text).configure_axis(
         grid=False
     ).configure_view(
@@ -188,6 +172,22 @@ def get_corr_matrix_plot(
     )
 
     return plot
+
+def get_corr_text_size(circle_size):
+    # Smaller circle --> smaller font size
+    if circle_size > 600:
+        return 11
+    elif circle_size > 500:
+        return 10
+    elif circle_size > 400:
+        return 9
+    elif circle_size > 300:
+        return 8
+    elif circle_size > 250:
+        return 7
+    else:
+        # If the circle size is <= 250, don't display any text inside the circle
+        return 0
 
 def get_hori_bar_chart(var, screen_width, verbose=False):
     plot_height, plot_width, image_size = get_hori_bar_chart_sizes(screen_width)
@@ -238,33 +238,6 @@ def get_hori_bar_chart(var, screen_width, verbose=False):
         width=plot_width
     )
     
-    ### Icons above bars ###
-    # pics = base_plot.encode(
-    #     alt.Y('above_bar:Q', scale=alt.Scale(domainMax = max_val * 1.15, clamp=True)),
-    #     alt.Url('img_url'),
-    # ).mark_image(plot_height=image_size, plot_width=image_size).transform_calculate(
-    #     above_bar=f"datum.{var} + ({max} / 10)"
-    # )
-
-    # dotted_lines = base_plot.encode(
-    #     alt.Y('above_bar:Q', scale=alt.Scale(domainMax = max_val * 1.15)),
-    #     alt.Y2(var)
-    # ).mark_line(strokeDash=(2,3), strokeWidth=2, color='black').transform_calculate(
-    #     above_bar=f"datum.{var} + ({max} / 10)"
-    # )
-    
-    # plot = bars + dotted_lines + pics
-    
-    # plot = plot.configure_axis(
-    #     labelFontSize=15,
-    #     titleFontSize=21
-    # ).properties(
-    #     plot_height=plot_height,
-    #     plot_width=plot_width
-    # )
-
-
-    ### Icons as axis labels ###
     pics = base_plot.encode(
         alt.X('Character', title='Character', sort=sorted_list).axis(
             domainOpacity=0, ticks=False, labels=False, titlePadding=-10

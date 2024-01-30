@@ -222,8 +222,8 @@ def update_corr_matrix_plot(
         var_2=scatter_var_2,
         plot_height=plot_height,
         plot_width=plot_width,
-        axis_label_size=axis_label_size,
-        circle_size=circle_size
+        circle_size=circle_size,
+        axis_label_size=axis_label_size
     )
     
     return plot.to_dict()
