@@ -7,8 +7,7 @@ from utils import (
     get_screen_width
 )
 from plots import (
-    get_hori_bar_chart, 
-    get_vert_bar_chart, 
+    get_bar_chart,
     get_bar_chart_title
 )
 
@@ -104,9 +103,9 @@ def update_bar_chart(
     screen_width = get_screen_width(display_size_str)
 
     if screen_width > 900:  # Horizontal bar chart
-        plot = get_hori_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
+        plot = get_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
     else:   # Vertical bar chart
-        plot = get_vert_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
+        plot = get_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
 
     title = get_bar_chart_title(bar_var)
 

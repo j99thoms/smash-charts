@@ -15,12 +15,11 @@ def get_scatter_plot(
 ):
     if verbose:
         print("--- Updating Scatter Plot ---")
+        print(f"scatter_var_1: {var_1}")
+        print(f"scatter_var_2: {var_2}")
 
     if var_1 is None or var_2 is None:
         # Return an empty plot and empty title
-        if verbose:
-            print("Empty scatter plot.")
-
         plot = alt.Chart().mark_point().properties(
              plot_height=plot_height,
              plot_width=plot_width
@@ -28,10 +27,6 @@ def get_scatter_plot(
         title = ""
 
         return plot, title
-    
-    if verbose:
-        print(f"var_1: {var_1}")
-        print(f"var_2: {var_2}")
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_character_data()
@@ -146,8 +141,8 @@ def get_corr_matrix_plot(
     )
 
     # If the circle size is > 900, display each correlation with 2 decimals.
-    # Otherwise, only use 1 decimal for each correlation, so that the 
-    # text fits in the circle.
+    # Otherwise, only use 1 decimal for each correlation,
+    # so that the text fits in the circle.
     if circle_size > 900:
         corr_text = 'corr_text_2'
     else:
@@ -163,6 +158,7 @@ def get_corr_matrix_plot(
     )
 
     # Overlay the text plot on top of the circles plot
+    # so that the text appears inside the circles.
     plot = (circles + text).configure_axis(
         grid=False
     ).configure_view(
@@ -189,71 +185,125 @@ def get_corr_text_size(circle_size):
         # If the circle size is <= 250, don't display any text inside the circle
         return 0
 
-def get_hori_bar_chart(var, screen_width, verbose=False):
-    plot_height, plot_width, image_size = get_hori_bar_chart_sizes(screen_width)
-    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
-
+def get_bar_chart(var, screen_width, verbose=False):
     if var is None:
         var = "Weight"
 
+    if screen_width > 900:
+        chart_orientation = "horizontal"
+    else:
+        chart_orientation = "vertical"
+    plot_height, plot_width, image_size = get_bar_chart_sizes(
+        screen_width,
+        chart_orientation
+    )
+
     if verbose:
-        print("--bar_chart--")
-
+        print("--- Updating Bar Chart ---")
         print(f"bar_chart_var: {var}")
-
+        print(f"bar_chart_orientation: {chart_orientation}")
         print(f"bar_chart_plot_width: {plot_width}")
         print(f"bar_chart_plot_height: {plot_height}")
         print(f"bar_chart_image_size: {image_size}")
-    
-        print(f"bar_chart_axis_title_size: {axis_title_size}")
-        print(f"bar_chart_axis_label_size: {axis_label_size}")
 
+    # Retrieve the data needed for the bar chart
     plot_df = get_character_data()
     plot_df = plot_df[['Character', 'img_url', var]]
     plot_df = plot_df.dropna()
 
     sorted_df = plot_df.sort_values(by=var, ascending=False)
-    sorted_list = sorted_df.Character.to_list()
+    sorted_character_list = sorted_df.Character.to_list()
     max_val = sorted_df[var].to_list()[0]
 
-    base_plot = alt.Chart(plot_df).encode(
-        alt.X('Character', title=None, sort=sorted_list, axis=None),
-        alt.Tooltip(['Character', var])
-    )
+    # Create the base canvas for the bar chart
+    if chart_orientation == "horizontal":
+        base_plot = alt.Chart(plot_df).encode(
+            alt.X('Character', sort=sorted_character_list, title=None, axis=None),
+            alt.Tooltip(['Character', var])
+        )
+    else:
+        base_plot = alt.Chart(plot_df).encode(
+            alt.Y('Character', title=None, sort=sorted_character_list, axis=None),
+            alt.Tooltip(['Character', var])
+        )
 
-    bars = base_plot.mark_bar(opacity=0.7).encode(
-        alt.Y(var).axis(
-            orient='left', titlePadding=0
-        ).scale(
-            domainMax = max_val * 1.15
-        ),
-        # alt.Color(
-            # var,
-            # bin=alt.Bin(maxbins=4), 
-            # scale=alt.Scale(scheme='dark2'),
-            # title=var
-        # ),
-    ).properties(
+    # Add the bars to the base canvas for the bar chart
+    if chart_orientation == "horizontal":
+        bars = base_plot.mark_bar(opacity=0.7).encode(
+            alt.Y(var).axis(
+                orient='left', titlePadding=0
+            ).scale(
+                domainMax = max_val * 1.15
+            )
+        )
+    else:
+        bars = base_plot.mark_bar(opacity=0.7).encode(
+            alt.X(var).axis(
+                orient='bottom', titlePadding=2
+            ).scale(
+                domainMax = max_val * 1.15
+            )
+        )
+
+    # Add the character icons to the base canvas for the bar chart
+    if chart_orientation == "horizontal":
+        icons = base_plot.mark_image(
+            height=image_size,
+            width=image_size
+        ).encode(
+            alt.X(
+                'Character',
+                sort=sorted_character_list,
+                title='Character'
+            ).axis(
+                domainOpacity=0,
+                ticks=False,
+                labels=False,
+                titlePadding=-10
+            ),
+            alt.Url('img_url')
+        )
+    else:
+        icons = base_plot.mark_image(
+            height=image_size,
+            width=image_size
+        ).encode(
+            alt.Y(
+                'Character',
+                sort=sorted_character_list,
+                title='Character'
+            ).axis(
+                domainOpacity=0,
+                ticks=False,
+                labels=False,
+                titlePadding=-10
+            ),
+            alt.Url('img_url')
+        )
+
+    # Configure the size of the chart
+    bars = bars.properties(
         height=plot_height,
         width=plot_width
     )
-    
-    pics = base_plot.encode(
-        alt.X('Character', title='Character', sort=sorted_list).axis(
-            domainOpacity=0, ticks=False, labels=False, titlePadding=-10
-        ),
-        alt.Url('img_url'),
-    ).mark_image(
-        height=image_size, 
-        width=image_size
-    ).properties(
-        width=plot_width
-    )
+    if chart_orientation == "horizontal":
+        icons = icons.properties(width=plot_width)
+    else:
+        icons = icons.properties(height=plot_height)
 
-    plot = alt.vconcat(
-        bars, pics
-    ).configure_concat(
-        spacing=-(32 - image_size) # idk lol
+    # Overlay the character icons plot on top of the bar chart plot
+    if chart_orientation == "horizontal":
+        # Charcter icons appear below each bar
+        plot = alt.vconcat(bars, icons)
+    else:
+        # Charcter icons appear to the left of each bar
+        plot = alt.hconcat(icons, bars)
+
+    # Configure the plot to look nice:
+    # Tight layout and appropriate axis font sizes
+    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
+    plot = plot.configure_concat(
+        spacing=-(32 - image_size) # trial and error - it works
     ).configure_view(
         strokeOpacity=0
     ).configure_axis(
@@ -261,77 +311,9 @@ def get_hori_bar_chart(var, screen_width, verbose=False):
         titleFontSize=axis_title_size,
     )
 
-    return plot
-
-def get_vert_bar_chart(var, screen_width, verbose=False):
-    plot_height, plot_width, image_size = get_vert_bar_chart_sizes(screen_width)
-    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
-
-    if var is None:
-        var = "Weight"
-
     if verbose:
-        print(f"bar_chart_var: {var}")
-
-        print(f"bar_chart_plot_width: {plot_width}")
-        print(f"bar_chart_plot_height: {plot_height}")
-        print(f"bar_chart_image_size: {image_size}")
-    
         print(f"bar_chart_axis_title_size: {axis_title_size}")
         print(f"bar_chart_axis_label_size: {axis_label_size}")
-    
-    plot_df = get_character_data()
-    plot_df = plot_df[['Character', 'img_url', var]]
-    plot_df = plot_df.dropna()
-
-    sorted_df = plot_df.sort_values(by=var, ascending=False)
-    sorted_list = sorted_df.Character.to_list()
-    max_val = sorted_df[var].to_list()[0]
-
-    base_plot = alt.Chart(plot_df).encode(
-        alt.Y('Character', title=None, sort=sorted_list, axis=None),
-        alt.Tooltip(['Character', var])
-    )
-
-    bars = base_plot.mark_bar(opacity=0.7).encode(
-        alt.X(var).axis(
-            orient='bottom', titlePadding=2
-        ).scale(
-            domainMax = max_val * 1.15
-        ),
-        # alt.Color(
-            # var,
-            # bin=alt.Bin(maxbins=4), 
-            # scale=alt.Scale(scheme='dark2'),
-            # title=var
-        # ),
-    ).properties(
-        height=plot_height,
-        width=plot_width
-    )
-    
-    pics = base_plot.encode(
-        alt.Y('Character', title='Character', sort=sorted_list).axis(
-            domainOpacity=0, ticks=False, labels=False, titlePadding=-10
-        ),
-        alt.Url('img_url'),
-    ).mark_image(
-        height=image_size, 
-        width=image_size
-    ).properties(
-        height=plot_height
-    )
-
-    plot = alt.hconcat(
-        pics, bars
-    ).configure_concat(
-        spacing=-(32 - image_size) # idk lol
-    ).configure_view(
-        strokeOpacity=0
-    ).configure_axis(
-        labelFontSize=axis_label_size,
-        titleFontSize=axis_title_size
-    )
 
     return plot
 
@@ -341,47 +323,39 @@ def get_bar_chart_title(var):
     return title
 
 def get_bar_chart_font_sizes(plot_width):
-    MAX_AXIS_TITLE_SIZE = 20
-    MIN_AXIS_TITLE_SIZE = 12
+    max_axis_title_size = 20
+    min_axis_title_size = 12
+    axis_title_size = int(plot_width / 50)
+    axis_title_size = min(axis_title_size, max_axis_title_size)
+    axis_title_size = max(axis_title_size, min_axis_title_size)
 
-    MAX_AXIS_LABEL_SIZE = 16
-    MIN_AXIS_LABEL_SIZE = 10
-
-    axis_title_size = min(int(plot_width / 50), MAX_AXIS_TITLE_SIZE)
-    axis_title_size = max(axis_title_size, MIN_AXIS_TITLE_SIZE)
-
-    axis_label_size = min(int(plot_width / 60), MAX_AXIS_LABEL_SIZE)
-    axis_label_size = max(axis_label_size, MIN_AXIS_LABEL_SIZE)
+    max_axis_label_size = 16
+    min_axis_label_size = 10
+    axis_label_size = int(plot_width / 60)
+    axis_label_size = min(axis_label_size, max_axis_label_size)
+    axis_label_size = max(axis_label_size, min_axis_label_size)
 
     return axis_title_size, axis_label_size
 
-def get_hori_bar_chart_sizes(screen_width):
-    PLOT_HEIGHT = 250
-    MAX_IMAGE_SIZE = 24
-    MIN_IMAGE_SIZE = 15
+def get_bar_chart_sizes(screen_width, chart_orientation):
+    if chart_orientation == "horizontal":
+        plot_height = 250
+        plot_width = int(screen_width * 0.86) # Plot takes up 86% of the screen
 
-    plot_height = PLOT_HEIGHT
-
-    plot_width = int(screen_width * 0.86)
-
-    image_size = min(int(plot_width / 62), MAX_IMAGE_SIZE)
-    image_size = max(image_size, MIN_IMAGE_SIZE)
-
-    return plot_height, plot_width, image_size
-
-def get_vert_bar_chart_sizes(screen_width):
-    PLOT_HEIGHT = 1200
-    MAX_PLOT_WIDTH = 550
-    IMAGE_SIZE = 20
-
-    plot_height = PLOT_HEIGHT
-
-    if screen_width > 550:
-        plot_width = int(screen_width * 0.8)
+        max_image_size = 24
+        min_image_size = 15
+        image_size = int(plot_width / 62)
+        image_size = min(image_size, max_image_size)
+        image_size = max(image_size, min_image_size)
     else:
-        plot_width = int(screen_width * 0.7)
-    plot_width = min(plot_width, MAX_PLOT_WIDTH)
+        plot_height = 1200
+        image_size = 20
 
-    image_size = IMAGE_SIZE
+        max_plot_width = 550
+        if screen_width > 550:
+            plot_width = int(screen_width * 0.8)
+        else:
+            plot_width = int(screen_width * 0.7)
+        plot_width = min(plot_width, max_plot_width)
 
     return plot_height, plot_width, image_size
