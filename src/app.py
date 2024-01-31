@@ -32,8 +32,8 @@ drawer_pages = [
     "/attribute-distributions"
 ]
 sidebar_pages = [
-    page['relative_path'] 
-    for page in pages 
+    page['relative_path']
+    for page in pages
     if page['relative_path'] not in drawer_pages
 ]
 
@@ -66,7 +66,12 @@ app.layout = dmc.MantineProvider(
     children=app_html
 )
 
-get_callbacks(app, pages, drawer_pages, sidebar_pages)
+get_callbacks(
+    app=app,
+    num_pages=len(pages),
+    drawer_pages=drawer_pages,
+    sidebar_pages=sidebar_pages
+)
 
 if __name__ == '__main__':
     app.run(debug=True)

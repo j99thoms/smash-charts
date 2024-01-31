@@ -1,58 +1,44 @@
 from dash import html, Input, Output, State, ctx
+from utils import get_screen_width, get_page_title, get_app_title
 from navigation import (
     get_sidebar_style_outputs,
     get_page_container_style
 )
-from utils import get_screen_width
 
-def get_callbacks(app, pages, drawer_pages, sidebar_pages):
+def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 
-    # Update the page title based on the current page url
+    # Update the page title
+    # based on the current page's url and the user's screen size
     @app.callback(
         Output('page-title-container', 'children'),
         Input('url', 'pathname'),
         Input('display-size', 'children')
     )
-    def update_page_title(pathname, display_size_str):
+    def update_page_title(page_url, display_size_str):
+        # Some pages use the app's title as the page title,
+        # other pages have a specific title for that page instead.
+        app_title_pages = [
+            "/",
+            "/attribute-info"
+        ]
+        specific_title_pages = [
+            "/attribute-correlations",
+            "/attribute-distributions"
+        ]
 
-        if pathname == "/":
-            # Use default title
-            pass
-        elif pathname == "/attribute-correlations":
-            return html.H1("Attribute Correlations", id='page_title')
-        elif pathname == "/attribute-distributions":
-            return html.H1("Attribute Distributions", id='page_title')
-        elif pathname == "/attribute-info":
-            # Use default title
-            pass
+        if page_url in specific_title_pages:
+            page_title = get_page_title(page_url)
+        elif page_url in app_title_pages:
+            # Choose the size of the app title based on the user's screen width
+            screen_width = get_screen_width(display_size_str)
+            page_title = get_app_title(screen_width)
         else:
-            return html.H1("404 - Page not found", id='page-title')
+            page_title = html.H1("404 - Page not found", id='page-title')
+
+        return page_title
         
-        # Choose size for default title based on the user's screen width
-        screen_width = get_screen_width(display_size_str)
-        if screen_width > 1400:
-            title = "Explore Super Smash Bros Characters with Interactive Visualizations!"
-            return html.H1(title, id='page-title', style={"font-size": "1.7vw", "padding-top": "10px"})
-        elif screen_width > 750:
-            title_upper = "Explore Super Smash Bros. Characters"
-            title_lower = "with Interactive Visualizations!"
-            return [
-                html.H1(title_upper, id='page-title-upper', style={"font-size": "24px"}),
-                html.H1(title_lower, id='page-title-lower', style={"font-size": "24px", "margin-top": "-10px"})]
-        elif screen_width > 650:
-            title_upper = "Explore Super Smash Bros. Characters"
-            title_lower = "with Interactive Visualizations!"
-            return [
-                html.H1(title_upper, id='page-title-upper', style={"font-size": "22px"}),
-                html.H1(title_lower, id='page-title-lower', style={"font-size": "22px", "margin-top": "-10px"})]
-        else:
-            title_upper = "Explore Super Smash Bros. Characters"
-            title_lower = "with Interactive Visualizations!"
-            return [
-                html.H1(title_upper, id='page-title-upper', style={"font-size": "19px"}),
-                html.H1(title_lower, id='page-title-lower', style={"font-size": "19px", "margin-top": "-10px"})]
-
-    # Update the active navlink based on the current page url
+    # Update the active navlink (for both the drawer and the sidebar)
+    # based on the current page's url
     @app.callback(
         Output('sidebar-navlink-/', 'active'),
         Output('sidebar-navlink-/attribute-correlations', 'active'),
@@ -64,24 +50,21 @@ def get_callbacks(app, pages, drawer_pages, sidebar_pages):
         Output('drawer-navlink-/attribute-info', 'active'),
         Input('url', 'pathname'),
     )
-    def update_active_navlink(pathname):
-        home_active = False
-        correlations_active = False
-        distributions_active = False
-        info_active = False
-
-        if pathname == "/":
-            home_active = True
-        elif pathname == "/attribute-correlations":
-            correlations_active = True
-        elif pathname == "/attribute-distributions":
-            distributions_active = True
-        elif pathname == "/attribute-info":
-            info_active = True
+    def update_active_navlink(page_url):
+        home_active = (page_url == "/")
+        correlations_active = (page_url == "/attribute-correlations")
+        distributions_active = (page_url == "/attribute-distributions")
+        info_active = (page_url == "/attribute-info")
         
-        return 2 * (home_active, correlations_active, distributions_active, info_active)
+        return 2 * (
+            home_active,
+            correlations_active,
+            distributions_active,
+            info_active
+        )
 
-    # Collapse / expand the sidebar based on screen size
+    # Update the sidebar's status (expanded / collapsed / hidden)
+    # based on the current page's url and the user's screen size
     @app.callback(
         Output('sidebar-navlink-/', 'styles'),
         Output('sidebar-navlink-/attribute-correlations', 'styles'),
@@ -99,82 +82,89 @@ def get_callbacks(app, pages, drawer_pages, sidebar_pages):
         Output('hamburger-menu-button-drawer-outer', 'style'),
         Input("display-size", "children"),
         Input('url', 'pathname'),
-        State("sidebar", "style")
     )
-    def collapse_expand_sidebar(display_size_str, pathname, current_sidebar_style):
-        triggered_id = ctx.triggered_id
+    def update_sidebar_status(display_size_str, page_url):
         screen_width = get_screen_width(display_size_str)
 
-        if pathname in sidebar_pages:
-            # Collapse the sidebar for small screen widths, expand for larger screen widths
-            if screen_width < 900:
-                # Collapse the sidebar
-                return (
-                    *get_sidebar_style_outputs(is_collapsed=True, num_pages=len(pages)),
-                    get_page_container_style(sidebar_status='collapsed'),
-                    None, None, {"display": "none"}
-                )
-            else:
-                # Expand the sidebar
-                return (
-                    *get_sidebar_style_outputs(is_collapsed=False, num_pages=len(pages)),
-                    get_page_container_style(sidebar_status='expanded'),
-                    None, None, {"display": "none"}
-                )
-        elif pathname in drawer_pages:
-            # User is on a page in which the sidebar is hidden
-            if screen_width < 900:
-                # sidebar is currently collapsed, leave it collapsed behind the scenes
-                return (
-                    *get_sidebar_style_outputs(is_collapsed=True, num_pages=len(pages)),
-                    get_page_container_style(sidebar_status='hidden'),
-                    {"display": "none"}, {"display": "none"}, None
-                )
-            else:
-                # sidebar is currently expanded, leave it expanded behind the scenes
-                return (
-                    *get_sidebar_style_outputs(is_collapsed=False, num_pages=len(pages)),
-                    get_page_container_style(sidebar_status='hidden'),
-                    {"display": "none"}, {"display": "none"}, None
-                )
+        # Collapse / expand the sidebar depending on the user's screen width.
+        # If the user is on a page with a drawer (no sidebar),
+        # then this happens behind the scenes so that the sidebar
+        # is the correct size when the user navigates to a page with a sidebar.
+        if screen_width < 900:
+            # Collapse the sidebar
+            sidebar_styles = get_sidebar_style_outputs(
+                is_collapsed=True,
+                num_pages=num_pages
+            )
+            page_container_style = get_page_container_style(
+                sidebar_status="collapsed"
+            )
         else:
-            # This should never happen.
-            print("Error updating sidebar.")
-            print(f"display-size: {display_size_str}")
-            print(f"pathname: {pathname}")
-            print(f"current_sidebar_style: {current_sidebar_style}")
-            print(f"triggered_id: {triggered_id}")
+            # Expand the sidebar
+            sidebar_styles = get_sidebar_style_outputs(
+                is_collapsed=False,
+                num_pages=num_pages
+            )
+            page_container_style = get_page_container_style(
+                sidebar_status="expanded"
+            )
 
-    # Open the drawer
+        # Update the page's layout depending on the current page's url
+        if page_url in sidebar_pages:
+            # Display the sidebar, hide the drawer's hamburger menu
+            sidebar_container_style = None
+            drawer_hamburger_menu_style = {"display": "none"}
+        elif page_url in drawer_pages:
+            # Hide the sidebar, display the drawer's hamburger menu
+            sidebar_container_style = {"display": "none"}
+            drawer_hamburger_menu_style = None
+            page_container_style = get_page_container_style(
+                sidebar_status="hidden"
+            )
+        else:
+            # This only happens if the user navigates to a non-existent page
+            # (i.e. a 404 error)
+            sidebar_container_style = {"display": "none"}
+            drawer_hamburger_menu_style = {"display": "none"}
+            page_container_style = get_page_container_style(
+                sidebar_status="hidden"
+            )
+
+        dummy_sidebar_container_style = sidebar_container_style
+
+        return (
+            *sidebar_styles,
+            page_container_style,
+            sidebar_container_style,
+            dummy_sidebar_container_style,
+            drawer_hamburger_menu_style
+        )
+
+    # Update the drawer's status (opened / closed)
+    # based on the current page's url
+    # and whether the user has clicked on a hamburger menu button
     @app.callback(
         Output("drawer", "opened", allow_duplicate=True),
         Input("hamburger-menu-button-drawer-outer", "n_clicks"),
-        prevent_initial_call=True
-    )
-    def open_drawer(n_clicks):
-        return True
-
-    # Close the drawer
-    @app.callback(
-        Output("drawer", "opened", allow_duplicate=True),
         Input("hamburger-menu-button-drawer-inner", "n_clicks"),
-        prevent_initial_call=True
-    )
-    def close_drawer(n_clicks):
-        return False
-
-    # Hide the drawer when the user navigates to a page that uses a side sidebar
-    @app.callback(
-        Output("drawer", "opened", allow_duplicate=True),
         Input("url", "pathname"),
         State("drawer", "opened"),
         prevent_initial_call=True
     )
-    def hide_drawer(pathname, opened):
-        if pathname in sidebar_pages:
-            return False
-        else:
-            return opened
+    def update_drawer_status(n_outer, n_inner, page_url, is_opened):
+        triggered_id = ctx.triggered_id
+        
+        if (
+            triggered_id == "hamburger-menu-button-drawer-outer"
+            or triggered_id == "hamburger-menu-button-drawer-inner"
+        ):
+            # A hamburger menu was clicked
+            is_opened = not is_opened
+        elif page_url in sidebar_pages:
+            # The user has navigated to a page that uses a sidebar (no drawer)
+            is_opened = False
+
+        return is_opened
 
     # Keep track of the user's screen width
     app.clientside_callback(

@@ -172,6 +172,48 @@ def parse_bolds(line):
 
     return line_segments
 
+def get_page_title(page_url):
+    title_text = page_url.strip("/").replace("-", " ").title()
+    page_title = html.H1(title_text, id='page_title')
+
+    return page_title
+
+def get_app_title(screen_width):
+    if screen_width > 1400:
+            # App title is all on one line
+            title_text = (
+                "Explore Super Smash Bros Characters "
+                "with Interactive Visualizations!"
+            )
+            app_title = html.H1(
+                title_text,
+                id='page-title',
+                style={"font-size": "1.7vw", "padding-top": "10px"}
+            )
+    else:
+        # App title is split across two lines
+        title_text_upper = "Explore Super Smash Bros. Characters"
+        title_text_lower = "with Interactive Visualizations!"
+        if screen_width > 750:
+            font_size = 24
+        elif screen_width > 650:
+            font_size = 22
+        else:
+            font_size = 19
+
+        app_title = [
+            html.H1(title_text_upper,
+                    id='page-title-upper',
+                    style={"font-size": f"{font_size}px"}
+            ),
+            html.H1(title_text_lower,
+                    id='page-title-lower',
+                    style={"font-size": f"{font_size}px", "margin-top": "-10px"}
+                )
+            ]
+
+    return app_title
+
 def get_screen_width(display_size_str):
     # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
     screen_width = display_size_str.split(" ")[4] # Looks like "1440px"
