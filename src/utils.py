@@ -1,6 +1,6 @@
 import re
 import pandas as pd
-from dash import html
+from dash import html, dcc
 from dash_iconify import DashIconify
 
 IMG_DIR = "assets/img"
@@ -114,6 +114,21 @@ def get_smash_wiki_credits():
     )
     
     return smash_wiki_credits
+
+def get_attribute_selector_dropdown(div_id, default_value):
+    dropdown_options = get_dropdown_options()
+    attribute_selector_dropdown = dcc.Dropdown(
+        id=div_id,
+        options=dropdown_options,
+        value=default_value
+    )
+   
+    return attribute_selector_dropdown
+
+def get_vertical_spacer(height):
+    vertical_spacer = html.Div(style={"height": f"{height}px"})
+
+    return vertical_spacer
 
 def parse_paragraphs(lines, paragraph_class_name):
     paragraphs = []

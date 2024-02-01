@@ -148,7 +148,7 @@
     }
 }
 
-.page-container {
+.inner-page-container {
     width: 98%;
     height: 99%;
     margin: auto;
@@ -156,19 +156,19 @@
 }
 
 @media screen and (max-width: 1000px) {
-    .page-container {
+    .inner-page-container {
         width: 97%;
     }
 }
 
 @media screen and (max-width: 850px) {
-    .page-container {
+    .inner-page-container {
         width: 96%;
     }
 }
 
 @media screen and (max-width: 700px) {
-    .page-container {
+    .inner-page-container {
         width: 95%;
     }
 }

@@ -1,91 +1,70 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import dcc, html, Input, Output, callback
+from dash import html, Input, Output, callback
 from utils import (
-    get_dropdown_options, 
+    get_attribute_selector_dropdown,
+    get_vertical_spacer,
     get_screen_width
 )
 from plots import (
     get_bar_chart,
-    get_bar_chart_title
+    get_bar_chart_title,
+    DEFAULT_BAR_CHART_ATTRIBUTE
 )
-
-# Prepare options for dropdown lists
-dropdown_options = get_dropdown_options()
 
 dash.register_page(__name__)
 
 layout = html.Div(
-    className="page-container",
+    className="inner-page-container",
     children=[
         dbc.Row([
             # Attribute selection (1x dropdown list)
             html.Div(
-                [
+                children=[
                     html.Div(
-                        [
-                            html.H4(
-                                "Choose an attribute:",
-                                style={
-                                    "width": "240px", 
-                                    "color": "black",  
-                                    "float": "right",
-                                    "text-align": "left"
-                                }
-                            ),
-                        ],
+                        children=html.H4("Choose an attribute:"),
                         style={
-                            "width": "270px",   
-                            "float": "left"
+                            "width": "270px",
+                            "padding-left": "5px"
                         }
-                    )
-                ], 
-                style={"width": "95%", "float": "right"}
-            ), 
-            html.Div(
-                [
+                    ),
                     html.Div(
-                        [
-                            dcc.Dropdown(
-                                id="bar-dropdown",
-                                options=dropdown_options,
-                                value="Weight",
+                        children=[
+                            get_attribute_selector_dropdown(
+                                div_id="bar-dropdown",
+                                default_value=DEFAULT_BAR_CHART_ATTRIBUTE
                             )
-                        ], 
-                        style={
-                            "width": "270px", 
-                            "color": "black",  
-                            "float": "left"
-                        }
+                        ],
+                        style={"width": "270px"}
                     )
-                ], 
-                style={"width": "95%", "float": "right"}
-            ), 
+                ],
+                style={
+                    "width": "95%",
+                    "float": "right"
+                }
+            )
         ]),
         dbc.Row([
             # Spacer
-            html.Div(style={"height": "10px"})
+            get_vertical_spacer(height=20)
         ]),
         dbc.Row([
             # Bar chart
-            html.Div(
-                [
-                    html.H3(id='bar-title'),
-                ], 
+            html.H3(
+                id='bar-title',
                 style={
                     "height": "6%", 
                     "width": "100%", 
-                    "text-align": "center", 
-                    "margin-top": "10px"
+                    "text-align": "center"
                 }
             ),
             dvc.Vega(
                 id="bar-chart",
                 className="bar-chart-frame",
                 opt={"renderer": "svg", "actions": False}
-            ),
-        ]),
+            )
+        ])
     ]
 )
 
@@ -98,15 +77,16 @@ layout = html.Div(
     Input("display-size", "children"),
 )
 def update_bar_chart(
-    bar_var, display_size_str
+    selected_attribute, display_size_str
 ):
     screen_width = get_screen_width(display_size_str)
 
-    if screen_width > 900:  # Horizontal bar chart
-        plot = get_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
-    else:   # Vertical bar chart
-        plot = get_bar_chart(var=bar_var, screen_width=screen_width, verbose=True)
+    plot = get_bar_chart(
+        var=selected_attribute,
+        screen_width=screen_width,
+        verbose=True
+    )
 
-    title = get_bar_chart_title(bar_var)
+    title = get_bar_chart_title(selected_attribute)
 
     return plot.to_dict(), title

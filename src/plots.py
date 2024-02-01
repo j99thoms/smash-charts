@@ -3,30 +3,30 @@ from utils import (
     get_character_attributes_df, get_correlations_df
 )
 
-def get_scatter_plot(
-    var_1,
-    var_2,
-    plot_height,
-    plot_width,
-    image_size,
-    axis_title_size,
-    axis_label_size,
-    verbose=False
-):
+DEFAULT_BAR_CHART_ATTRIBUTE = "Weight"
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "Max Air Speed"
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "Max Run Speed"
+
+def get_scatter_plot(var_1, var_2, screen_width, verbose=False):
+    if var_1 is None:
+        var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
+    if var_2 is None:
+        var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
+
+    plot_height, plot_width, image_size = get_scatter_plot_sizes(screen_width)
+    axis_title_size, axis_label_size = get_scatter_plot_font_sizes(plot_width)
+
     if verbose:
-        print("--- Updating Scatter Plot ---")
-        print(f"scatter_var_1: {var_1}")
-        print(f"scatter_var_2: {var_2}")
-
-    if var_1 is None or var_2 is None:
-        # Return an empty plot and empty title
-        plot = alt.Chart().mark_point().properties(
-             plot_height=plot_height,
-             plot_width=plot_width
+        print(
+            "--- Updating Scatter Plot ---\n" 
+            f"scatter_var_1: {var_1}\n"
+            f"scatter_var_2: {var_2}\n"
+            f"scatter_plot_height: {plot_height}\n"
+            f"scatter_plot_width: {plot_width}\n"
+            f"scatter_image_size: {image_size}\n"
+            f"scatter_axis_title_size: {axis_title_size}\n"
+            f"scatter_axis_label_size: {axis_label_size}\n"
         )
-        title = ""
-
-        return plot, title
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_character_attributes_df()
@@ -42,7 +42,7 @@ def get_scatter_plot(
         alt.Y(var_2).scale(zero=False),
         alt.Tooltip(['Character', var_1, var_2]),
         alt.Url('img_url')
-    ).mark_image(  
+    ).mark_image(
         height=image_size, # TODO: Image size slider??
         width=image_size
     ).properties(
@@ -53,18 +53,68 @@ def get_scatter_plot(
         labelFontSize=axis_label_size
     ).interactive()
 
+    return plot
+
+def get_scatter_plot_title(var_1, var_2):
+    if var_1 is None:
+        var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
+    if var_2 is None:
+        var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
+
     title = f"{var_1} vs. {var_2}"
 
-    return plot, title
+    return title
 
-def get_corr_matrix_plot(
-    var_1,
-    var_2,
-    plot_height,
-    plot_width,
-    circle_size,
-    axis_label_size
-):
+def get_scatter_plot_font_sizes(plot_width):
+    max_axis_title_size = 20
+    min_axis_title_size = 12
+    axis_title_size = int(plot_width / 19)
+    axis_title_size = min(axis_title_size, max_axis_title_size)
+    axis_title_size = max(axis_title_size, min_axis_title_size)
+
+    max_axis_label_size = 16
+    min_axis_label_size = 10
+    axis_label_size = int(plot_width / 24)
+    axis_label_size = min(axis_label_size, max_axis_label_size)
+    axis_label_size = max(axis_label_size, min_axis_label_size)
+
+    return axis_title_size, axis_label_size
+
+def get_scatter_plot_sizes(screen_width):
+    if screen_width > 1200:
+        plot_width = int(screen_width / 2.8)
+    elif screen_width > 900:
+        plot_width = int(screen_width / 3.2)
+    elif screen_width > 650:
+        plot_width = int(screen_width / 3.6)
+    elif screen_width > 450:
+        plot_width = int(screen_width / 4.0)
+    else:
+        plot_width = int(screen_width / 4.5)
+    
+    plot_height = plot_width
+
+    max_image_size = 40
+    min_image_size = 15
+    image_size = int(plot_width / 14)
+    image_size = min(image_size, max_image_size)
+    image_size = max(image_size, min_image_size)
+
+    return plot_height, plot_width, image_size
+
+def get_corr_matrix_plot(var_1, var_2, screen_width, verbose=False):
+    plot_height, plot_width, circle_size = get_corr_matrix_plot_sizes(screen_width)
+    axis_label_size = get_corr_matrix_plot_font_sizes(plot_width)
+
+    if verbose:
+        print(
+            "--- Updating Correlation Matrix Plot ---\n" 
+            f"corr_plot_height: {plot_height}\n"
+            f"corr_plot_width: {plot_width}\n"
+            f"corr_circle_size: {circle_size}\n"
+            f"corr_axis_label_size: {axis_label_size}\n"
+        )
+
     # Retrieve the data needed for the correlation plot
     corr_df = get_correlations_df()
 
@@ -169,6 +219,34 @@ def get_corr_matrix_plot(
 
     return plot
 
+def get_corr_matrix_plot_font_sizes(plot_width):
+    max_axis_label_size = 16
+    min_axis_label_size = 10
+    axis_label_size = int(plot_width / 26)
+    axis_label_size = min(axis_label_size, max_axis_label_size)
+    axis_label_size = max(axis_label_size, min_axis_label_size)
+
+    return axis_label_size
+
+def get_corr_matrix_plot_sizes(screen_width):
+    if screen_width > 1200:
+        plot_width = int(screen_width / 3.2)
+    elif screen_width > 900:
+        plot_width = int(screen_width / 3.6)
+    elif screen_width > 650:
+        plot_width = int(screen_width / 4.0)
+    elif screen_width > 450:
+        plot_width = int(screen_width / 4.4)
+    else:
+        plot_width = int(screen_width / 4.5)
+
+    plot_height = plot_width
+
+    circle_radius = plot_width / 20
+    circle_size = int(3.14159 * (circle_radius ** 2))
+
+    return plot_height, plot_width, circle_size
+
 def get_corr_text_size(circle_size):
     # Smaller circle --> smaller font size
     if circle_size > 600:
@@ -187,24 +265,29 @@ def get_corr_text_size(circle_size):
 
 def get_bar_chart(var, screen_width, verbose=False):
     if var is None:
-        var = "Weight"
+        var = DEFAULT_BAR_CHART_ATTRIBUTE
 
     if screen_width > 900:
         chart_orientation = "horizontal"
     else:
         chart_orientation = "vertical"
     plot_height, plot_width, image_size = get_bar_chart_sizes(
-        screen_width,
-        chart_orientation
+        screen_width=screen_width,
+        chart_orientation=chart_orientation
     )
+    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
 
     if verbose:
-        print("--- Updating Bar Chart ---")
-        print(f"bar_chart_var: {var}")
-        print(f"bar_chart_orientation: {chart_orientation}")
-        print(f"bar_chart_plot_width: {plot_width}")
-        print(f"bar_chart_plot_height: {plot_height}")
-        print(f"bar_chart_image_size: {image_size}")
+        print(
+            "--- Updating Bar Chart ---\n"
+            f"bar_chart_var: {var}\n"
+            f"bar_chart_orientation: {chart_orientation}\n"
+            f"bar_chart_plot_height: {plot_height}\n"
+            f"bar_chart_plot_width: {plot_width}\n"
+            f"bar_chart_image_size: {image_size}\n"
+            f"bar_chart_axis_title_size: {axis_title_size}\n"
+            f"bar_chart_axis_label_size: {axis_label_size}\n"
+        )
 
     # Retrieve the data needed for the bar chart
     plot_df = get_character_attributes_df()
@@ -301,23 +384,21 @@ def get_bar_chart(var, screen_width, verbose=False):
 
     # Configure the plot to look nice:
     # Tight layout and appropriate axis font sizes
-    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
     plot = plot.configure_concat(
         spacing=-(32 - image_size) # trial and error - it works
     ).configure_view(
         strokeOpacity=0
     ).configure_axis(
         labelFontSize=axis_label_size,
-        titleFontSize=axis_title_size,
+        titleFontSize=axis_title_size
     )
-
-    if verbose:
-        print(f"bar_chart_axis_title_size: {axis_title_size}")
-        print(f"bar_chart_axis_label_size: {axis_label_size}")
 
     return plot
 
 def get_bar_chart_title(var):
+    if var is None:
+        var = DEFAULT_BAR_CHART_ATTRIBUTE
+    
     title = f"Distribution of {var}s"
 
     return title
