@@ -45,11 +45,32 @@ def get_drawer_contents(pages):
 
     return drawer_contents
 
+def get_page_icon(page_name, height=24, variant=None):
+    if variant:
+        variant = "-" + variant
+    else:
+        variant = ""
+    
+    icons_dict = {
+        'Home': f'ph:house{variant}',
+        'Attribute correlations': f'ph:chart-scatter{variant}',
+        'Attribute distributions': f'ph:chart-bar{variant}',
+        'Attribute info': f'ph:info{variant}'
+    }
+
+    if page_name in icons_dict:
+        icon = icons_dict[page_name]
+    else:
+        # Missing icon
+        icon = f"ph:square{variant}"
+
+    return get_icon(icon=icon, height=height)
+
 def get_navlink(page, type):
     navlink = dmc.NavLink(
         label=page['name'].title(),
         href=page['relative_path'],
-        icon=get_icon(icon="bi:house-door-fill", height=24), #TODO: page icons
+        icon=get_page_icon(page_name=page['name'], height=32),
         id=f"{type}-navlink-" + page['relative_path'],
         color='dark',
         variant="light",
@@ -109,13 +130,14 @@ def get_navlink_styles(is_collapsed=False):
             "label": {
                 "overflow": "visible",
                 "font-size": "11px",
+                "line-height": "0.85"
                 # "background-color": "yellow"
             },
             "body": {
                 "overflow": "visible", 
                 "position": "relative", 
-                "left": "-48px", 
-                "top": "20px", 
+                "left": "-58px",
+                "top": "28px",
                 "text-align" : "center", 
                 "min-height": "48px",
                 "min-width": f"{COLLAPSED_SIDEBAR_NAVLINK_WIDTH}px",
@@ -125,7 +147,7 @@ def get_navlink_styles(is_collapsed=False):
             "icon": {
                 "position": "relative", 
                 "top": "-12px", 
-                "left": "12px",
+                "left": "8px",
                 # "background-color": "blue"
             }
         }
@@ -135,14 +157,14 @@ def get_navlink_styles(is_collapsed=False):
                 "overflow": "visible",
                 "font-size": "15px",
                 "position": "relative", 
-                "left": f"{COLLAPSED_SIDEBAR_NAVLINK_MARGIN}px", # Line up with collapsed navlinks
+                "left": f"{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 8}px", # Line up with collapsed navlinks
             },
             "body": {
                 "overflow": "visible"
             },
             "icon": {
                 "position": "relative", 
-                "left": f"{COLLAPSED_SIDEBAR_NAVLINK_MARGIN}px",  # Line up with collapsed navlinks
+                "left": f"{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 4}px",  # Line up with collapsed navlinks
             }
         }
 
