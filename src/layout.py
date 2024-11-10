@@ -1,7 +1,7 @@
 from dash import html
 import dash_vega_components as dvc
 import dash_mantine_components as dmc
-from utils import get_logo
+from utils import get_logo, get_vertical_spacer
 from navigation import (
     get_sidebar,
     get_drawer,
@@ -70,6 +70,8 @@ def get_settings_menu():
         id="settings-menu-wrapper",
         children=[
             html.H3("Settings"),
+            get_vertical_spacer(height=10),
+            html.H5("Select Characters:"),
             dvc.Vega(
                 id="character-selector-chart",
                 spec=get_character_selector_chart().to_dict(),
