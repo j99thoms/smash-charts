@@ -100,7 +100,8 @@ layout = html.Div(
                 dvc.Vega(
                     id="corr-matrix-plot",
                     className="corr-matrix-plot-frame", #TODO: Dynamic height
-                    opt={"renderer": "svg", "actions": False}
+                    opt={"renderer": "svg", "actions": False},
+                    style={"margin-bottom": "30px"}
                 )
             ])
         ])
