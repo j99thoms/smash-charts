@@ -128,7 +128,7 @@ def get_corr_matrix_plot(var_1, var_2, screen_width, excluded_character_ids):
             title=None,
             labelColor=selected_attributes_label_red_color,
             labelFontWeight=selected_attributes_label_bold_font
-        )
+        ).scale(reverse=True)
     ).properties(
         height=plot_height,
         width=plot_width
