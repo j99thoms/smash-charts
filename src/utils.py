@@ -281,7 +281,7 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
 def get_correlations_df(excluded_character_ids):
     character_attributes_df = get_character_attributes_df(
         data_type="continuous", excluded_character_ids=excluded_character_ids
-    )
+    ).drop(columns=['row_number', 'col_number'])
 
     corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
     corr_df = corr_df.reset_index().melt(id_vars='index').rename(
@@ -302,9 +302,9 @@ def get_correlations_df(excluded_character_ids):
 def get_dropdown_options(data_type):
     character_attributes_df = get_character_attributes_df(data_type=data_type)
 
-    # The first column is 'Character #', the 2nd column is 'Character', 
-    # and the last column is 'img_url'
-    attribute_names = character_attributes_df.columns.to_series().iloc[2:-1]
+    # The first 2 columns are 'Character #' and 'Character'.
+    # The last 3 columns are 'img_url', 'row_number', and 'col_number'.
+    attribute_names = character_attributes_df.columns.to_series().iloc[2:-3]
 
     dropdown_options = [
         {
