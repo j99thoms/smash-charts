@@ -115,8 +115,8 @@ def get_smash_wiki_credits():
     
     return smash_wiki_credits
 
-def get_attribute_selector_dropdown(div_id, default_value):
-    dropdown_options = get_dropdown_options()
+def get_attribute_selector_dropdown(div_id, default_value, data_type):
+    dropdown_options = get_dropdown_options(data_type=data_type)
     attribute_selector_dropdown = dcc.Dropdown(
         id=div_id,
         options=dropdown_options,
@@ -236,17 +236,42 @@ def get_screen_width(display_size_str):
 
     return screen_width
 
-def get_character_attributes_df():
+def get_character_attributes_df(data_type="all"):
     character_attributes_df = pd.read_csv(f"{DATA_DIR}/character_data.csv")
-    character_attributes_df = character_attributes_df.drop(
-        columns=['percent_incr_fall_speed']  # Unused column
-    )
+
+    # Drop non-playable characters
+    non_playable_characters = [
+        "Giga Bowser", "Mob Smash Mii Enemy (Brawler)",
+        "Mob Smash Mii Enemy (Swordfighter)", "Mob Smash Mii Enemy (Gunner)"
+    ]
+    character_attributes_df = character_attributes_df[
+        ~character_attributes_df['Character'].isin(non_playable_characters)
+    ]
+
+    boolean_columns = [
+        "Has Walljump", "Has Crawl", "Has Wallcling", "Has Zair"
+    ]
+    ordinal_columns = ["Number of Jumps"]
+
+    data_type = data_type.lower()
+    if data_type == "continuous":
+        character_attributes_df = character_attributes_df.drop(
+            columns=(boolean_columns + ordinal_columns)
+        )
+    elif data_type == "quantitative":
+        character_attributes_df = character_attributes_df.drop(
+            columns=boolean_columns
+        )
+    elif data_type == "all":
+        pass
+    else:
+        raise ValueError("data_type should be one of 'continuous', 'quantitative', or 'all'.")
 
     return character_attributes_df
 
 def get_correlations_df():
     # TODO: Pre-compute correlations (save in file and load when needed)
-    character_attributes_df = get_character_attributes_df()
+    character_attributes_df = get_character_attributes_df(data_type="continuous")
 
     corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
     corr_df = corr_df.reset_index().melt(id_vars='index').rename(
@@ -264,11 +289,12 @@ def get_correlations_df():
 
     return corr_df
 
-def get_dropdown_options():
-    character_attributes_df = get_character_attributes_df()
+def get_dropdown_options(data_type):
+    character_attributes_df = get_character_attributes_df(data_type=data_type)
 
-    # The first column is 'character', the last column is 'img_url'
-    attribute_names = character_attributes_df.columns.to_series().iloc[1:-1]
+    # The first column is 'Character #', the 2nd column is 'Character', 
+    # and the last column is 'img_url'
+    attribute_names = character_attributes_df.columns.to_series().iloc[2:-1]
 
     dropdown_options = [
         {

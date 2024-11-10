@@ -35,12 +35,14 @@ layout = html.Div(
                         children=[
                             get_attribute_selector_dropdown(
                                 div_id="scatter-dropdown-1",
-                                default_value=DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
+                                default_value=DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
+                                data_type="continuous"
                             ),
                             get_vertical_spacer(height=8),
                             get_attribute_selector_dropdown(
                                 div_id="scatter-dropdown-2",
-                                default_value=DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
+                                default_value=DEFAULT_SCATTER_PLOT_ATTRIBUTE_2,
+                                data_type="continuous"
                             )
                         ],
                         style={"width": "270px"}

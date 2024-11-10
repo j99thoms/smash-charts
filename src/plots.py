@@ -3,6 +3,10 @@ from utils import (
     get_character_attributes_df, get_correlations_df
 )
 
+# Load the data needed for the plots
+character_attributes_df = get_character_attributes_df(data_type="quantitative")
+correlations_df = get_correlations_df()
+
 DEFAULT_BAR_CHART_ATTRIBUTE = "Weight"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "Max Air Speed"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "Max Run Speed"
@@ -29,7 +33,7 @@ def get_scatter_plot(var_1, var_2, screen_width, verbose=False):
         )
 
     # Retrieve the data needed for the scatter plot
-    plot_df = get_character_attributes_df()
+    plot_df = character_attributes_df.copy()
     if var_2 == var_1:
          plot_df = plot_df[['Character', 'img_url', var_1]]
     else:
@@ -103,7 +107,10 @@ def get_scatter_plot_sizes(screen_width):
     return plot_height, plot_width, image_size
 
 def get_corr_matrix_plot(var_1, var_2, screen_width, verbose=False):
-    plot_height, plot_width, circle_size = get_corr_matrix_plot_sizes(screen_width)
+    num_attributes = len(correlations_df) ** (1/2)
+    plot_height, plot_width, circle_size = get_corr_matrix_plot_sizes(
+        screen_width, num_attributes
+    )
     axis_label_size = get_corr_matrix_plot_font_sizes(plot_width)
 
     if verbose:
@@ -114,9 +121,6 @@ def get_corr_matrix_plot(var_1, var_2, screen_width, verbose=False):
             f"corr_circle_size: {circle_size}\n"
             f"corr_axis_label_size: {axis_label_size}\n"
         )
-
-    # Retrieve the data needed for the correlation plot
-    corr_df = get_correlations_df()
 
     # For the two selected attributes being plotted on the scatter plot,
     # highlight their labels on the correlation plot by giving them
@@ -133,7 +137,7 @@ def get_corr_matrix_plot(var_1, var_2, screen_width, verbose=False):
     )
 
     # Create the base canvas for the correlation plot
-    base_plot = alt.Chart(corr_df).encode(
+    base_plot = alt.Chart(correlations_df).encode(
         alt.X('Attribute 1:N').axis(
             title=None,
             labelAngle=-45,
@@ -228,7 +232,7 @@ def get_corr_matrix_plot_font_sizes(plot_width):
 
     return axis_label_size
 
-def get_corr_matrix_plot_sizes(screen_width):
+def get_corr_matrix_plot_sizes(screen_width, num_attributes):
     if screen_width > 1200:
         plot_width = int(screen_width / 3.2)
     elif screen_width > 900:
@@ -241,8 +245,9 @@ def get_corr_matrix_plot_sizes(screen_width):
         plot_width = int(screen_width / 4.5)
 
     plot_height = plot_width
-
-    circle_radius = plot_width / 20
+    
+    circle_diameter = plot_width / num_attributes
+    circle_radius = circle_diameter / 2
     circle_size = int(3.14159 * (circle_radius ** 2))
 
     return plot_height, plot_width, circle_size
@@ -290,7 +295,7 @@ def get_bar_chart(var, screen_width, verbose=False):
         )
 
     # Retrieve the data needed for the bar chart
-    plot_df = get_character_attributes_df()
+    plot_df = character_attributes_df.copy()
     plot_df = plot_df[['Character', 'img_url', var]]
     plot_df = plot_df.dropna()
 
