@@ -331,7 +331,6 @@ def append_row_col_for_character_selector(character_df):
     return character_df
 
 def parse_excluded_character_ids(excluded_ids_string):
-    print(excluded_ids_string)
     if excluded_ids_string == "" or excluded_ids_string is None:
         return []
     else:

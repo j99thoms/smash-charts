@@ -8,10 +8,7 @@ DEFAULT_BAR_CHART_ATTRIBUTE = "Weight"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "Max Air Speed"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "Max Run Speed"
 
-def get_scatter_plot(
-        var_1, var_2, screen_width, 
-        excluded_character_ids, verbose=False
-    ):
+def get_scatter_plot(var_1, var_2, screen_width, excluded_character_ids):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
     if var_2 is None:
@@ -19,18 +16,6 @@ def get_scatter_plot(
 
     plot_height, plot_width, image_size = get_scatter_plot_sizes(screen_width)
     axis_title_size, axis_label_size = get_scatter_plot_font_sizes(plot_width)
-
-    if verbose:
-        print(
-            "--- Updating Scatter Plot ---\n" 
-            f"scatter_var_1: {var_1}\n"
-            f"scatter_var_2: {var_2}\n"
-            f"scatter_plot_height: {plot_height}\n"
-            f"scatter_plot_width: {plot_width}\n"
-            f"scatter_image_size: {image_size}\n"
-            f"scatter_axis_title_size: {axis_title_size}\n"
-            f"scatter_axis_label_size: {axis_label_size}\n"
-        )
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_character_attributes_df(
@@ -108,10 +93,7 @@ def get_scatter_plot_sizes(screen_width):
 
     return plot_height, plot_width, image_size
 
-def get_corr_matrix_plot(
-        var_1, var_2, screen_width, 
-        excluded_character_ids, verbose=False
-    ):
+def get_corr_matrix_plot(var_1, var_2, screen_width, excluded_character_ids):
     correlations_df = get_correlations_df(excluded_character_ids)
 
     num_attributes = len(correlations_df) ** (1/2)
@@ -119,15 +101,6 @@ def get_corr_matrix_plot(
         screen_width, num_attributes
     )
     axis_label_size = get_corr_matrix_plot_font_sizes(plot_width)
-
-    if verbose:
-        print(
-            "--- Updating Correlation Matrix Plot ---\n" 
-            f"corr_plot_height: {plot_height}\n"
-            f"corr_plot_width: {plot_width}\n"
-            f"corr_circle_size: {circle_size}\n"
-            f"corr_axis_label_size: {axis_label_size}\n"
-        )
 
     # For the two selected attributes being plotted on the scatter plot,
     # highlight their labels on the correlation plot by giving them
@@ -275,7 +248,7 @@ def get_corr_text_size(circle_size):
         # If the circle size is <= 250, don't display any text inside the circle
         return 0
 
-def get_bar_chart(var, screen_width, excluded_character_ids, verbose=False):
+def get_bar_chart(var, screen_width, excluded_character_ids):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
@@ -288,18 +261,6 @@ def get_bar_chart(var, screen_width, excluded_character_ids, verbose=False):
         chart_orientation=chart_orientation
     )
     axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
-
-    if verbose:
-        print(
-            "--- Updating Bar Chart ---\n"
-            f"bar_chart_var: {var}\n"
-            f"bar_chart_orientation: {chart_orientation}\n"
-            f"bar_chart_plot_height: {plot_height}\n"
-            f"bar_chart_plot_width: {plot_width}\n"
-            f"bar_chart_image_size: {image_size}\n"
-            f"bar_chart_axis_title_size: {axis_title_size}\n"
-            f"bar_chart_axis_label_size: {axis_label_size}\n"
-        )
 
     # Retrieve the data needed for the bar chart
     plot_df = get_character_attributes_df(

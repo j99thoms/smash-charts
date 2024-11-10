@@ -153,8 +153,7 @@ def update_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,
          screen_width=screen_width,
-         excluded_character_ids=excluded_character_ids,
-         verbose=True
+         excluded_character_ids=excluded_character_ids
     )
 
     title = get_scatter_plot_title(scatter_var_1, scatter_var_2)
@@ -187,8 +186,7 @@ def update_corr_matrix_plot(
         var_1=scatter_var_1,
         var_2=scatter_var_2,
         screen_width=screen_width,
-        excluded_character_ids=excluded_character_ids,
-        verbose=True
+        excluded_character_ids=excluded_character_ids
     )
 
     return plot.to_dict()
