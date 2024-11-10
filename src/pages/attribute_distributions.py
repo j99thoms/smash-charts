@@ -1,7 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import html, Input, Output, callback
+from dash import html, Input, Output, State, callback
 from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
@@ -38,6 +38,12 @@ layout = html.Div(
                             )
                         ],
                         style={"width": "270px"}
+                    ),
+                    # Invisible divs used to track last selected var:
+                    html.Div(
+                        id='last-selected-bar-var',
+                        children=DEFAULT_BAR_CHART_ATTRIBUTE,
+                        style={'display': 'None'}
                     )
                 ],
                 style={
@@ -70,17 +76,35 @@ layout = html.Div(
 )
 
 
+# Track which variable was selected last
+@callback(
+    Output('last-selected-bar-var', 'children'),
+    Input("bar-dropdown", "value"),
+    State('last-selected-bar-var', 'children')
+)
+def update_last_selected_bar_var(
+    selected_attribute, last_selected_attribute
+):
+    if selected_attribute is not None:
+       last_selected_attribute = selected_attribute
+
+    return last_selected_attribute
+
 # Update the bar chart
 @callback(
     Output("bar-chart", "spec"),
     Output('bar-title', 'children'),
     Input("bar-dropdown", "value"),
     Input("display-size", "children"),
+    State('last-selected-bar-var', 'children')
 )
 def update_bar_chart(
-    selected_attribute, display_size_str
+    selected_attribute, display_size_str, last_selected_attribute
 ):
     screen_width = get_screen_width(display_size_str)
+
+    if selected_attribute is None:
+        selected_attribute = last_selected_attribute
 
     plot = get_bar_chart(
         var=selected_attribute,
