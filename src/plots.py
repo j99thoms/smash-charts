@@ -1,3 +1,4 @@
+import math
 import altair as alt
 from utils import (
     get_character_attributes_df, get_correlations_df
@@ -248,7 +249,7 @@ def get_corr_matrix_plot_sizes(screen_width, num_attributes):
     
     circle_diameter = plot_width / num_attributes
     circle_radius = circle_diameter / 2
-    circle_size = int(3.14159 * (circle_radius ** 2))
+    circle_size = int(math.pi * (circle_radius ** 2))
 
     return plot_height, plot_width, circle_size
 
