@@ -4,15 +4,14 @@ from utils import (
     get_character_attributes_df, get_correlations_df
 )
 
-# Load the data needed for the plots
-character_attributes_df = get_character_attributes_df(data_type="quantitative")
-correlations_df = get_correlations_df()
-
 DEFAULT_BAR_CHART_ATTRIBUTE = "Weight"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "Max Air Speed"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "Max Run Speed"
 
-def get_scatter_plot(var_1, var_2, screen_width, verbose=False):
+def get_scatter_plot(
+        var_1, var_2, screen_width, 
+        excluded_character_ids, verbose=False
+    ):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
     if var_2 is None:
@@ -34,7 +33,9 @@ def get_scatter_plot(var_1, var_2, screen_width, verbose=False):
         )
 
     # Retrieve the data needed for the scatter plot
-    plot_df = character_attributes_df.copy()
+    plot_df = get_character_attributes_df(
+        data_type="continuous", excluded_character_ids=excluded_character_ids
+    )
     if var_2 == var_1:
          plot_df = plot_df[['Character', 'img_url', var_1]]
     else:
@@ -107,7 +108,12 @@ def get_scatter_plot_sizes(screen_width):
 
     return plot_height, plot_width, image_size
 
-def get_corr_matrix_plot(var_1, var_2, screen_width, verbose=False):
+def get_corr_matrix_plot(
+        var_1, var_2, screen_width, 
+        excluded_character_ids, verbose=False
+    ):
+    correlations_df = get_correlations_df(excluded_character_ids)
+
     num_attributes = len(correlations_df) ** (1/2)
     plot_height, plot_width, circle_size = get_corr_matrix_plot_sizes(
         screen_width, num_attributes
@@ -246,7 +252,7 @@ def get_corr_matrix_plot_sizes(screen_width, num_attributes):
         plot_width = int(screen_width / 4.5)
 
     plot_height = plot_width
-    
+
     circle_diameter = plot_width / num_attributes
     circle_radius = circle_diameter / 2
     circle_size = int(math.pi * (circle_radius ** 2))
@@ -269,7 +275,7 @@ def get_corr_text_size(circle_size):
         # If the circle size is <= 250, don't display any text inside the circle
         return 0
 
-def get_bar_chart(var, screen_width, verbose=False):
+def get_bar_chart(var, screen_width, excluded_character_ids, verbose=False):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
@@ -296,7 +302,9 @@ def get_bar_chart(var, screen_width, verbose=False):
         )
 
     # Retrieve the data needed for the bar chart
-    plot_df = character_attributes_df.copy()
+    plot_df = get_character_attributes_df(
+        data_type="quantitative", excluded_character_ids=excluded_character_ids
+    )
     plot_df = plot_df[['Character', 'img_url', var]]
     plot_df = plot_df.dropna()
 
@@ -446,3 +454,33 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
         plot_width = min(plot_width, max_plot_width)
 
     return plot_height, plot_width, image_size
+
+def get_character_selector_chart():
+    character_df = get_character_attributes_df()
+
+    character_selector = alt.selection_point(
+        name="character_selector", toggle='true', empty=False
+    )
+
+    n_rows, n_cols = character_df[['row_number', 'col_number']].max()
+
+    plot_height = plot_width = 270
+    plot = alt.Chart(character_df).encode(
+        alt.X('col_number', axis=None),
+        alt.Y('row_number', axis=None).scale(reverse=True),
+        alt.Url('img_url'),
+        alt.Tooltip(['Character', 'Character #']),
+        opacity=alt.condition(
+            character_selector, alt.value(0.25), alt.value(1)
+        )
+    ).mark_image(
+        width=plot_width//n_cols,
+        height=plot_height//n_rows
+    ).configure_view(
+        strokeOpacity=0
+    ).properties(
+        width=plot_width,
+        height=plot_height
+    ).add_params(character_selector)
+
+    return plot

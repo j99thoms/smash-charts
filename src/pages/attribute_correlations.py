@@ -5,7 +5,8 @@ from dash import html, Input, Output, State, callback
 from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
-    get_screen_width
+    get_screen_width,
+    parse_excluded_character_ids
 )
 from plots import (
     get_scatter_plot,
@@ -132,14 +133,16 @@ def update_last_selected_scatter_vars(
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value"),
     Input("display-size", "children"),
+    Input("excluded-characters", "children"),
     State("last-selected-scatter-var-1", "children"),
     State("last-selected-scatter-var-2", "children")
 )
 def update_scatter_plot(
-    scatter_var_1, scatter_var_2, display_size_str,
+    scatter_var_1, scatter_var_2, display_size_str, excluded_ids_string,
     last_selected_var_1, last_selected_var_2
 ):
     screen_width = get_screen_width(display_size_str)
+    excluded_character_ids = parse_excluded_character_ids(excluded_ids_string)
 
     if scatter_var_1 is None:
         scatter_var_1 = last_selected_var_1
@@ -150,6 +153,7 @@ def update_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,
          screen_width=screen_width,
+         excluded_character_ids=excluded_character_ids,
          verbose=True
     )
 
@@ -163,14 +167,16 @@ def update_scatter_plot(
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value"),
     Input("display-size", "children"),
+    Input("excluded-characters", "children"),
     State("last-selected-scatter-var-1", "children"),
     State("last-selected-scatter-var-2", "children")
 )
 def update_corr_matrix_plot(
-    scatter_var_1, scatter_var_2, display_size_str,
+    scatter_var_1, scatter_var_2, display_size_str, excluded_ids_string,
     last_selected_var_1, last_selected_var_2
 ):
     screen_width = get_screen_width(display_size_str)
+    excluded_character_ids = parse_excluded_character_ids(excluded_ids_string)
 
     if scatter_var_1 is None:
         scatter_var_1 = last_selected_var_1
@@ -181,6 +187,7 @@ def update_corr_matrix_plot(
         var_1=scatter_var_1,
         var_2=scatter_var_2,
         screen_width=screen_width,
+        excluded_character_ids=excluded_character_ids,
         verbose=True
     )
 

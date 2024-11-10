@@ -7,6 +7,7 @@ from navigation import (
     get_drawer,
     get_menu_button
 )
+from plots import get_character_selector_chart
 
 def get_app_html(pages, dash_page_container):
     header = get_header()
@@ -69,6 +70,13 @@ def get_settings_menu():
         id="settings-menu-wrapper",
         children=[
             html.H3("Settings"),
+            dvc.Vega(
+                id="character-selector-chart",
+                spec=get_character_selector_chart().to_dict(),
+                signalsToObserve=["character_selector"],
+                opt={"renderer": "svg", "actions": False}
+            ),
+            html.Div(id='excluded-characters', style={'display': 'None'})
         ]
     )
 

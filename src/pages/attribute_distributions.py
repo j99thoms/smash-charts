@@ -5,7 +5,8 @@ from dash import html, Input, Output, State, callback
 from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
-    get_screen_width
+    get_screen_width,
+    parse_excluded_character_ids
 )
 from plots import (
     get_bar_chart,
@@ -96,12 +97,15 @@ def update_last_selected_bar_var(
     Output('bar-title', 'children'),
     Input("bar-dropdown", "value"),
     Input("display-size", "children"),
+    Input("excluded-characters", "children"),
     State('last-selected-bar-var', 'children')
 )
 def update_bar_chart(
-    selected_attribute, display_size_str, last_selected_attribute
+    selected_attribute, display_size_str, excluded_ids_string,
+    last_selected_attribute
 ):
     screen_width = get_screen_width(display_size_str)
+    excluded_character_ids = parse_excluded_character_ids(excluded_ids_string)
 
     if selected_attribute is None:
         selected_attribute = last_selected_attribute
@@ -109,6 +113,7 @@ def update_bar_chart(
     plot = get_bar_chart(
         var=selected_attribute,
         screen_width=screen_width,
+        excluded_character_ids=excluded_character_ids,
         verbose=True
     )
 

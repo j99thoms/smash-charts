@@ -1,5 +1,7 @@
 import re
+import math
 import pandas as pd
+from itertools import product
 from dash import html, dcc
 from dash_iconify import DashIconify
 
@@ -236,7 +238,7 @@ def get_screen_width(display_size_str):
 
     return screen_width
 
-def get_character_attributes_df(data_type="all"):
+def get_character_attributes_df(data_type="all", excluded_character_ids=None):
     character_attributes_df = pd.read_csv(f"{DATA_DIR}/character_data.csv")
 
     # Drop non-playable characters
@@ -267,11 +269,19 @@ def get_character_attributes_df(data_type="all"):
     else:
         raise ValueError("data_type should be one of 'continuous', 'quantitative', or 'all'.")
 
+    character_attributes_df = append_row_col_for_character_selector(character_attributes_df)
+
+    if excluded_character_ids is not None:
+       character_attributes_df =  character_attributes_df.loc[
+           ~character_attributes_df.index.isin(excluded_character_ids)
+        ]
+
     return character_attributes_df
 
-def get_correlations_df():
-    # TODO: Pre-compute correlations (save in file and load when needed)
-    character_attributes_df = get_character_attributes_df(data_type="continuous")
+def get_correlations_df(excluded_character_ids):
+    character_attributes_df = get_character_attributes_df(
+        data_type="continuous", excluded_character_ids=excluded_character_ids
+    )
 
     corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
     corr_df = corr_df.reset_index().melt(id_vars='index').rename(
@@ -305,6 +315,27 @@ def get_dropdown_options(data_type):
     ]
     
     return dropdown_options
+
+def append_row_col_for_character_selector(character_df):
+    character_df = character_df.sort_values(by="Character #", ignore_index=True)
+
+    # Calculate number of rows and columns needed for a square grid
+    n_characters = len(character_df)
+    n_rows = math.ceil(math.sqrt(n_characters))
+    n_cols  = math.ceil(n_characters / n_rows)
+
+    # Generate row-column pairs and add them as new columns
+    row_cols = [*product(range(n_rows), range(n_cols))][:n_characters]
+    character_df['row_number'], character_df['col_number'] = zip(*row_cols)
+
+    return character_df
+
+def parse_excluded_character_ids(excluded_ids_string):
+    print(excluded_ids_string)
+    if excluded_ids_string == "" or excluded_ids_string is None:
+        return []
+    else:
+        return [int(id) - 1 for id in excluded_ids_string.split(',')]
 
 def make_dash_table(df):
     """ Return a dash definition of an HTML table for a Pandas dataframe """

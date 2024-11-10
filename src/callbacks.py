@@ -192,6 +192,20 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 
         return is_opened, button_style
 
+    # Update excluded characters
+    @app.callback(
+        Output("excluded-characters", "children"),
+        Input("character-selector-chart", "signalData"),
+        prevent_initial_call=True,
+    )
+    def update_selected_characters(altair_params):
+        selector_dict = altair_params['character_selector']
+
+        if '_vgsid_' in selector_dict:
+            return selector_dict['_vgsid_'].strip("Set()")
+        else:
+            return ""
+
     # Keep track of the user's screen width
     app.clientside_callback(
         """(wBreakpoint, w) => {
