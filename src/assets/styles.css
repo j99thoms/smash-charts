@@ -178,8 +178,9 @@
 #settings-menu-wrapper h3 {
     position: absolute;
     top: 10px;
+    left: 50%;
+    transform: translate(-50%);
     text-align: center;
-    width: 90%;
 }
 
 /* @media screen and (max-width: 800px) {
