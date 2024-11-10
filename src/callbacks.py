@@ -151,7 +151,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         State("drawer", "opened"),
         prevent_initial_call=True
     )
-    def update_drawer_status(n_outer, n_inner, page_url, is_opened):
+    def update_navigation_drawer_status(n_outer, n_inner, page_url, is_opened):
         triggered_id = ctx.triggered_id
         
         if (
@@ -165,6 +165,32 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             is_opened = False
 
         return is_opened
+
+    # Update the settings menu's status (opened / closed)
+    # based on the current page's url
+    # and whether the user has clicked on the settings menu button
+    @app.callback(
+        Output("settings-menu-drawer", "opened", allow_duplicate=True),
+        Output("settings-menu-button", "style", allow_duplicate=True),
+        Input("settings-menu-button", "n_clicks"),
+        Input("url", "pathname"),
+        State("settings-menu-button", "opened"),
+        prevent_initial_call=True
+    )
+    def update_settings_drawer_status(n_clicks, page_url, is_opened):
+        triggered_id = ctx.triggered_id
+        button_style = None
+
+        if triggered_id == "settings-menu-button":
+            # Menu button was clicked
+            is_opened = not is_opened
+        elif page_url in sidebar_pages: # TODO
+            # The user has navigated to a page that does not display the
+            # settings menu
+            is_opened = False
+            button_style = {"display": "none"}
+
+        return is_opened, button_style
 
     # Keep track of the user's screen width
     app.clientside_callback(

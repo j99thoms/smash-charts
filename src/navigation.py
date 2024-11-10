@@ -17,23 +17,33 @@ EXPANDED_SIDEBAR_NAVLINK_WIDTH = (
 
 DRAWER_SIZE = EXPANDED_SIDEBAR_WIDTH + EXPANDED_SIDEBAR_NAVLINK_MARGIN
 
-def get_hamburger_menu(div_id, initial_load=False):
+def get_menu_button(div_id, type, initial_load=False):
     if initial_load:
         style = {'display': 'none'} # Don't display during the initial load
     else:
         style = None
+
+    icons_dict = {
+        'hamburger': 'ci:hamburger-md',
+        'settings': 'ci:settings'
+    }
+
+    if type in icons_dict:
+        icon = icons_dict[type]
+    else:
+        icon = "ph:square"
     
-    hamburger_menu= dmc.ActionIcon(
-        get_icon("ci:hamburger-md", height=36),
+    menu_button = dmc.ActionIcon(
+        get_icon(icon, height=36),
         id=div_id,
-        className='hamburger-menu',
+        className=f'{type}-menu-button',
         color="dark",
         radius="20px",
         style=style
         # variant="outline"
     )
 
-    return hamburger_menu
+    return menu_button
 
 def get_sidebar_contents(pages):
     sidebar_contents = [get_navlink(page, "sidebar") for page in pages]
@@ -99,8 +109,9 @@ def get_sidebar(pages):
 
 def get_drawer(pages):
     logo=get_logo()
-    hamburger_menu_drawer_inner = get_hamburger_menu(
-        div_id="hamburger-menu-button-drawer-inner"
+    hamburger_menu_drawer_inner = get_menu_button(
+        div_id="hamburger-menu-button-drawer-inner",
+        type="hamburger"
     )
     drawer_header = html.Div(
         id='drawer-header',

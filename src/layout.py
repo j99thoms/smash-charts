@@ -1,9 +1,11 @@
 from dash import html
+import dash_vega_components as dvc
+import dash_mantine_components as dmc
 from utils import get_logo
 from navigation import (
     get_sidebar,
     get_drawer,
-    get_hamburger_menu
+    get_menu_button
 )
 
 def get_app_html(pages, dash_page_container):
@@ -32,9 +34,17 @@ def get_header():
     logo = get_logo()
 
     # For opening the drawer
-    hamburger_menu_drawer_outer = get_hamburger_menu(
+    hamburger_menu_drawer_outer = get_menu_button(
         div_id="hamburger-menu-button-drawer-outer",
+        type="hamburger",
         initial_load=True
+    )
+
+    # For opening the settings menu
+    settings_menu_button = get_menu_button(
+        div_id="settings-menu-button",
+        type="settings",
+        initial_load=False
     )
 
     page_title = html.Div(
@@ -47,13 +57,37 @@ def get_header():
         children=[
             logo,
             hamburger_menu_drawer_outer,
-            page_title
+            page_title,
+            settings_menu_button
         ]
     )
 
     return header
 
+def get_settings_menu():
+    settings_menu_contents = html.Div(
+        id="settings-menu-wrapper",
+        children=[
+            html.H3("Settings"),
+        ]
+    )
+
+    settings_menu = dmc.Drawer(
+        children=settings_menu_contents,
+        id="settings-menu-drawer",
+        withCloseButton=True,
+        transitionDuration=100,
+        size=350,
+        position="right",
+        padding=15,
+        zIndex=80000
+    )
+
+    return settings_menu
+
 def get_page_container(dash_page_container):
+    settings_menu = get_settings_menu()
+
     page_container = html.Div(
         id='wrapper-outer',
         children=[
@@ -68,7 +102,7 @@ def get_page_container(dash_page_container):
                     ),
                     html.Div(
                         id='page-container',
-                        children=[dash_page_container],
+                        children=[settings_menu, dash_page_container],
                         style={'display': 'none'} # Just for the initial load
                     ),
                 ],
