@@ -1,7 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import html, Input, Output, State, callback
+from dash import html, dcc, Input, Output, State, callback
 from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
@@ -81,10 +81,24 @@ layout = html.Div(
                         "width": "95%"
                     }
                 ),
-                dvc.Vega(
-                    id="scatter-plot",
-                    className="scatter-plot-frame", #TODO: Dynamic height
-                    opt={"renderer": "svg", "actions": False}
+                html.Div([
+                    dvc.Vega(
+                        id="scatter-plot",
+                        className="scatter-plot-frame", #TODO: Dynamic height
+                        opt={"renderer": "svg", "actions": False}
+                    )],
+                    style={"position": "relative", "float": "left", "width": "90%"}
+                ),
+                html.Div([
+                    dcc.Slider(
+                        id='scatter-image-size-slider',
+                        value=1, min=0, max=2,
+                        marks=None,
+                        vertical=True,
+                        updatemode='drag',
+                        # tooltip={"placement": "right"}
+                    )],
+                    style={"position": "relative", "float": "left", "width": "5%"}
                 )
             ]),
             dbc.Col([
@@ -135,12 +149,13 @@ def update_last_selected_scatter_vars(
     Input("scatter-dropdown-2", "value"),
     Input("display-size", "children"),
     Input("excluded-characters", "children"),
+    Input('scatter-image-size-slider', 'value'),
     State("last-selected-scatter-var-1", "children"),
     State("last-selected-scatter-var-2", "children")
 )
 def update_scatter_plot(
     scatter_var_1, scatter_var_2, display_size_str, excluded_ids_string,
-    last_selected_var_1, last_selected_var_2
+    image_size_slider_val, last_selected_var_1, last_selected_var_2
 ):
     screen_width = get_screen_width(display_size_str)
     excluded_character_ids = parse_excluded_character_ids(excluded_ids_string)
@@ -149,12 +164,20 @@ def update_scatter_plot(
         scatter_var_1 = last_selected_var_1
     if scatter_var_2 is None:
         scatter_var_2 = last_selected_var_2
+
+    if isinstance(image_size_slider_val, (int, float)):
+        # f(0) = 1/2; f(1) = 1; f(2) = 2
+        val = image_size_slider_val
+        image_size_multiplier = (0.25 * val ** 2) + (0.25 * val) + 0.5
+    else:
+        image_size_multiplier = 1
    
     plot = get_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,
          screen_width=screen_width,
-         excluded_character_ids=excluded_character_ids
+         excluded_character_ids=excluded_character_ids,
+         image_size_multiplier=image_size_multiplier
     )
 
     title = get_scatter_plot_title(scatter_var_1, scatter_var_2)

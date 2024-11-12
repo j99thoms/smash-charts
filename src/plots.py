@@ -8,7 +8,10 @@ DEFAULT_BAR_CHART_ATTRIBUTE = "Weight"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "Max Air Speed"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "Max Run Speed"
 
-def get_scatter_plot(var_1, var_2, screen_width, excluded_character_ids):
+def get_scatter_plot(
+        var_1, var_2, screen_width,
+        excluded_character_ids, image_size_multiplier=1
+    ):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
     if var_2 is None:
@@ -16,6 +19,7 @@ def get_scatter_plot(var_1, var_2, screen_width, excluded_character_ids):
 
     plot_height, plot_width, image_size = get_scatter_plot_sizes(screen_width)
     axis_title_size, axis_label_size = get_scatter_plot_font_sizes(plot_width)
+    image_size = image_size * image_size_multiplier
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_character_attributes_df(
@@ -34,7 +38,7 @@ def get_scatter_plot(var_1, var_2, screen_width, excluded_character_ids):
         alt.Tooltip(['Character', var_1, var_2]),
         alt.Url('img_url')
     ).mark_image(
-        height=image_size, # TODO: Image size slider??
+        height=image_size,
         width=image_size
     ).properties(
         height=plot_height,
