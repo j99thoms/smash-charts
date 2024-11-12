@@ -96,7 +96,7 @@ layout = html.Div(
                         marks=None,
                         vertical=True,
                         updatemode='drag',
-                        # tooltip={"placement": "right"}
+                        tooltip={"placement": "right", "transform": "imageSizeMultiplier"},
                     )],
                     style={"position": "relative", "float": "left", "width": "5%"}
                 )
