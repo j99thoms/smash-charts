@@ -6,7 +6,8 @@ from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
     get_screen_width,
-    parse_excluded_character_ids
+    parse_excluded_character_ids,
+    get_window_title
 )
 from plots import (
     get_scatter_plot,
@@ -16,7 +17,7 @@ from plots import (
     DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 )
 
-dash.register_page(__name__)
+dash.register_page(__name__, title=get_window_title(__name__))
 
 layout = html.Div(
     className="inner-page-container",

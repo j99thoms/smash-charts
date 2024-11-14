@@ -346,3 +346,11 @@ def make_dash_table(df):
         table.append(html.Tr(html_row))
         
     return table
+
+def get_window_title(page_name):
+    page_title =  page_name.replace("pages.", "").replace("_", " ").title()
+
+    if page_title == "Home":
+        return "Smash Charts"
+    else:
+        return page_title + " | Smash Charts"
