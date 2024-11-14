@@ -15,7 +15,7 @@ def get_icon(icon, height=16):
 def get_logo():
     logo = html.A(
         className='logo',
-        children=[html.Img(src=f'{IMG_DIR}/logo.png')],
+        children=[html.Img(src=f'{IMG_DIR}/logo-small.png')],
         href="/",
         target="_self"
     )
