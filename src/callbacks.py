@@ -113,7 +113,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         if page_url in sidebar_pages:
             # Display the sidebar, hide the drawer's hamburger menu
             sidebar_container_style = None
-            drawer_hamburger_menu_style = {"display": "none"}
+            drawer_hamburger_menu_style = {"visibility": "hidden"}
         elif page_url in drawer_pages:
             # Hide the sidebar, display the drawer's hamburger menu
             sidebar_container_style = {"display": "none"}

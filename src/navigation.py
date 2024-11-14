@@ -19,7 +19,7 @@ DRAWER_SIZE = EXPANDED_SIDEBAR_WIDTH + EXPANDED_SIDEBAR_NAVLINK_MARGIN
 
 def get_menu_button(div_id, type, initial_load=False):
     if initial_load:
-        style = {'display': 'none'} # Don't display during the initial load
+        style = {'visibility': 'hidden'} # Don't display during the initial load
     else:
         style = None
 
@@ -108,14 +108,14 @@ def get_sidebar(pages):
     return sidebar
 
 def get_drawer(pages):
-    logo=get_logo()
+    logo = get_logo()
     hamburger_menu_drawer_inner = get_menu_button(
         div_id="hamburger-menu-button-drawer-inner",
         type="hamburger"
     )
     drawer_header = html.Div(
         id='drawer-header',
-        children=[logo, hamburger_menu_drawer_inner]
+        children=[hamburger_menu_drawer_inner, logo]
     )
 
     drawer_contents = get_drawer_contents(pages)

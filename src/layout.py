@@ -56,8 +56,8 @@ def get_header():
     header = html.Div(
         id='header',
         children=[
-            logo,
             hamburger_menu_drawer_outer,
+            logo,
             page_title,
             settings_menu_button
         ]
