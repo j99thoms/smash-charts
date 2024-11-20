@@ -19,7 +19,8 @@ app = Dash(
         themes.MATERIA,
         GOOGLE_FONTS # Include google fonts
     ],
-    suppress_callback_exceptions=True
+    suppress_callback_exceptions=True,
+     update_title=None
 )
 app.title = "Smash Charts"
 server = app.server
