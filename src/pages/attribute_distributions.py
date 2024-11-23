@@ -1,12 +1,14 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import html, Input, Output, State, callback
+from datetime import datetime, timedelta
+from dash.exceptions import PreventUpdate
+from dash import html, dcc, Input, Output, State, callback, ctx
 from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
     get_screen_width,
-    parse_excluded_character_ids,
+    get_excluded_char_ids,
     get_window_title
 )
 from plots import (
@@ -73,7 +75,8 @@ layout = html.Div(
                 className="bar-chart-frame",
                 opt={"renderer": "svg", "actions": False}
             )
-        ])
+        ]),
+        dcc.Store(id="bar-prev-excluded-char-ids-mem", storage_type="session")
     ]
 )
 
@@ -96,17 +99,46 @@ def update_last_selected_bar_var(
 @callback(
     Output("bar-chart", "spec"),
     Output('bar-title', 'children'),
+    Output("bar-prev-excluded-char-ids-mem", "data"),
     Input("bar-dropdown", "value"),
     Input("display-size", "children"),
-    Input("excluded-characters", "children"),
-    State('last-selected-bar-var', 'children')
+    Input("excluded-char-ids-mem", "data"),
+    State('last-selected-bar-var', 'children'),
+    State("bar-prev-excluded-char-ids-mem", "data"),
+    State("excluded-char-ids-mem", "modified_timestamp"),
+    State("settings-btn-last-press", "data")
 )
 def update_bar_chart(
-    selected_attribute, display_size_str, excluded_ids_string,
-    last_selected_attribute
+    selected_attribute, display_size_str, excluded_char_ids_mem,
+    last_selected_attribute, prev_excluded_char_ids_mem, 
+    excluded_char_ids_last_update, settings_btn_last_press
 ):
     screen_width = get_screen_width(display_size_str)
-    excluded_character_ids = parse_excluded_character_ids(excluded_ids_string)
+
+    excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
+    prev_excluded_char_ids = get_excluded_char_ids(prev_excluded_char_ids_mem)
+
+    # Prevent unnecessary updates:
+    if (
+        excluded_char_ids_mem is not None
+          and set(excluded_char_ids) == set(prev_excluded_char_ids)
+          and ctx.triggered_id == "excluded-char-ids-mem" 
+    ):
+        now = datetime.now()
+
+        if settings_btn_last_press is not None:
+            last_press_time = settings_btn_last_press['time']
+            last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
+            delta = timedelta(seconds = 1.25)
+            if last_press_time <= now <= (last_press_time + delta):
+                raise PreventUpdate("Halting because update is unnecessary.")
+
+        if excluded_char_ids_last_update > 0:
+            last_update_unix = excluded_char_ids_last_update / 1000
+            last_update_time = datetime.fromtimestamp(last_update_unix)
+            delta = timedelta(seconds = 1.25)
+            if last_update_time <= now <= (last_update_time + delta):
+                raise PreventUpdate("Halting because update is unnecessary.")
 
     if selected_attribute is None:
         selected_attribute = last_selected_attribute
@@ -114,9 +146,9 @@ def update_bar_chart(
     plot = get_bar_chart(
         var=selected_attribute,
         screen_width=screen_width,
-        excluded_character_ids=excluded_character_ids
+        excluded_character_ids=excluded_char_ids
     )
 
     title = get_bar_chart_title(selected_attribute)
 
-    return plot.to_dict(), title
+    return plot.to_dict(), title, excluded_char_ids_mem

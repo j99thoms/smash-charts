@@ -1,12 +1,14 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import html, dcc, Input, Output, State, callback
+from datetime import datetime, timedelta
+from dash.exceptions import PreventUpdate
+from dash import html, dcc, Input, Output, State, callback, ctx
 from utils import (
     get_attribute_selector_dropdown,
     get_vertical_spacer,
     get_screen_width,
-    parse_excluded_character_ids,
+    get_excluded_char_ids,
     get_window_title
 )
 from plots import (
@@ -119,7 +121,8 @@ layout = html.Div(
                     style={"margin-bottom": "30px"}
                 )
             ])
-        ])
+        ]),
+        dcc.Store(id="scatter-prev-excluded-char-ids-mem", storage_type="session"),
     ]
 )
 
@@ -146,20 +149,50 @@ def update_last_selected_scatter_vars(
 @callback(
     Output("scatter-plot", "spec"),
     Output('scatter-title', 'children'),
+    Output("scatter-prev-excluded-char-ids-mem", "data"),
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value"),
     Input("display-size", "children"),
-    Input("excluded-characters", "children"),
+    Input("excluded-char-ids-mem", "data"),
     Input('scatter-image-size-slider', 'value'),
     State("last-selected-scatter-var-1", "children"),
-    State("last-selected-scatter-var-2", "children")
+    State("last-selected-scatter-var-2", "children"),
+    State("scatter-prev-excluded-char-ids-mem", "data"),
+    State("excluded-char-ids-mem", "modified_timestamp"),
+    State("settings-btn-last-press", "data")
 )
 def update_scatter_plot(
-    scatter_var_1, scatter_var_2, display_size_str, excluded_ids_string,
-    image_size_slider_val, last_selected_var_1, last_selected_var_2
+    scatter_var_1, scatter_var_2, display_size_str, excluded_char_ids_mem,
+    image_size_slider_val, last_selected_var_1, last_selected_var_2, 
+    prev_excluded_char_ids_mem, excluded_char_ids_last_update, 
+    settings_btn_last_press
 ):
     screen_width = get_screen_width(display_size_str)
-    excluded_character_ids = parse_excluded_character_ids(excluded_ids_string)
+
+    excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
+    prev_excluded_char_ids = get_excluded_char_ids(prev_excluded_char_ids_mem)
+
+    # Prevent unnecessary updates:
+    if (
+        excluded_char_ids_mem is not None
+          and set(excluded_char_ids) == set(prev_excluded_char_ids)
+          and ctx.triggered_id == "excluded-char-ids-mem" 
+    ):
+        now = datetime.now()
+
+        if settings_btn_last_press is not None:
+            last_press_time = settings_btn_last_press['time']
+            last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
+            delta = timedelta(seconds = 1.25)
+            if last_press_time <= now <= (last_press_time + delta):
+                raise PreventUpdate("Halting because update is unnecessary.")
+
+        if excluded_char_ids_last_update > 0:
+            last_update_unix = excluded_char_ids_last_update / 1000
+            last_update_time = datetime.fromtimestamp(last_update_unix)
+            delta = timedelta(seconds = 1.25)
+            if last_update_time <= now <= (last_update_time + delta):
+                raise PreventUpdate("Halting because update is unnecessary.")
 
     if scatter_var_1 is None:
         scatter_var_1 = last_selected_var_1
@@ -177,13 +210,13 @@ def update_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,
          screen_width=screen_width,
-         excluded_character_ids=excluded_character_ids,
+         excluded_character_ids=excluded_char_ids,
          image_size_multiplier=image_size_multiplier
     )
 
     title = get_scatter_plot_title(scatter_var_1, scatter_var_2)
 
-    return plot.to_dict(), title
+    return plot.to_dict(), title, excluded_char_ids_mem
 
 # Update the correlation matrix plot
 @callback(
