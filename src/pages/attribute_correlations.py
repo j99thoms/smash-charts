@@ -183,14 +183,14 @@ def update_scatter_plot(
         if settings_btn_last_press is not None:
             last_press_time = settings_btn_last_press['time']
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds = 1.25)
+            delta = timedelta(seconds = 2)
             if last_press_time <= now <= (last_press_time + delta):
                 raise PreventUpdate("Halting because update is unnecessary.")
 
         if excluded_char_ids_last_update > 0:
             last_update_unix = excluded_char_ids_last_update / 1000
             last_update_time = datetime.fromtimestamp(last_update_unix)
-            delta = timedelta(seconds = 1.25)
+            delta = timedelta(seconds = 2)
             if last_update_time <= now <= (last_update_time + delta):
                 raise PreventUpdate("Halting because update is unnecessary.")
 

@@ -241,7 +241,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         ):
             last_press_time = settings_btn_last_press['time']
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds = 1.25)
+            delta = timedelta(seconds = 2.5)
             if last_press_time <= datetime.now() <= (last_press_time + delta):
                 return {'selected': []}, excluded_char_ids_mem
 
