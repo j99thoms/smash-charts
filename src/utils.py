@@ -278,9 +278,9 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
 
     return character_attributes_df
 
-def get_correlations_df(excluded_character_ids):
+def get_correlations_df():
     character_attributes_df = get_character_attributes_df(
-        data_type="continuous", excluded_character_ids=excluded_character_ids
+        data_type="continuous"
     ).drop(columns=['row_number', 'col_number'])
 
     corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
