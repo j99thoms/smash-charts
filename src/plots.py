@@ -420,11 +420,13 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
 
     return plot_height, plot_width, image_size
 
-def get_character_selector_chart():
+def get_character_selector_chart(excluded_char_ids = []):
     character_df = get_character_attributes_df()
+    character_df['excluded'] = character_df.index.isin(excluded_char_ids)
 
     character_selector = alt.selection_point(
-        name="character_selector", toggle='true', empty=False
+        name="character_selector", toggle='true', empty=False, clear=False,
+        value=999 # Hack to deal with unexpected behaviour when the selector is empty
     )
 
     n_rows, n_cols = character_df[['row_number', 'col_number']].max()
@@ -436,7 +438,10 @@ def get_character_selector_chart():
         alt.Url('img_url'),
         alt.Tooltip(['Character', 'Character #']),
         opacity=alt.condition(
-            character_selector, alt.value(0.25), alt.value(1)
+            # character_selector XOR datum.excluded
+            (character_selector | alt.datum.excluded) &
+            ~(character_selector & alt.datum.excluded),
+            alt.value(0.25), alt.value(1)
         )
     ).mark_image(
         width=plot_width//n_cols,

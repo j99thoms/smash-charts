@@ -330,11 +330,12 @@ def append_row_col_for_character_selector(character_df):
 
     return character_df
 
-def parse_excluded_character_ids(excluded_ids_string):
-    if excluded_ids_string == "" or excluded_ids_string is None:
+def get_excluded_char_ids(excluded_char_ids_mem):
+    if excluded_char_ids_mem is None:
         return []
-    else:
-        return [int(id) - 1 for id in excluded_ids_string.split(',')]
+
+    ids = excluded_char_ids_mem['ids']
+    return [] if ids is None else ids
 
 def make_dash_table(df):
     """ Return a dash definition of an HTML table for a Pandas dataframe """

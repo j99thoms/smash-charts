@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc
 import dash_vega_components as dvc
 import dash_mantine_components as dmc
 from utils import get_logo, get_vertical_spacer
@@ -7,7 +7,6 @@ from navigation import (
     get_drawer,
     get_menu_button
 )
-from plots import get_character_selector_chart
 
 def get_app_html(pages, dash_page_container):
     header = get_header()
@@ -74,11 +73,13 @@ def get_settings_menu():
             html.H5("Select Characters:"),
             dvc.Vega(
                 id="character-selector-chart",
-                spec=get_character_selector_chart().to_dict(),
+                spec=None,
                 signalsToObserve=["character_selector"],
                 opt={"renderer": "svg", "actions": False}
             ),
-            html.Div(id='excluded-characters', style={'display': 'None'})
+            dcc.Store(id="char-selector-mem", storage_type="memory"),
+            dcc.Store(id="excluded-char-ids-mem", storage_type="session"),
+            dcc.Store(id="settings-btn-last-press", storage_type="memory")
         ]
     )
 
