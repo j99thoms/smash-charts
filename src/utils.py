@@ -272,7 +272,7 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
     character_attributes_df = append_row_col_for_character_selector(character_attributes_df)
 
     if excluded_character_ids is not None:
-       character_attributes_df =  character_attributes_df.loc[
+       character_attributes_df = character_attributes_df.loc[
            ~character_attributes_df.index.isin(excluded_character_ids)
         ]
 
