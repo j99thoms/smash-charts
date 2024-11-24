@@ -271,6 +271,17 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
 
     character_attributes_df = append_row_col_for_character_selector(character_attributes_df)
 
+    character_attributes_df['img_url'] = (
+        IMG_DIR + "/heads/"
+        + character_attributes_df['Character #'] + "_"
+        + character_attributes_df['Character'].\
+            str.lower().\
+            str.replace(" ", "_", regex=False).\
+            str.replace("&", "and", regex=False).\
+            str.replace("\.|\(|\)", "", regex=True)
+        + ".png"
+    )
+
     if excluded_character_ids is not None:
        character_attributes_df = character_attributes_df.loc[
            ~character_attributes_df.index.isin(excluded_character_ids)
