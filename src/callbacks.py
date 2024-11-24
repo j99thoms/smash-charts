@@ -265,7 +265,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         if (len(diff) != 1):
             # Should not have > 1 change except if chart was reset,
             # which is already dealt with above
-            return selector_mem, excluded_char_ids_mem
+            return {'selected': selected_char_ids}, excluded_char_ids_mem
         else:
             pressed_id = diff[0]
 
