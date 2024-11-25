@@ -1,3 +1,5 @@
 src/__pycache__/*
 src/pages/__pycache__/*
 *.xlsx
+.Rproj.user
+.Rhistory
