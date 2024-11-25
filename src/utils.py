@@ -241,14 +241,7 @@ def get_screen_width(display_size_str):
 def get_character_attributes_df(data_type="all", excluded_character_ids=None):
     character_attributes_df = pd.read_csv(f"{DATA_DIR}/character_data.csv")
 
-    # Drop non-playable characters
-    non_playable_characters = [
-        "Giga Bowser", "Mob Smash Mii Enemy (Brawler)",
-        "Mob Smash Mii Enemy (Swordfighter)", "Mob Smash Mii Enemy (Gunner)"
-    ]
-    character_attributes_df = character_attributes_df[
-        ~character_attributes_df['Character'].isin(non_playable_characters)
-    ]
+    character_attributes_df = character_attributes_df.iloc[:-1] # rm Giga Bowser
 
     boolean_columns = [
         "Has Walljump", "Has Crawl", "Has Wallcling", "Has Zair"
