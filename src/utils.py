@@ -244,9 +244,9 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
     character_attributes_df = character_attributes_df.iloc[:-1] # rm Giga Bowser
 
     boolean_columns = [
-        "Has Walljump", "Has Crawl", "Has Wallcling", "Has Zair"
+        "has_walljump", "has_crawl", "has_wallcling", "has_zair"
     ]
-    ordinal_columns = ["Number of Jumps"]
+    ordinal_columns = ["number_of_jumps"]
 
     data_type = data_type.lower()
     if data_type == "continuous":
@@ -266,8 +266,8 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
 
     character_attributes_df['img_url'] = (
         IMG_DIR + "/heads/"
-        + character_attributes_df['Character #'] + "_"
-        + character_attributes_df['Character'].\
+        + character_attributes_df['character_number'] + "_"
+        + character_attributes_df['character'].\
             str.lower().\
             str.replace(" ", "_", regex=False).\
             str.replace("&", "and", regex=False).\
@@ -286,6 +286,14 @@ def get_correlations_df():
     character_attributes_df = get_character_attributes_df(
         data_type="continuous"
     ).drop(columns=['row_number', 'col_number'])
+
+    column_names = character_attributes_df.columns.tolist()
+    formatted_names = [
+        format_attribute_name(column_name) for column_name in column_names
+    ]
+    character_attributes_df = character_attributes_df.rename(
+        columns=dict(zip(column_names, formatted_names))
+    )
 
     corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
     corr_df = corr_df.reset_index().melt(id_vars='index').rename(
@@ -306,22 +314,25 @@ def get_correlations_df():
 def get_dropdown_options(data_type):
     character_attributes_df = get_character_attributes_df(data_type=data_type)
 
-    # The first 2 columns are 'Character #' and 'Character'.
+    # The first 2 columns are 'character_number' and 'character'.
     # The last 3 columns are 'img_url', 'row_number', and 'col_number'.
-    attribute_names = character_attributes_df.columns.to_series().iloc[2:-3]
+    attribute_columns = character_attributes_df.columns.to_series().iloc[2:-3]
+    attribute_names = [
+        format_attribute_name(column_name) for column_name in attribute_columns
+    ]
 
     dropdown_options = [
-        {
-            'value': attribute_name,
-            'label': attribute_name
-        }
-        for attribute_name in attribute_names
+        {'value': column, 'label': name}
+        for column, name in zip(attribute_columns, attribute_names)
     ]
     
     return dropdown_options
 
+def format_attribute_name(column_name):
+    return column_name.replace("_", " ").title()
+
 def append_row_col_for_character_selector(character_df):
-    character_df = character_df.sort_values(by="Character #", ignore_index=True)
+    character_df = character_df.sort_values(by="character_number", ignore_index=True)
 
     # Calculate number of rows and columns needed for a square grid
     n_characters = len(character_df)

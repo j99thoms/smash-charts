@@ -1,12 +1,12 @@
 import math
 import altair as alt
 from utils import (
-    get_character_attributes_df, get_correlations_df
+    get_character_attributes_df, get_correlations_df, format_attribute_name
 )
 
-DEFAULT_BAR_CHART_ATTRIBUTE = "Weight"
-DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "Max Air Speed"
-DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "Max Run Speed"
+DEFAULT_BAR_CHART_ATTRIBUTE = "weight"
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "max_horizontal_air_speed"
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "max_run_speed"
 
 def get_scatter_plot(
         var_1, var_2, screen_width,
@@ -26,16 +26,16 @@ def get_scatter_plot(
         data_type="continuous", excluded_character_ids=excluded_character_ids
     )
     if var_2 == var_1:
-         plot_df = plot_df[['Character', 'img_url', var_1]]
+         plot_df = plot_df[['character', 'img_url', var_1]]
     else:
-        plot_df = plot_df[['Character', 'img_url', var_1, var_2]]
+        plot_df = plot_df[['character', 'img_url', var_1, var_2]]
     plot_df = plot_df.dropna()
     
     # Create the scatter plot
     plot = alt.Chart(plot_df).encode(
-        alt.X(var_1).scale(zero=False),
-        alt.Y(var_2).scale(zero=False),
-        alt.Tooltip(['Character', var_1, var_2]),
+        alt.X(var_1, title=format_attribute_name(var_1)).scale(zero=False),
+        alt.Y(var_2, title=format_attribute_name(var_2)).scale(zero=False),
+        alt.Tooltip(['character', var_1, var_2]),
         alt.Url('img_url')
     ).mark_image(
         height=image_size,
@@ -56,7 +56,7 @@ def get_scatter_plot_title(var_1, var_2):
     if var_2 is None:
         var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
-    title = f"{var_1} vs. {var_2}"
+    title = f"{format_attribute_name(var_1)} vs. {format_attribute_name(var_2)}"
 
     return title
 
@@ -270,29 +270,29 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
     plot_df = get_character_attributes_df(
         data_type="quantitative", excluded_character_ids=excluded_character_ids
     )
-    plot_df = plot_df[['Character', 'img_url', var]]
+    plot_df = plot_df[['character', 'img_url', var]]
     plot_df = plot_df.dropna()
 
     sorted_df = plot_df.sort_values(by=var, ascending=False)
-    sorted_character_list = sorted_df.Character.to_list()
+    sorted_character_list = sorted_df.character.to_list()
     max_val = sorted_df[var].to_list()[0]
 
     # Create the base canvas for the bar chart
     if chart_orientation == "horizontal":
         base_plot = alt.Chart(plot_df).encode(
-            alt.X('Character', sort=sorted_character_list, title=None, axis=None),
-            alt.Tooltip(['Character', var])
+            alt.X('character', sort=sorted_character_list, title=None, axis=None),
+            alt.Tooltip(['character', var])
         )
     else:
         base_plot = alt.Chart(plot_df).encode(
-            alt.Y('Character', title=None, sort=sorted_character_list, axis=None),
-            alt.Tooltip(['Character', var])
+            alt.Y('character', title=None, sort=sorted_character_list, axis=None),
+            alt.Tooltip(['character', var])
         )
 
     # Add the bars to the base canvas for the bar chart
     if chart_orientation == "horizontal":
         bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.Y(var).axis(
+            alt.Y(var, title=format_attribute_name(var)).axis(
                 orient='left', titlePadding=0
             ).scale(
                 domainMax = max_val * 1.15
@@ -300,7 +300,7 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
         )
     else:
         bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.X(var).axis(
+            alt.X(var, title=format_attribute_name(var)).axis(
                 orient='bottom', titlePadding=2
             ).scale(
                 domainMax = max_val * 1.15
@@ -314,7 +314,7 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
             width=image_size
         ).encode(
             alt.X(
-                'Character',
+                'character',
                 sort=sorted_character_list,
                 title='Character'
             ).axis(
@@ -331,7 +331,7 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
             width=image_size
         ).encode(
             alt.Y(
-                'Character',
+                'character',
                 sort=sorted_character_list,
                 title='Character'
             ).axis(
@@ -378,7 +378,7 @@ def get_bar_chart_title(var):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
     
-    title = f"Distribution of {var}s"
+    title = f"Distribution of {format_attribute_name(var)}s"
 
     return title
 
@@ -436,7 +436,7 @@ def get_character_selector_chart(excluded_char_ids = []):
         alt.X('col_number', axis=None),
         alt.Y('row_number', axis=None).scale(reverse=True),
         alt.Url('img_url'),
-        alt.Tooltip(['Character', 'Character #']),
+        alt.Tooltip(['character', 'character_number']),
         opacity=alt.condition(
             # character_selector XOR datum.excluded
             (character_selector | alt.datum.excluded) &

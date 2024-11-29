@@ -1,4 +1,4 @@
-Character #,Character,Weight,Max Fall Speed,Fast-Fall Speed,Initial Dash Speed,Max Run Speed,Max Air Speed,Base Air Acceleration,Air Acceleration Range,Ground Friction,Base Run Acceleration,Run Acceleration Range,Jump Height,Hop Height,Air Jump Height,Horizontal Air Friction,Gravity,Ledge Jump Height,Number of Jumps,Has Walljump,Has Crawl,Has Wallcling,Has Zair
+character_number,character,weight,max_fall_speed,fastfall_speed,initial_dash_speed,max_run_speed,max_horizontal_air_speed,base_air_acceleration,air_acceleration_range,ground_friction,base_run_acceleration,run_acceleration_range,jump_height,hop_height,air_jump_height,horizontal_air_friction,gravity,ledge_jump_height,number_of_jumps,has_walljump,has_crawl,has_wallcling,has_zair
 01,Mario,98,1.5,2.4,1.936,1.76,1.208,0.01,0.07,0.102,0.044,0.10978,36.33,17.54,36.33,0.015,0.087,38.165,2,TRUE,FALSE,FALSE,FALSE
 02,Donkey Kong,127,1.63,2.608,2.09,1.873,1.208,0.01,0.05,0.123,0.044,0.07337,34,17.3,35.5,0.015,0.085,37,2,FALSE,FALSE,FALSE,FALSE
 03,Link,104,1.6,3.04,1.98,1.534,0.924,0.01,0.04,0.113,0.044,0.13167,27.8,13.38,29,0.0038,0.096,33.9,2,FALSE,FALSE,FALSE,FALSE
