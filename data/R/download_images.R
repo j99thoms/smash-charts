@@ -1,14 +1,14 @@
-library(here)
 library(dplyr)
 library(stringr)
 
-IMG_DIR <- here('../src/assets/img')
+IMG_DIR <- here::here('../../src/assets/img')
 
 img_files <- c(
   "0/0d/MarioHeadSSBU",
   "b/ba/DonkeyKongHeadSSBU",
   "a/aa/LinkHeadSSBU",
   "7/7f/SamusHeadSSBU",
+  "9/96/DarkSamusHeadSSBU",
   "0/03/YoshiHeadSSBU",
   "9/91/KirbyHeadSSBU",
   "0/04/FoxHeadSSBU",
@@ -18,6 +18,7 @@ img_files <- c(
   "3/35/CaptainFalconHeadSSBU",
   "9/95/JigglypuffHeadSSBU",
   "d/d2/PeachHeadSSBU",
+  "9/96/DaisyHeadSSBU",
   "b/b5/BowserHeadSSBU",
   "8/8b/IceClimbersHeadSSBU",
   "d/d3/IceClimbersHeadRedSSBU",
@@ -27,13 +28,16 @@ img_files <- c(
   "d/d6/PichuHeadSSBU",
   "2/2f/FalcoHeadSSBU",
   "b/bd/MarthHeadSSBU",
+  "0/04/LucinaHeadSSBU",
   "c/cd/YoungLinkHeadSSBU",
   "7/78/GanondorfHeadSSBU",
   "9/96/MewtwoHeadSSBU",
   "e/ed/RoyHeadSSBU",
+  "2/25/ChromHeadSSBU",
   "6/6b/MrGame%26WatchHeadSSBU",
   "d/de/MetaKnightHeadSSBU",
   "a/aa/PitHeadSSBU",
+  "e/ed/DarkPitHeadSSBU",
   "7/71/ZeroSuitSamusHeadSSBU",
   "0/05/WarioHeadSSBU",
   "9/9a/SnakeHeadSSBU",
@@ -66,12 +70,14 @@ img_files <- c(
   "0/07/BowserJrHeadSSBU",
   "a/a1/DuckHuntHeadSSBU",
   "f/fb/RyuHeadSSBU",
+  "7/72/KenHeadSSBU",
   "3/3b/CloudHeadSSBU",
   "c/cf/CorrinHeadSSBU",
   "6/6c/BayonettaHeadSSBU",
   "f/f1/InklingHeadSSBU",
   "5/5b/RidleyHeadSSBU",
   "d/df/SimonHeadSSBU",
+  "0/07/RichterHeadSSBU",
   "d/de/KingKRoolHeadSSBU",
   "2/2f/IsabelleHeadSSBU",
   "5/50/IncineroarHeadSSBU",
@@ -87,21 +93,14 @@ img_files <- c(
   "7/79/PyraHeadSSBU",
   "3/32/MythraHeadSSBU",
   "6/67/KazuyaHeadSSBU",
-  "0/0e/SoraHeadSSBU",
-  "9/96/DarkSamusHeadSSBU",
-  "9/96/DaisyHeadSSBU",
-  "0/04/LucinaHeadSSBU",
-  "2/25/ChromHeadSSBU",
-  "e/ed/DarkPitHeadSSBU",
-  "7/72/KenHeadSSBU",
-  "0/07/RichterHeadSSBU"
+  "0/0e/SoraHeadSSBU"
 )
 
-character_data <- readr::read_csv('character_data.csv', col_select = 1:2) |>
+fighter_data <- readr::read_csv('../clean/fighter_params.csv', col_select = 1:2) |>
   janitor::clean_names() |>
-  filter(character != "Giga Bowser") |>
+  filter(fighter != "Giga Bowser") |>
   mutate(
-    character = str_to_lower(character) |>
+    fighter = str_to_lower(fighter) |>
       str_replace_all(" ", "_") |>
       str_replace_all("&", "and") |>
       str_remove_all("\\.|\\(|\\)"),
@@ -112,9 +111,9 @@ output_dir <- file.path(IMG_DIR, 'heads')
 if (!dir.exists(output_dir)) dir.create(output_dir)
 
 purrr::pwalk(
-  character_data,
-  function(character_number, character, img_url) {
-    file_name <- glue::glue("{character_number}_{character}.png")
+  fighter_data,
+  function(fighter_number, fighter, img_url) {
+    file_name <- glue::glue("{fighter_number}_{fighter}.png")
     output_file <- file.path(output_dir, file_name)
     download.file(img_url, output_file, mode = "wb")
   }
