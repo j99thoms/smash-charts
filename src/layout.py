@@ -70,11 +70,11 @@ def get_settings_menu():
         children=[
             html.H3("Settings"),
             get_vertical_spacer(height=10),
-            html.H5("Select Characters:"),
+            html.H5("Select Fighters:"),
             dvc.Vega(
-                id="character-selector-chart",
+                id="fighter-selector-chart",
                 spec=None,
-                signalsToObserve=["character_selector"],
+                signalsToObserve=["fighter_selector"],
                 opt={"renderer": "svg", "actions": False}
             ),
             dcc.Store(id="char-selector-mem", storage_type="memory"),

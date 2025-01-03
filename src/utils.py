@@ -199,7 +199,7 @@ def get_app_title(screen_width):
     if screen_width > 1400:
             # App title is all on one line
             title_text = (
-                "Explore Super Smash Bros Characters "
+                "Explore Super Smash Bros Fighters "
                 "with Interactive Visualizations!"
             )
             app_title = html.H1(
@@ -209,7 +209,7 @@ def get_app_title(screen_width):
             )
     else:
         # App title is split across two lines
-        title_text_upper = "Explore Super Smash Bros. Characters"
+        title_text_upper = "Explore Super Smash Bros. Fighters"
         title_text_lower = "with Interactive Visualizations!"
         if screen_width > 750:
             font_size = 24
@@ -238,10 +238,10 @@ def get_screen_width(display_size_str):
 
     return screen_width
 
-def get_character_attributes_df(data_type="all", excluded_character_ids=None):
-    character_attributes_df = pd.read_csv(f"{DATA_DIR}/character_data.csv")
+def get_fighter_attributes_df(data_type="all", excluded_fighter_ids=None):
+    fighter_attributes_df = pd.read_csv(f"{DATA_DIR}/fighter_data.csv")
 
-    character_attributes_df = character_attributes_df.iloc[:-1] # rm Giga Bowser
+    fighter_attributes_df = fighter_attributes_df.iloc[:-1] # rm Giga Bowser
 
     boolean_columns = [
         "has_walljump", "has_crawl", "has_wallcling", "has_zair"
@@ -250,11 +250,11 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
 
     data_type = data_type.lower()
     if data_type == "continuous":
-        character_attributes_df = character_attributes_df.drop(
+        fighter_attributes_df = fighter_attributes_df.drop(
             columns=(boolean_columns + ordinal_columns)
         )
     elif data_type == "quantitative":
-        character_attributes_df = character_attributes_df.drop(
+        fighter_attributes_df = fighter_attributes_df.drop(
             columns=boolean_columns
         )
     elif data_type == "all":
@@ -262,12 +262,12 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
     else:
         raise ValueError("data_type should be one of 'continuous', 'quantitative', or 'all'.")
 
-    character_attributes_df = append_row_col_for_character_selector(character_attributes_df)
+    fighter_attributes_df = append_row_col_for_fighter_selector(fighter_attributes_df)
 
-    character_attributes_df['img_url'] = (
+    fighter_attributes_df['img_url'] = (
         IMG_DIR + "/heads/"
-        + character_attributes_df['character_number'] + "_"
-        + character_attributes_df['character'].\
+        + fighter_attributes_df['fighter_number'] + "_"
+        + fighter_attributes_df['fighter'].\
             str.lower().\
             str.replace(" ", "_", regex=False).\
             str.replace("&", "and", regex=False).\
@@ -275,27 +275,27 @@ def get_character_attributes_df(data_type="all", excluded_character_ids=None):
         + ".png"
     )
 
-    if excluded_character_ids is not None:
-       character_attributes_df = character_attributes_df.loc[
-           ~character_attributes_df.index.isin(excluded_character_ids)
+    if excluded_fighter_ids is not None:
+       fighter_attributes_df = fighter_attributes_df.loc[
+           ~fighter_attributes_df.index.isin(excluded_fighter_ids)
         ]
 
-    return character_attributes_df
+    return fighter_attributes_df
 
 def get_correlations_df():
-    character_attributes_df = get_character_attributes_df(
+    fighter_attributes_df = get_fighter_attributes_df(
         data_type="continuous"
     ).drop(columns=['row_number', 'col_number'])
 
-    column_names = character_attributes_df.columns.tolist()
+    column_names = fighter_attributes_df.columns.tolist()
     formatted_names = [
         format_attribute_name(column_name) for column_name in column_names
     ]
-    character_attributes_df = character_attributes_df.rename(
+    fighter_attributes_df = fighter_attributes_df.rename(
         columns=dict(zip(column_names, formatted_names))
     )
 
-    corr_df = character_attributes_df.corr(numeric_only=True, method='pearson')
+    corr_df = fighter_attributes_df.corr(numeric_only=True, method='pearson')
     corr_df = corr_df.reset_index().melt(id_vars='index').rename(
         columns={
             'index': 'Attribute 1',
@@ -312,11 +312,11 @@ def get_correlations_df():
     return corr_df
 
 def get_dropdown_options(data_type):
-    character_attributes_df = get_character_attributes_df(data_type=data_type)
+    fighter_attributes_df = get_fighter_attributes_df(data_type=data_type)
 
-    # The first 2 columns are 'character_number' and 'character'.
+    # The first 2 columns are 'fighter_number' and 'fighter'.
     # The last 3 columns are 'img_url', 'row_number', and 'col_number'.
-    attribute_columns = character_attributes_df.columns.to_series().iloc[2:-3]
+    attribute_columns = fighter_attributes_df.columns.to_series().iloc[2:-3]
     attribute_names = [
         format_attribute_name(column_name) for column_name in attribute_columns
     ]
@@ -331,19 +331,19 @@ def get_dropdown_options(data_type):
 def format_attribute_name(column_name):
     return column_name.replace("_", " ").title()
 
-def append_row_col_for_character_selector(character_df):
-    character_df = character_df.sort_values(by="character_number", ignore_index=True)
+def append_row_col_for_fighter_selector(fighter_df):
+    fighter_df = fighter_df.sort_values(by="fighter_number", ignore_index=True)
 
     # Calculate number of rows and columns needed for a square grid
-    n_characters = len(character_df)
-    n_rows = math.ceil(math.sqrt(n_characters))
-    n_cols  = math.ceil(n_characters / n_rows)
+    n_fighters = len(fighter_df)
+    n_rows = math.ceil(math.sqrt(n_fighters))
+    n_cols  = math.ceil(n_fighters / n_rows)
 
     # Generate row-column pairs and add them as new columns
-    row_cols = [*product(range(n_rows), range(n_cols))][:n_characters]
-    character_df['row_number'], character_df['col_number'] = zip(*row_cols)
+    row_cols = [*product(range(n_rows), range(n_cols))][:n_fighters]
+    fighter_df['row_number'], fighter_df['col_number'] = zip(*row_cols)
 
-    return character_df
+    return fighter_df
 
 def get_excluded_char_ids(excluded_char_ids_mem):
     if excluded_char_ids_mem is None:

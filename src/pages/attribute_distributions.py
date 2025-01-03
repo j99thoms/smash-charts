@@ -146,7 +146,7 @@ def update_bar_chart(
     plot = get_bar_chart(
         var=selected_attribute,
         screen_width=screen_width,
-        excluded_character_ids=excluded_char_ids
+        excluded_fighter_ids=excluded_char_ids
     )
 
     title = get_bar_chart_title(selected_attribute)

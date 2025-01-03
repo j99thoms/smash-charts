@@ -6,7 +6,7 @@ from navigation import (
     get_sidebar_style_outputs,
     get_page_container_style
 )
-from plots import get_character_selector_chart
+from plots import get_fighter_selector_chart
 
 def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 
@@ -204,31 +204,31 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     def record_settings_btn_last_press(n_clicks):
       return {'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-    # Update character selector chart
+    # Update fighter selector chart
     @app.callback(
-        Output("character-selector-chart", "spec"),
+        Output("fighter-selector-chart", "spec"),
         Input("settings-menu-drawer", "opened"),
         State("excluded-char-ids-mem", "data")
     )
-    def update_character_selector_chart(is_opened, excluded_char_ids_mem):
+    def update_fighter_selector_chart(is_opened, excluded_char_ids_mem):
         excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
-        return get_character_selector_chart(excluded_char_ids).to_dict()
+        return get_fighter_selector_chart(excluded_char_ids).to_dict()
 
-    # Update excluded characters
+    # Update excluded fighters
     @app.callback(
         Output("char-selector-mem", "data"),
         Output("excluded-char-ids-mem", "data"),
-        Input("character-selector-chart", "signalData"),
+        Input("fighter-selector-chart", "signalData"),
         State("char-selector-mem", "data"),
         State("excluded-char-ids-mem", "data"),
         State("settings-btn-last-press", "data"),
         prevent_initial_call=True
     )
-    def update_selected_characters(
+    def update_selected_fighters(
         selector_signal, selector_mem, 
         excluded_char_ids_mem, settings_btn_last_press
     ):
-        selector_dict = selector_signal['character_selector']
+        selector_dict = selector_signal['fighter_selector']
 
         if '_vgsid_' in selector_dict:
             selected_char_ids_string = selector_dict['_vgsid_'].strip("Set()")
@@ -245,7 +245,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             if last_press_time <= datetime.now() <= (last_press_time + delta):
                 return {'selected': []}, excluded_char_ids_mem
 
-        # Get character ids currently selected in the chart's selection_point:
+        # Get fighter ids currently selected in the chart's selection_point:
         if not selected_char_ids_string:
             selected_char_ids = []
         else:
@@ -254,7 +254,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             if 998 in selected_char_ids:
                 selected_char_ids.remove(998)
 
-        # Get character ids previously selected in the chart's selection_point:
+        # Get fighter ids previously selected in the chart's selection_point:
         if not selector_mem:
             prev_selected_char_ids = []
         else:

@@ -1,7 +1,7 @@
 import math
 import altair as alt
 from utils import (
-    get_character_attributes_df, get_correlations_df, format_attribute_name
+    get_fighter_attributes_df, get_correlations_df, format_attribute_name
 )
 
 DEFAULT_BAR_CHART_ATTRIBUTE = "weight"
@@ -10,7 +10,7 @@ DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "max_run_speed"
 
 def get_scatter_plot(
         var_1, var_2, screen_width,
-        excluded_character_ids, image_size_multiplier=1
+        excluded_fighter_ids, image_size_multiplier=1
     ):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
@@ -22,20 +22,20 @@ def get_scatter_plot(
     image_size = image_size * image_size_multiplier
 
     # Retrieve the data needed for the scatter plot
-    plot_df = get_character_attributes_df(
-        data_type="continuous", excluded_character_ids=excluded_character_ids
+    plot_df = get_fighter_attributes_df(
+        data_type="continuous", excluded_fighter_ids=excluded_fighter_ids
     )
     if var_2 == var_1:
-         plot_df = plot_df[['character', 'img_url', var_1]]
+         plot_df = plot_df[['fighter', 'img_url', var_1]]
     else:
-        plot_df = plot_df[['character', 'img_url', var_1, var_2]]
+        plot_df = plot_df[['fighter', 'img_url', var_1, var_2]]
     plot_df = plot_df.dropna()
     
     # Create the scatter plot
     plot = alt.Chart(plot_df).encode(
         alt.X(var_1, title=format_attribute_name(var_1)).scale(zero=False),
         alt.Y(var_2, title=format_attribute_name(var_2)).scale(zero=False),
-        alt.Tooltip(['character', var_1, var_2]),
+        alt.Tooltip(['fighter', var_1, var_2]),
         alt.Url('img_url')
     ).mark_image(
         height=image_size,
@@ -252,7 +252,7 @@ def get_corr_text_size(circle_size):
         # If the circle size is <= 250, don't display any text inside the circle
         return 0
 
-def get_bar_chart(var, screen_width, excluded_character_ids):
+def get_bar_chart(var, screen_width, excluded_fighter_ids):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
@@ -267,26 +267,26 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
     axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
 
     # Retrieve the data needed for the bar chart
-    plot_df = get_character_attributes_df(
-        data_type="quantitative", excluded_character_ids=excluded_character_ids
+    plot_df = get_fighter_attributes_df(
+        data_type="quantitative", excluded_fighter_ids=excluded_fighter_ids
     )
-    plot_df = plot_df[['character', 'img_url', var]]
+    plot_df = plot_df[['fighter', 'img_url', var]]
     plot_df = plot_df.dropna()
 
     sorted_df = plot_df.sort_values(by=var, ascending=False)
-    sorted_character_list = sorted_df.character.to_list()
+    sorted_fighter_list = sorted_df.fighter.to_list()
     max_val = sorted_df[var].to_list()[0]
 
     # Create the base canvas for the bar chart
     if chart_orientation == "horizontal":
         base_plot = alt.Chart(plot_df).encode(
-            alt.X('character', sort=sorted_character_list, title=None, axis=None),
-            alt.Tooltip(['character', var])
+            alt.X('fighter', sort=sorted_fighter_list, title=None, axis=None),
+            alt.Tooltip(['fighter', var])
         )
     else:
         base_plot = alt.Chart(plot_df).encode(
-            alt.Y('character', title=None, sort=sorted_character_list, axis=None),
-            alt.Tooltip(['character', var])
+            alt.Y('fighter', title=None, sort=sorted_fighter_list, axis=None),
+            alt.Tooltip(['fighter', var])
         )
 
     # Add the bars to the base canvas for the bar chart
@@ -307,16 +307,16 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
             )
         )
 
-    # Add the character icons to the base canvas for the bar chart
+    # Add the fighter icons to the base canvas for the bar chart
     if chart_orientation == "horizontal":
         icons = base_plot.mark_image(
             height=image_size,
             width=image_size
         ).encode(
             alt.X(
-                'character',
-                sort=sorted_character_list,
-                title='Character'
+                'fighter',
+                sort=sorted_fighter_list,
+                title='fighter'
             ).axis(
                 domainOpacity=0,
                 ticks=False,
@@ -331,9 +331,9 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
             width=image_size
         ).encode(
             alt.Y(
-                'character',
-                sort=sorted_character_list,
-                title='Character'
+                'fighter',
+                sort=sorted_fighter_list,
+                title='fighter'
             ).axis(
                 domainOpacity=0,
                 ticks=False,
@@ -353,7 +353,7 @@ def get_bar_chart(var, screen_width, excluded_character_ids):
     else:
         icons = icons.properties(height=plot_height)
 
-    # Overlay the character icons plot on top of the bar chart plot
+    # Overlay the fighter icons plot on top of the bar chart plot
     if chart_orientation == "horizontal":
         # Charcter icons appear below each bar
         plot = alt.vconcat(bars, icons)
@@ -420,27 +420,27 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
 
     return plot_height, plot_width, image_size
 
-def get_character_selector_chart(excluded_char_ids = []):
-    character_df = get_character_attributes_df()
-    character_df['excluded'] = character_df.index.isin(excluded_char_ids)
+def get_fighter_selector_chart(excluded_char_ids = []):
+    fighter_df = get_fighter_attributes_df()
+    fighter_df['excluded'] = fighter_df.index.isin(excluded_char_ids)
 
-    character_selector = alt.selection_point(
-        name="character_selector", toggle='true', empty=False, clear=False,
+    fighter_selector = alt.selection_point(
+        name="fighter_selector", toggle='true', empty=False, clear=False,
         value=999 # Hack to deal with unexpected behaviour when the selector is empty
     )
 
-    n_rows, n_cols = character_df[['row_number', 'col_number']].max()
+    n_rows, n_cols = fighter_df[['row_number', 'col_number']].max()
 
     plot_height = plot_width = 270
-    plot = alt.Chart(character_df).encode(
+    plot = alt.Chart(fighter_df).encode(
         alt.X('col_number', axis=None),
         alt.Y('row_number', axis=None).scale(reverse=True),
         alt.Url('img_url'),
-        alt.Tooltip(['character', 'character_number']),
+        alt.Tooltip(['fighter', 'fighter_number']),
         opacity=alt.condition(
-            # character_selector XOR datum.excluded
-            (character_selector | alt.datum.excluded) &
-            ~(character_selector & alt.datum.excluded),
+            # fighter_selector XOR datum.excluded
+            (fighter_selector | alt.datum.excluded) &
+            ~(fighter_selector & alt.datum.excluded),
             alt.value(0.25), alt.value(1)
         )
     ).mark_image(
@@ -451,6 +451,6 @@ def get_character_selector_chart(excluded_char_ids = []):
     ).properties(
         width=plot_width,
         height=plot_height
-    ).add_params(character_selector)
+    ).add_params(fighter_selector)
 
     return plot

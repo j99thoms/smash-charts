@@ -210,7 +210,7 @@ def update_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,
          screen_width=screen_width,
-         excluded_character_ids=excluded_char_ids,
+         excluded_fighter_ids=excluded_char_ids,
          image_size_multiplier=image_size_multiplier
     )
 
