@@ -7,7 +7,7 @@ from dash_iconify import DashIconify
 
 IMG_DIR = "assets/img"
 TXT_DIR = "assets/txt"
-DATA_DIR = "../data"
+DATA_DIR = "../data/clean"
 
 def get_icon(icon, height=16):
     return DashIconify(icon=icon, height=height)
@@ -239,7 +239,7 @@ def get_screen_width(display_size_str):
     return screen_width
 
 def get_fighter_attributes_df(data_type="all", excluded_fighter_ids=None):
-    fighter_attributes_df = pd.read_csv(f"{DATA_DIR}/fighter_data.csv")
+    fighter_attributes_df = pd.read_csv(f"{DATA_DIR}/fighter_params.csv")
 
     fighter_attributes_df = fighter_attributes_df.iloc[:-1] # rm Giga Bowser
 
