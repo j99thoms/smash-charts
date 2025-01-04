@@ -10,7 +10,7 @@ fighter_params_sheet_url <- paste0(
   'export?format=csv&gid=963542361'
 )
 raw_fighter_params_filename <- file.path(
-  DATA_DIR, 'raw/fighter_params.csv'
+  DATA_DIR, 'raw/ultimate_fighter_params.csv'
 )
 download.file(
   fighter_params_sheet_url, raw_fighter_params_filename, mode = 'wb'
@@ -157,6 +157,6 @@ cleaned_fighter_params <- raw_fighter_params |>
 
 # Write the cleaned data to file
 cleaned_fighter_params_filename <- file.path(
-  DATA_DIR, 'clean/fighter_params.csv'
+  DATA_DIR, 'clean/ultimate_fighter_params.csv'
 )
 write_csv(cleaned_fighter_params, cleaned_fighter_params_filename)

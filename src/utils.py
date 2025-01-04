@@ -238,17 +238,17 @@ def get_screen_width(display_size_str):
 
     return screen_width
 
-def get_fighter_attributes_df(data_type="all", excluded_fighter_ids=None):
-    fighter_attributes_df = pd.read_csv(f"{DATA_DIR}/fighter_params.csv")
+def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter_ids=None):
+    fighter_attributes_df = pd.read_csv(f"{DATA_DIR}/{game}_fighter_params.csv")
 
     fighter_attributes_df = fighter_attributes_df.iloc[:-1] # rm Giga Bowser
 
-    ordinal_columns = ["number_of_jumps"]
+    ordinal_columns = ["number_of_jumps", "jump_frames"]
 
     data_type = data_type.lower()
     if data_type == "continuous":
         fighter_attributes_df = fighter_attributes_df.drop(
-            columns=(ordinal_columns)
+            columns=(ordinal_columns), errors='ignore'
         )
     elif data_type == "quantitative":
         pass
