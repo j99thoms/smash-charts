@@ -268,7 +268,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids):
 
     # Retrieve the data needed for the bar chart
     plot_df = get_fighter_attributes_df(
-        data_type="quantitative", excluded_fighter_ids=excluded_fighter_ids
+        excluded_fighter_ids=excluded_fighter_ids
     )
     plot_df = plot_df[['fighter', 'img_url', var]]
     plot_df = plot_df.dropna()

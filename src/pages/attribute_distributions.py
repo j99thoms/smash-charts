@@ -37,8 +37,7 @@ layout = html.Div(
                         children=[
                             get_attribute_selector_dropdown(
                                 div_id="bar-dropdown",
-                                default_value=DEFAULT_BAR_CHART_ATTRIBUTE,
-                                data_type="quantitative"
+                                default_value=DEFAULT_BAR_CHART_ATTRIBUTE
                             )
                         ],
                         style={"width": "270px"}

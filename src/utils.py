@@ -117,7 +117,7 @@ def get_smash_wiki_credits():
     
     return smash_wiki_credits
 
-def get_attribute_selector_dropdown(div_id, default_value, data_type):
+def get_attribute_selector_dropdown(div_id, default_value, data_type="all"):
     dropdown_options = get_dropdown_options(data_type=data_type)
     attribute_selector_dropdown = dcc.Dropdown(
         id=div_id,
@@ -250,12 +250,10 @@ def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter
         fighter_attributes_df = fighter_attributes_df.drop(
             columns=(ordinal_columns), errors='ignore'
         )
-    elif data_type == "quantitative":
-        pass
     elif data_type == "all":
         pass
     else:
-        raise ValueError("data_type should be one of 'continuous', 'quantitative', or 'all'.")
+        raise ValueError("data_type should be either 'continuous' or 'all'.")
 
     fighter_attributes_df = append_row_col_for_fighter_selector(fighter_attributes_df)
 
