@@ -243,20 +243,15 @@ def get_fighter_attributes_df(data_type="all", excluded_fighter_ids=None):
 
     fighter_attributes_df = fighter_attributes_df.iloc[:-1] # rm Giga Bowser
 
-    boolean_columns = [
-        "has_walljump", "has_crawl", "has_wallcling", "has_zair"
-    ]
     ordinal_columns = ["number_of_jumps"]
 
     data_type = data_type.lower()
     if data_type == "continuous":
         fighter_attributes_df = fighter_attributes_df.drop(
-            columns=(boolean_columns + ordinal_columns)
+            columns=(ordinal_columns)
         )
     elif data_type == "quantitative":
-        fighter_attributes_df = fighter_attributes_df.drop(
-            columns=boolean_columns
-        )
+        pass
     elif data_type == "all":
         pass
     else:

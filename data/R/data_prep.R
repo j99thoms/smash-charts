@@ -131,11 +131,10 @@ cleaned_fighter_params <- raw_fighter_params |>
     max_fall_speed = maximum_fall_speed,
     fastfall_speed,
     initial_dash_speed = dash_initial_velocity,
-    max_run_speed = run_maximum_velocity,
-    max_horizontal_air_speed = maximum_horizontal_air_speed,
+    run_speed = run_maximum_velocity,
+    horizontal_air_speed = maximum_horizontal_air_speed,
     base_air_acceleration,
     air_acceleration_range = air_maximum_additional_acceleration,
-    ground_friction,
     base_run_acceleration,
     run_acceleration_range = run_maximum_additional_accel,
     jump_height = jump_heights,
@@ -144,8 +143,7 @@ cleaned_fighter_params <- raw_fighter_params |>
     horizontal_air_friction,
     gravity,
     ledge_jump_height,
-    number_of_jumps,
-    has_walljump, has_crawl, has_wallcling, has_zair
+    number_of_jumps
   ) |>
   mutate(
     number_of_jumps = purrr::map_int(

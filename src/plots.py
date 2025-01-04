@@ -5,8 +5,8 @@ from utils import (
 )
 
 DEFAULT_BAR_CHART_ATTRIBUTE = "weight"
-DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "max_horizontal_air_speed"
-DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "max_run_speed"
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "horizontal_air_speed"
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "run_speed"
 
 def get_scatter_plot(
         var_1, var_2, screen_width,
