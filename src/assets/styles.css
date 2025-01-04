@@ -43,6 +43,14 @@
     /* background-color: yellow; */
 }
 
+#game-selector-buttons {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    z-index: 99999;
+    /* background-color: yellow; */
+}
+
 .logo {
     width: 150px;
     height: 50px;

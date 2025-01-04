@@ -117,8 +117,8 @@ def get_smash_wiki_credits():
     
     return smash_wiki_credits
 
-def get_attribute_selector_dropdown(div_id, default_value, data_type="all"):
-    dropdown_options = get_dropdown_options(data_type=data_type)
+def get_attribute_selector_dropdown(div_id, default_value, data_type="all", game="ultimate"):
+    dropdown_options = get_dropdown_options(data_type=data_type, game=game)
     attribute_selector_dropdown = dcc.Dropdown(
         id=div_id,
         options=dropdown_options,
@@ -304,8 +304,8 @@ def get_correlations_df():
 
     return corr_df
 
-def get_dropdown_options(data_type):
-    fighter_attributes_df = get_fighter_attributes_df(data_type=data_type)
+def get_dropdown_options(data_type, game):
+    fighter_attributes_df = get_fighter_attributes_df(data_type=data_type, game=game)
 
     # The first 2 columns are 'fighter_number' and 'fighter'.
     # The last 3 columns are 'img_url', 'row_number', and 'col_number'.

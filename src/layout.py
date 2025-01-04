@@ -58,7 +58,15 @@ def get_header():
             hamburger_menu_drawer_outer,
             logo,
             page_title,
-            settings_menu_button
+            settings_menu_button,
+            dcc.RadioItems(
+                options={
+                    'ultimate': 'SSB Ultimate',
+                    'melee': 'SSB Melee',
+                },
+                value='ultimate',
+                id="game-selector-buttons"
+            )
         ]
     )
 
