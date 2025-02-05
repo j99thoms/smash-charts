@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from dash.exceptions import PreventUpdate
 from dash import html, dcc, Input, Output, State, callback, ctx
 from utils import (
+    get_fighter_attributes_df,
     get_attribute_selector_dropdown,
     get_vertical_spacer,
     get_screen_width,
@@ -34,6 +35,7 @@ layout = html.Div(
                         }
                     ),
                     html.Div(
+                        id="bar-dropdown-container",
                         children=[
                             get_attribute_selector_dropdown(
                                 div_id="bar-dropdown",
@@ -80,6 +82,28 @@ layout = html.Div(
 )
 
 
+# Update dropdown list when game is changed
+@callback(
+    Output("bar-dropdown-container", "children"),
+    Input("game-selector-buttons", "value"),
+    State('last-selected-bar-var', 'children')
+)
+def update_bar_dropdown(
+    selected_game, last_selected_attribute
+):
+    if last_selected_attribute in get_fighter_attributes_df(game=selected_game).columns:
+        default_value = last_selected_attribute
+    else:
+        default_value = DEFAULT_BAR_CHART_ATTRIBUTE
+
+    dropdown = get_attribute_selector_dropdown(
+        div_id="bar-dropdown",
+        default_value=default_value,
+        game=selected_game
+    )
+
+    return dropdown
+
 # Track which variable was selected last
 @callback(
     Output('last-selected-bar-var', 'children'),
@@ -102,13 +126,14 @@ def update_last_selected_bar_var(
     Input("bar-dropdown", "value"),
     Input("display-size", "children"),
     Input("excluded-char-ids-mem", "data"),
+    Input("game-selector-buttons", "value"),
     State('last-selected-bar-var', 'children'),
     State("bar-prev-excluded-char-ids-mem", "data"),
     State("excluded-char-ids-mem", "modified_timestamp"),
     State("settings-btn-last-press", "data")
 )
 def update_bar_chart(
-    selected_attribute, display_size_str, excluded_char_ids_mem,
+    selected_attribute, display_size_str, excluded_char_ids_mem, selected_game,
     last_selected_attribute, prev_excluded_char_ids_mem, 
     excluded_char_ids_last_update, settings_btn_last_press
 ):
@@ -145,7 +170,8 @@ def update_bar_chart(
     plot = get_bar_chart(
         var=selected_attribute,
         screen_width=screen_width,
-        excluded_fighter_ids=excluded_char_ids
+        excluded_fighter_ids=excluded_char_ids,
+        selected_game=selected_game
     )
 
     title = get_bar_chart_title(selected_attribute)

@@ -10,7 +10,7 @@ DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "run_speed"
 
 def get_scatter_plot(
         var_1, var_2, screen_width,
-        excluded_fighter_ids, image_size_multiplier=1
+        excluded_fighter_ids, selected_game, image_size_multiplier=1
     ):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
@@ -23,7 +23,8 @@ def get_scatter_plot(
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_fighter_attributes_df(
-        data_type="continuous", excluded_fighter_ids=excluded_fighter_ids
+        data_type="continuous",
+        excluded_fighter_ids=excluded_fighter_ids, game=selected_game
     )
     if var_2 == var_1:
          plot_df = plot_df[['fighter', 'img_url', var_1]]
@@ -252,7 +253,7 @@ def get_corr_text_size(circle_size):
         # If the circle size is <= 250, don't display any text inside the circle
         return 0
 
-def get_bar_chart(var, screen_width, excluded_fighter_ids):
+def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
@@ -268,7 +269,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids):
 
     # Retrieve the data needed for the bar chart
     plot_df = get_fighter_attributes_df(
-        excluded_fighter_ids=excluded_fighter_ids
+        excluded_fighter_ids=excluded_fighter_ids, game=selected_game
     )
     plot_df = plot_df[['fighter', 'img_url', var]]
     plot_df = plot_df.dropna()
@@ -420,8 +421,8 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
 
     return plot_height, plot_width, image_size
 
-def get_fighter_selector_chart(excluded_char_ids = []):
-    fighter_df = get_fighter_attributes_df()
+def get_fighter_selector_chart(excluded_char_ids = [], selected_game = "ultimate"):
+    fighter_df = get_fighter_attributes_df(game=selected_game)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_char_ids)
 
     fighter_selector = alt.selection_point(

@@ -345,6 +345,49 @@ def get_excluded_char_ids(excluded_char_ids_mem):
     ids = excluded_char_ids_mem['ids']
     return [] if ids is None else ids
 
+def convert_excluded_char_ids(excluded_fighter_numbers, selected_game):
+    excluded_fighter_numbers_df = pd.DataFrame(excluded_fighter_numbers)
+    fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
+
+    excluded_mask = excluded_fighter_numbers_df['excluded']
+    excluded_numbers = excluded_fighter_numbers_df.loc[excluded_mask, 'fighter_number']
+
+    fighter_df['excluded'] = fighter_df['fighter_number'].isin(excluded_numbers)
+    excluded_ids = fighter_df[fighter_df['excluded']].index.tolist()
+
+    return excluded_ids
+
+def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
+    cur_excluded_fighters_df = pd.DataFrame(cur_excluded_fighters)
+    fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
+
+    fighter_df['excluded_in_selected'] = fighter_df.index.isin(ids)
+
+    excluded_fighters_df = pd.merge(
+        cur_excluded_fighters_df, fighter_df, how='left', on='fighter_number'
+    )
+    excluded_fighters_df['excluded'] = excluded_fighters_df['excluded_in_selected'].\
+        fillna(excluded_fighters_df['excluded'])
+
+    return excluded_fighters_df[['fighter_number', 'excluded']].to_dict()
+
+def initialize_excluded_fighters():
+    df = pd.DataFrame({
+        'fighter_number': ["01", "02", "03", "04", "04E", "05", "06", "07", "08",
+                           "09", "10", "11", "12", "13", "13E", "14", "15", "15B",
+                           "16", "17", "18", "19", "20", "21", "21E", "22", "23",
+                           "24", "25", "25E", "26", "27", "28", "28E", "29", "30",
+                           "31", "32", "33", "34", "35", "36", "37", "38", "39",
+                           "40", "41", "42", "43", "44", "45", "46", "47", "48",
+                           "49", "50", "51", "52", "53", "54", "55", "56", "57",
+                           "58", "59", "60", "60E", "61", "62", "63", "64", "65",
+                           "66", "66E", "67", "68", "69", "70", "71", "72", "73",
+                           "74", "75", "76", "77", "78", "79", "80", "81", "82"]
+    })
+    df['excluded'] = False # All fighters are initially included
+
+    return df.to_dict()
+
 def make_dash_table(df):
     """ Return a dash definition of an HTML table for a Pandas dataframe """
     table = []

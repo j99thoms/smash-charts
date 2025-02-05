@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from dash.exceptions import PreventUpdate
 from dash import html, dcc, Input, Output, State, callback, ctx
 from utils import (
+    get_fighter_attributes_df,
     get_attribute_selector_dropdown,
     get_vertical_spacer,
     get_screen_width,
@@ -36,6 +37,7 @@ layout = html.Div(
                         }
                     ),
                     html.Div(
+                        id="scatter-dropdown-container",
                         children=[
                             get_attribute_selector_dropdown(
                                 div_id="scatter-dropdown-1",
@@ -126,6 +128,47 @@ layout = html.Div(
     ]
 )
 
+
+# Update dropdown list when game is changed
+@callback(
+    Output("scatter-dropdown-container", "children"),
+    Input("game-selector-buttons", "value"),
+    State("last-selected-scatter-var-1", "children"),
+    State("last-selected-scatter-var-2", "children")
+)
+def update_scatter_dropdowns(
+    selected_game, last_selected_var_1, last_selected_var_2
+):
+    valid_attributes = get_fighter_attributes_df(game=selected_game).columns
+
+    if last_selected_var_1 in valid_attributes:
+        default_value_1 = last_selected_var_1
+    else:
+        default_value_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
+
+    if last_selected_var_2 in valid_attributes:
+        default_value_2 = last_selected_var_2
+    else:
+        default_value_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
+
+    dropdowns = [
+        get_attribute_selector_dropdown(
+            div_id="scatter-dropdown-1",
+            default_value=default_value_1,
+            data_type="continuous",
+            game=selected_game
+        ),
+        get_vertical_spacer(height=8),
+        get_attribute_selector_dropdown(
+            div_id="scatter-dropdown-2",
+            default_value=default_value_2,
+            data_type="continuous",
+            game=selected_game
+        )
+    ]
+
+    return dropdowns
+
 # Track which variables were selected last
 @callback(
     Output('last-selected-scatter-var-1', 'children'),
@@ -154,6 +197,7 @@ def update_last_selected_scatter_vars(
     Input("scatter-dropdown-2", "value"),
     Input("display-size", "children"),
     Input("excluded-char-ids-mem", "data"),
+    Input("game-selector-buttons", "value"),
     Input('scatter-image-size-slider', 'value'),
     State("last-selected-scatter-var-1", "children"),
     State("last-selected-scatter-var-2", "children"),
@@ -162,8 +206,9 @@ def update_last_selected_scatter_vars(
     State("settings-btn-last-press", "data")
 )
 def update_scatter_plot(
-    scatter_var_1, scatter_var_2, display_size_str, excluded_char_ids_mem,
-    image_size_slider_val, last_selected_var_1, last_selected_var_2, 
+    scatter_var_1, scatter_var_2, display_size_str,
+    excluded_char_ids_mem, selected_game, image_size_slider_val,
+    last_selected_var_1, last_selected_var_2,
     prev_excluded_char_ids_mem, excluded_char_ids_last_update, 
     settings_btn_last_press
 ):
@@ -211,6 +256,7 @@ def update_scatter_plot(
          var_2=scatter_var_2,
          screen_width=screen_width,
          excluded_fighter_ids=excluded_char_ids,
+         selected_game=selected_game,
          image_size_multiplier=image_size_multiplier
     )
 

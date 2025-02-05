@@ -1,7 +1,11 @@
 from dash import html, Input, Output, State, ctx
 from dash.exceptions import PreventUpdate
 from datetime import datetime, timedelta
-from utils import get_screen_width, get_page_title, get_app_title, get_excluded_char_ids
+from utils import (
+    get_screen_width, get_page_title, get_app_title,
+    get_excluded_char_ids, convert_excluded_char_ids,
+    initialize_excluded_fighters, update_excluded_fighter_numbers
+)
 from navigation import (
     get_sidebar_style_outputs,
     get_page_container_style
@@ -207,29 +211,47 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     # Update fighter selector chart
     @app.callback(
         Output("fighter-selector-chart", "spec"),
+        Output("excluded-char-ids-mem", "data"),
         Input("settings-menu-drawer", "opened"),
-        State("excluded-char-ids-mem", "data")
+        Input("game-selector-buttons", "value"),
+        State("excluded-char-ids-mem", "data"),
+        State("excluded-fighter-numbers", "data"),
     )
-    def update_fighter_selector_chart(is_opened, excluded_char_ids_mem):
-        excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
-        return get_fighter_selector_chart(excluded_char_ids).to_dict()
+    def update_fighter_selector_chart(
+        is_opened, selected_game,
+        excluded_char_ids_mem, excluded_fighter_numbers
+    ):
+        if ctx.triggered_id == "game-selector-buttons":
+            excluded_char_ids = convert_excluded_char_ids(excluded_fighter_numbers, selected_game)
+        else:
+            excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
+
+        chart = get_fighter_selector_chart(excluded_char_ids, selected_game)
+
+        return chart.to_dict(), {'ids': excluded_char_ids}
 
     # Update excluded fighters
     @app.callback(
         Output("char-selector-mem", "data"),
-        Output("excluded-char-ids-mem", "data"),
+        Output("excluded-char-ids-mem", "data", allow_duplicate=True),
+        Output("excluded-fighter-numbers", "data"),
         Input("fighter-selector-chart", "signalData"),
         State("char-selector-mem", "data"),
         State("excluded-char-ids-mem", "data"),
         State("settings-btn-last-press", "data"),
+        State("game-selector-buttons", "value"),
+        State("excluded-fighter-numbers", "data"),
         prevent_initial_call=True
     )
     def update_selected_fighters(
         selector_signal, selector_mem, 
-        excluded_char_ids_mem, settings_btn_last_press
+        excluded_char_ids_mem, settings_btn_last_press,
+        selected_game, excluded_fighter_numbers
     ):
-        selector_dict = selector_signal['fighter_selector']
+        if 'fighter_selector' not in selector_signal:
+            raise PreventUpdate
 
+        selector_dict = selector_signal['fighter_selector']
         if '_vgsid_' in selector_dict:
             selected_char_ids_string = selector_dict['_vgsid_'].strip("Set()")
         else:
@@ -243,7 +265,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
             delta = timedelta(seconds = 2.5)
             if last_press_time <= datetime.now() <= (last_press_time + delta):
-                return {'selected': []}, excluded_char_ids_mem
+                return {'selected': []}, excluded_char_ids_mem, excluded_fighter_numbers
 
         # Get fighter ids currently selected in the chart's selection_point:
         if not selected_char_ids_string:
@@ -265,7 +287,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         if (len(diff) != 1):
             # Should not have > 1 change except if chart was reset,
             # which is already dealt with above
-            return {'selected': selected_char_ids}, excluded_char_ids_mem
+            return {'selected': selected_char_ids}, excluded_char_ids_mem, excluded_fighter_numbers
         else:
             pressed_id = diff[0]
 
@@ -275,7 +297,11 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         else:
             excluded_char_ids.append(pressed_id)
 
-        return {'selected': selected_char_ids}, {'ids': excluded_char_ids}
+        excluded_fighter_numbers = update_excluded_fighter_numbers(
+            excluded_fighter_numbers, excluded_char_ids, selected_game
+        )
+
+        return {'selected': selected_char_ids}, {'ids': excluded_char_ids}, excluded_fighter_numbers
 
     # Keep track of the user's screen width
     app.clientside_callback(

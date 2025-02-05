@@ -1,7 +1,7 @@
 from dash import html, dcc
 import dash_vega_components as dvc
 import dash_mantine_components as dmc
-from utils import get_logo, get_vertical_spacer
+from utils import get_logo, get_vertical_spacer, initialize_excluded_fighters
 from navigation import (
     get_sidebar,
     get_drawer,
@@ -86,8 +86,12 @@ def get_settings_menu():
                 opt={"renderer": "svg", "actions": False}
             ),
             dcc.Store(id="char-selector-mem", storage_type="memory"),
-            dcc.Store(id="excluded-char-ids-mem", storage_type="session"),
-            dcc.Store(id="settings-btn-last-press", storage_type="memory")
+            dcc.Store(id="excluded-char-ids-mem", storage_type="memory"),
+            dcc.Store(id="settings-btn-last-press", storage_type="memory"),
+            dcc.Store(
+                id="excluded-fighter-numbers", storage_type="memory",
+                data = initialize_excluded_fighters()
+            )
         ]
     )
 
