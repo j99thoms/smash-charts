@@ -1,7 +1,7 @@
 from dash import html, dcc
 import dash_vega_components as dvc
 import dash_mantine_components as dmc
-from utils import get_logo, get_vertical_spacer, initialize_excluded_fighters
+from utils import get_logo, get_vertical_spacer, initialize_excluded_fighters, get_icon
 from navigation import (
     get_sidebar,
     get_drawer,
@@ -91,6 +91,12 @@ def get_settings_menu():
             dcc.Store(
                 id="excluded-fighter-numbers", storage_type="memory",
                 data = initialize_excluded_fighters()
+            ),
+            dmc.Button(
+                html.Span("Select All"),
+                leftIcon=get_icon("ci:select-multiple", height=30),
+                id="fighter-selector-reset-button",
+                color="dark", radius="15px", variant="outline"
             )
         ]
     )

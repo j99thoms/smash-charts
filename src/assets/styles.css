@@ -43,6 +43,13 @@
     /* background-color: yellow; */
 }
 
+#fighter-selector-reset-button {
+    width: 40%;
+    height: 34px;
+    position: relative;
+    margin-top: 5px;
+}
+
 #game-selector-buttons {
     position: absolute;
     top: 50px;

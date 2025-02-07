@@ -174,26 +174,29 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         return is_opened
 
     # Update the settings menu's status (opened / closed)
-    # based on the current page's url
-    # and whether the user has clicked on the settings menu button
+    # based on the current page's url and whether the user has clicked on the settings menu button.
+    # This also closes the settings menu if the user resets the fighter selector chart.
+    #   (This is b/c the chart refuses to update while the settings menu is open).
     @app.callback(
-        Output("settings-menu-drawer", "opened", allow_duplicate=True),
-        Output("settings-menu-button", "style", allow_duplicate=True),
+        Output("settings-menu-drawer", "opened"),
+        Output("settings-menu-button", "style"),
         Input("settings-menu-button", "n_clicks"),
         Input("url", "pathname"),
-        State("settings-menu-button", "opened"),
+        Input("fighter-selector-reset-button", "n_clicks"),
+        State("settings-menu-drawer", "opened"),
         prevent_initial_call=True
     )
-    def update_settings_drawer_status(n_clicks, page_url, is_opened):
-        triggered_id = ctx.triggered_id
+    def update_settings_drawer_status(n_clicks, reset_click, page_url, is_opened):
         button_style = None
 
-        if triggered_id == "settings-menu-button":
+        if ctx.triggered_id == "fighter-selector-reset-button":
+            # Close the settings menu if the user resets the fighter selector chart
+            is_opened = False
+        elif ctx.triggered_id == "settings-menu-button":
             # Menu button was clicked
             is_opened = not is_opened
         elif page_url in sidebar_pages:
-            # The user has navigated to a page that does not display the
-            # settings menu
+            # The user has navigated to a page that does not display the settings menu
             is_opened = False
             button_style = {"display": "none"}
 
@@ -214,14 +217,17 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         Output("excluded-char-ids-mem", "data"),
         Input("settings-menu-drawer", "opened"),
         Input("game-selector-buttons", "value"),
+        Input("fighter-selector-reset-button", "n_clicks"),
         State("excluded-char-ids-mem", "data"),
         State("excluded-fighter-numbers", "data"),
     )
     def update_fighter_selector_chart(
-        is_opened, selected_game,
+        is_opened, selected_game, reset_click,
         excluded_char_ids_mem, excluded_fighter_numbers
     ):
-        if ctx.triggered_id == "game-selector-buttons":
+        if ctx.triggered_id == "fighter-selector-reset-button":
+            return None, {'ids': []}
+        elif ctx.triggered_id == "game-selector-buttons":
             excluded_char_ids = convert_excluded_char_ids(excluded_fighter_numbers, selected_game)
         else:
             excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
@@ -236,6 +242,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         Output("excluded-char-ids-mem", "data", allow_duplicate=True),
         Output("excluded-fighter-numbers", "data"),
         Input("fighter-selector-chart", "signalData"),
+        Input("fighter-selector-reset-button", "n_clicks"),
         State("char-selector-mem", "data"),
         State("excluded-char-ids-mem", "data"),
         State("settings-btn-last-press", "data"),
@@ -244,11 +251,13 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         prevent_initial_call=True
     )
     def update_selected_fighters(
-        selector_signal, selector_mem, 
+        selector_signal, reset_click, selector_mem,
         excluded_char_ids_mem, settings_btn_last_press,
         selected_game, excluded_fighter_numbers
     ):
-        if 'fighter_selector' not in selector_signal:
+        if ctx.triggered_id == "fighter-selector-reset-button":
+            return {'selected': []}, {'ids': []}, initialize_excluded_fighters()
+        elif 'fighter_selector' not in selector_signal:
             raise PreventUpdate
 
         selector_dict = selector_signal['fighter_selector']
