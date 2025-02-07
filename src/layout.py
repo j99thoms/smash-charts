@@ -97,6 +97,12 @@ def get_settings_menu():
                 leftIcon=get_icon("ci:select-multiple", height=30),
                 id="fighter-selector-reset-button",
                 color="dark", radius="15px", variant="outline"
+            ),
+            dmc.Button(
+                html.Span("Remove All"),
+                leftIcon=get_icon("mdi:clear-circle-outline", height=30),
+                id="fighter-selector-clear-all-button",
+                color="dark", radius="15px", variant="outline"
             )
         ]
     )

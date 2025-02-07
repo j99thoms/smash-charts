@@ -44,10 +44,22 @@
 }
 
 #fighter-selector-reset-button {
-    width: 40%;
+    width: 46%;
     height: 34px;
     position: relative;
     margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 1px;
+}
+
+#fighter-selector-clear-all-button {
+    width: 46%;
+    height: 34px;
+    position: relative;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-left: 1px;
+    float: right;
 }
 
 #game-selector-buttons {
