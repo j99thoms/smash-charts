@@ -157,7 +157,7 @@ def update_bar_chart(
             if last_press_time <= now <= (last_press_time + delta):
                 raise PreventUpdate("Halting because update is unnecessary.")
 
-        if excluded_char_ids_last_update > 0:
+        if excluded_char_ids_last_update is not None and excluded_char_ids_last_update > 0:
             last_update_unix = excluded_char_ids_last_update / 1000
             last_update_time = datetime.fromtimestamp(last_update_unix)
             delta = timedelta(seconds = 2)
