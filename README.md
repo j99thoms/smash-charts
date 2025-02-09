@@ -1,5 +1,6 @@
 # Smash Charts
-
+                                                           
+[![image](https://img.shields.io/badge/license-MIT-green)](https://github.com/j99thoms/smash-charts/blob/main/LICENSE)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 #### Try it out at [smash-charts.onrender.com](https://smash-charts.onrender.com)!
