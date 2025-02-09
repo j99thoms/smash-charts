@@ -1,21 +1,19 @@
+from datetime import datetime, timedelta
+
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from datetime import datetime, timedelta
+from dash import Input, Output, State, callback, ctx, dcc, html
 from dash.exceptions import PreventUpdate
-from dash import html, dcc, Input, Output, State, callback, ctx
+
+from plots import DEFAULT_BAR_CHART_ATTRIBUTE, get_bar_chart, get_bar_chart_title
 from utils import (
-    get_fighter_attributes_df,
     get_attribute_selector_dropdown,
-    get_vertical_spacer,
-    get_screen_width,
     get_excluded_char_ids,
-    get_window_title
-)
-from plots import (
-    get_bar_chart,
-    get_bar_chart_title,
-    DEFAULT_BAR_CHART_ATTRIBUTE
+    get_fighter_attributes_df,
+    get_screen_width,
+    get_vertical_spacer,
+    get_window_title,
 )
 
 dash.register_page(__name__, title=get_window_title(__name__))

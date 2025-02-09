@@ -1,8 +1,8 @@
 import math
+
 import altair as alt
-from utils import (
-    get_fighter_attributes_df, get_correlations_df, format_attribute_name
-)
+
+from utils import format_attribute_name, get_correlations_df, get_fighter_attributes_df
 
 DEFAULT_BAR_CHART_ATTRIBUTE = "weight"
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "fastfall_speed"

@@ -1,12 +1,10 @@
-from dash import html, dcc
-import dash_vega_components as dvc
 import dash_mantine_components as dmc
-from utils import get_logo, get_vertical_spacer, initialize_excluded_fighters, get_icon
-from navigation import (
-    get_sidebar,
-    get_drawer,
-    get_menu_button
-)
+import dash_vega_components as dvc
+from dash import dcc, html
+
+from navigation import get_drawer, get_menu_button, get_sidebar
+from utils import get_icon, get_logo, get_vertical_spacer, initialize_excluded_fighters
+
 
 def get_app_html(pages, dash_page_container):
     header = get_header()

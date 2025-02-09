@@ -1,16 +1,20 @@
-from dash import html, Input, Output, State, ctx
-from dash.exceptions import PreventUpdate
 from datetime import datetime, timedelta
-from utils import (
-    get_screen_width, get_page_title, get_app_title,
-    get_excluded_char_ids, convert_excluded_char_ids,
-    initialize_excluded_fighters, update_excluded_fighter_numbers
-)
-from navigation import (
-    get_sidebar_style_outputs,
-    get_page_container_style
-)
+
+from dash import Input, Output, State, ctx, html
+from dash.exceptions import PreventUpdate
+
+from navigation import get_page_container_style, get_sidebar_style_outputs
 from plots import get_fighter_selector_chart
+from utils import (
+    convert_excluded_char_ids,
+    get_app_title,
+    get_excluded_char_ids,
+    get_page_title,
+    get_screen_width,
+    initialize_excluded_fighters,
+    update_excluded_fighter_numbers,
+)
+
 
 def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 

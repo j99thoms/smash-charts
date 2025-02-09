@@ -1,8 +1,9 @@
-import re
 import math
-import pandas as pd
+import re
 from itertools import product
-from dash import html, dcc
+
+import pandas as pd
+from dash import dcc, html
 from dash_iconify import DashIconify
 
 IMG_DIR = "assets/img"

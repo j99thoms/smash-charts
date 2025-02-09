@@ -1,23 +1,25 @@
+from datetime import datetime, timedelta
+
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from datetime import datetime, timedelta
+from dash import Input, Output, State, callback, ctx, dcc, html
 from dash.exceptions import PreventUpdate
-from dash import html, dcc, Input, Output, State, callback, ctx
-from utils import (
-    get_fighter_attributes_df,
-    get_attribute_selector_dropdown,
-    get_vertical_spacer,
-    get_screen_width,
-    get_excluded_char_ids,
-    get_window_title
-)
+
 from plots import (
+    DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
+    DEFAULT_SCATTER_PLOT_ATTRIBUTE_2,
+    get_corr_matrix_plot,
     get_scatter_plot,
     get_scatter_plot_title,
-    get_corr_matrix_plot,
-    DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
-    DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
+)
+from utils import (
+    get_attribute_selector_dropdown,
+    get_excluded_char_ids,
+    get_fighter_attributes_df,
+    get_screen_width,
+    get_vertical_spacer,
+    get_window_title,
 )
 
 dash.register_page(__name__, title=get_window_title(__name__))

@@ -1,5 +1,6 @@
 import dash_mantine_components as dmc
 from dash import html
+
 from utils import get_icon, get_logo
 
 COLLAPSED_SIDEBAR_WIDTH = 76

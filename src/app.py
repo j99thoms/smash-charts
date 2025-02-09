@@ -1,10 +1,11 @@
 import dash
 import dash_breakpoints
 import dash_mantine_components as dmc
-from dash import Dash, html, dcc
+from dash import Dash, dcc, html
 from dash_bootstrap_components import themes
-from layout import get_app_html
+
 from callbacks import get_callbacks
+from layout import get_app_html
 
 GOOGLE_FONTS = (
     "https://fonts.googleapis.com/css2"

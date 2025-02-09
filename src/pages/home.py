@@ -1,5 +1,6 @@
 import dash
 from dash import html
+
 from utils import get_introduction_block, get_window_title
 
 dash.register_page(__name__,  title=get_window_title(__name__), path='/')
