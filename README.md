@@ -1,5 +1,7 @@
 # Smash Charts
 
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 #### Try it out at [smash-charts.onrender.com](https://smash-charts.onrender.com)!
    > Please note that the app will take a minute or two to load each time you start a new session.
    > 
