@@ -67,11 +67,7 @@ def get_page_icon(page_name, height=24, variant=None):
         'Attribute info': f'ph:info{variant}',
     }
 
-    if page_name in icons_dict:
-        icon = icons_dict[page_name]
-    else:
-        # Missing icon
-        icon = f'ph:square{variant}'
+    icon = icons_dict.get(page_name, f'ph:square{variant}')
 
     return get_icon(icon=icon, height=height)
 

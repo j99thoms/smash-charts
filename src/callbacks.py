@@ -293,8 +293,11 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if not selected_char_ids_string:
             selected_char_ids = []
         else:
-            ids = selected_char_ids_string.split(',')
-            selected_char_ids = [int(id) - 1 for id in ids]  # Altair off-by-one
+            char_ids = selected_char_ids_string.split(',')
+            selected_char_ids = [
+                int(char_id) - 1  # Altair off-by-one
+                for char_id in char_ids
+            ]
             if 998 in selected_char_ids:
                 selected_char_ids.remove(998)
 
