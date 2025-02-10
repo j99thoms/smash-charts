@@ -74,6 +74,9 @@ unfixable = [
 # Use single quotes for strings:
 flake8-quotes.inline-quotes = "single"
 
+# Allow up to 10 arguments in a function definition:
+pylint.max-args = 10
+
 [format]
 # Use single quotes for strings:
 quote-style = "single"
