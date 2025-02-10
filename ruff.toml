@@ -56,6 +56,7 @@ select = [
 ]
 
 ignore = [
+    "COM812",  # trailing comma, conflicts with `ruff format`
     "FBT002",  # don't report boolean default function arguments
     "PLR2004", # don't report magic numbers
     "RET504",  # don't report unnecessary variable assignment before return
