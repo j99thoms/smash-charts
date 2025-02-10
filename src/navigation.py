@@ -29,10 +29,7 @@ def get_menu_button(div_id, type, initial_load=False):
         'settings': 'ci:settings',
     }
 
-    if type in icons_dict:
-        icon = icons_dict[type]
-    else:
-        icon = 'ph:square'
+    icon = icons_dict.get(type, 'ph:square')
 
     menu_button = dmc.ActionIcon(
         get_icon(icon, height=36),
@@ -122,7 +119,7 @@ def get_drawer(pages):
     drawer_contents = get_drawer_contents(pages)
 
     drawer = dmc.Drawer(
-        children=[drawer_header] + drawer_contents,
+        children=[drawer_header, *drawer_contents],
         id='drawer',
         withCloseButton=False,
         transitionDuration=100,
@@ -247,7 +244,7 @@ def get_page_container_style(sidebar_status):
     if sidebar_status not in ['hidden', 'collapsed', 'expanded']:
         raise ValueError(
             """
-                Error during get_page_container_style. 
+                Error during get_page_container_style.
                 The input 'sidebar_status' should be one of \
                 "collapsed", "expanded", or "hidden".
             """,

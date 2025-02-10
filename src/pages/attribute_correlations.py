@@ -246,7 +246,7 @@ def update_scatter_plot(
     if scatter_var_2 is None:
         scatter_var_2 = last_selected_var_2
 
-    if isinstance(image_size_slider_val, (int, float)):
+    if isinstance(image_size_slider_val, int | float):
         # f(0) = 1/2; f(1) = 1; f(2) = 2
         val = image_size_slider_val
         image_size_multiplier = (0.25 * val ** 2) + (0.25 * val) + 0.5

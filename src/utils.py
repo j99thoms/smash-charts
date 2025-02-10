@@ -76,7 +76,7 @@ def get_introduction_block():
     return introduction_block
 
 def get_attribute_info_paragraphs():
-    with open(f'{TXT_DIR}/attribute_info.txt', 'r') as text:
+    with open(f'{TXT_DIR}/attribute_info.txt') as text:
         attribute_info_txt = text.readlines()
 
     attribute_info_paragraphs = parse_paragraphs(
@@ -87,7 +87,7 @@ def get_attribute_info_paragraphs():
     return attribute_info_paragraphs
 
 def get_introduction_paragraphs():
-    with open(f'{TXT_DIR}/introduction.txt', 'r') as text:
+    with open(f'{TXT_DIR}/introduction.txt') as text:
         introduction_txt = text.readlines()
 
     introduction_paragraphs = parse_paragraphs(
@@ -139,8 +139,7 @@ def parse_paragraphs(lines, paragraph_class_name):
 
     for line in lines:
         if line != '\n':
-            if line.endswith('\n'):
-                line = line[:-1]
+            line = line.removesuffix('\n')
             for segment in parse_bolds(line):
                 p_children.append(segment)
         else:
