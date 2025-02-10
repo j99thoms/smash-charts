@@ -18,10 +18,10 @@ app = Dash(
     use_pages=True,
     external_stylesheets=[
         themes.MATERIA,
-        GOOGLE_FONTS, # Include google fonts
+        GOOGLE_FONTS,  # Include google fonts
     ],
     suppress_callback_exceptions=True,
-     update_title=None,
+    update_title=None,
 )
 app.title = 'Smash Charts'
 server = app.server
@@ -34,9 +34,7 @@ drawer_pages = [
     '/attribute-distributions',
 ]
 sidebar_pages = [
-    page['relative_path']
-    for page in pages
-    if page['relative_path'] not in drawer_pages
+    page['relative_path'] for page in pages if page['relative_path'] not in drawer_pages
 ]
 
 # Window size breakpoints - used for dynamic layout updates based on screen size

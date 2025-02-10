@@ -21,60 +21,66 @@ dash.register_page(__name__, title=get_window_title(__name__))
 layout = html.Div(
     className='inner-page-container',
     children=[
-        dbc.Row([
-            # Attribute selection (1x dropdown list)
-            html.Div(
-                children=[
-                    html.Div(
-                        children=html.H4('Choose an attribute:'),
-                        style={
-                            'width': '270px',
-                            'padding-left': '5px',
-                        },
-                    ),
-                    html.Div(
-                        id='bar-dropdown-container',
-                        children=[
-                            get_attribute_selector_dropdown(
-                                div_id='bar-dropdown',
-                                default_value=DEFAULT_BAR_CHART_ATTRIBUTE,
-                            ),
-                        ],
-                        style={'width': '270px'},
-                    ),
-                    # Invisible divs used to track last selected var:
-                    html.Div(
-                        id='last-selected-bar-var',
-                        children=DEFAULT_BAR_CHART_ATTRIBUTE,
-                        style={'display': 'None'},
-                    ),
-                ],
-                style={
-                    'width': '95%',
-                    'float': 'right',
-                },
-            ),
-        ]),
-        dbc.Row([
-            # Spacer
-            get_vertical_spacer(height=20),
-        ]),
-        dbc.Row([
-            # Bar chart
-            html.H3(
-                id='bar-title',
-                style={
-                    'height': '6%',
-                    'width': '100%',
-                    'text-align': 'center',
-                },
-            ),
-            dvc.Vega(
-                id='bar-chart',
-                className='bar-chart-frame',
-                opt={'renderer': 'svg', 'actions': False},
-            ),
-        ]),
+        dbc.Row(
+            [
+                # Attribute selection (1x dropdown list)
+                html.Div(
+                    children=[
+                        html.Div(
+                            children=html.H4('Choose an attribute:'),
+                            style={
+                                'width': '270px',
+                                'padding-left': '5px',
+                            },
+                        ),
+                        html.Div(
+                            id='bar-dropdown-container',
+                            children=[
+                                get_attribute_selector_dropdown(
+                                    div_id='bar-dropdown',
+                                    default_value=DEFAULT_BAR_CHART_ATTRIBUTE,
+                                ),
+                            ],
+                            style={'width': '270px'},
+                        ),
+                        # Invisible divs used to track last selected var:
+                        html.Div(
+                            id='last-selected-bar-var',
+                            children=DEFAULT_BAR_CHART_ATTRIBUTE,
+                            style={'display': 'None'},
+                        ),
+                    ],
+                    style={
+                        'width': '95%',
+                        'float': 'right',
+                    },
+                ),
+            ],
+        ),
+        dbc.Row(
+            [
+                # Spacer
+                get_vertical_spacer(height=20),
+            ],
+        ),
+        dbc.Row(
+            [
+                # Bar chart
+                html.H3(
+                    id='bar-title',
+                    style={
+                        'height': '6%',
+                        'width': '100%',
+                        'text-align': 'center',
+                    },
+                ),
+                dvc.Vega(
+                    id='bar-chart',
+                    className='bar-chart-frame',
+                    opt={'renderer': 'svg', 'actions': False},
+                ),
+            ],
+        ),
         dcc.Store(id='bar-prev-excluded-char-ids-mem', storage_type='session'),
     ],
 )
@@ -87,7 +93,8 @@ layout = html.Div(
     State('last-selected-bar-var', 'children'),
 )
 def update_bar_dropdown(
-    selected_game, last_selected_attribute,
+    selected_game,
+    last_selected_attribute,
 ):
     if last_selected_attribute in get_fighter_attributes_df(game=selected_game).columns:
         default_value = last_selected_attribute
@@ -102,6 +109,7 @@ def update_bar_dropdown(
 
     return dropdown
 
+
 # Track which variable was selected last
 @callback(
     Output('last-selected-bar-var', 'children'),
@@ -109,12 +117,14 @@ def update_bar_dropdown(
     State('last-selected-bar-var', 'children'),
 )
 def update_last_selected_bar_var(
-    selected_attribute, last_selected_attribute,
+    selected_attribute,
+    last_selected_attribute,
 ):
     if selected_attribute is not None:
-       last_selected_attribute = selected_attribute
+        last_selected_attribute = selected_attribute
 
     return last_selected_attribute
+
 
 # Update the bar chart
 @callback(
@@ -131,9 +141,14 @@ def update_last_selected_bar_var(
     State('settings-btn-last-press', 'data'),
 )
 def update_bar_chart(
-    selected_attribute, display_size_str, excluded_char_ids_mem, selected_game,
-    last_selected_attribute, prev_excluded_char_ids_mem,
-    excluded_char_ids_last_update, settings_btn_last_press,
+    selected_attribute,
+    display_size_str,
+    excluded_char_ids_mem,
+    selected_game,
+    last_selected_attribute,
+    prev_excluded_char_ids_mem,
+    excluded_char_ids_last_update,
+    settings_btn_last_press,
 ):
     screen_width = get_screen_width(display_size_str)
 
@@ -143,22 +158,25 @@ def update_bar_chart(
     # Prevent unnecessary updates:
     if (
         excluded_char_ids_mem is not None
-          and set(excluded_char_ids) == set(prev_excluded_char_ids)
-          and ctx.triggered_id == 'excluded-char-ids-mem'
+        and set(excluded_char_ids) == set(prev_excluded_char_ids)
+        and ctx.triggered_id == 'excluded-char-ids-mem'
     ):
         now = datetime.now()
 
         if settings_btn_last_press is not None:
             last_press_time = settings_btn_last_press['time']
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds = 2)
+            delta = timedelta(seconds=2)
             if last_press_time <= now <= (last_press_time + delta):
                 raise PreventUpdate('Halting because update is unnecessary.')
 
-        if excluded_char_ids_last_update is not None and excluded_char_ids_last_update > 0:
+        if (
+            excluded_char_ids_last_update is not None
+            and excluded_char_ids_last_update > 0
+        ):
             last_update_unix = excluded_char_ids_last_update / 1000
             last_update_time = datetime.fromtimestamp(last_update_unix)
-            delta = timedelta(seconds = 2)
+            delta = timedelta(seconds=2)
             if last_update_time <= now <= (last_update_time + delta):
                 raise PreventUpdate('Halting because update is unnecessary.')
 

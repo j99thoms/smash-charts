@@ -28,6 +28,7 @@ def get_app_html(pages, dash_page_container):
 
     return app_html
 
+
 def get_header():
     logo = get_logo()
 
@@ -70,6 +71,7 @@ def get_header():
 
     return header
 
+
 def get_settings_menu():
     settings_menu_contents = html.Div(
         id='settings-menu-wrapper',
@@ -87,20 +89,25 @@ def get_settings_menu():
             dcc.Store(id='excluded-char-ids-mem', storage_type='memory'),
             dcc.Store(id='settings-btn-last-press', storage_type='memory'),
             dcc.Store(
-                id='excluded-fighter-numbers', storage_type='memory',
-                data = initialize_excluded_fighters(),
+                id='excluded-fighter-numbers',
+                storage_type='memory',
+                data=initialize_excluded_fighters(),
             ),
             dmc.Button(
                 html.Span('Select All'),
                 leftIcon=get_icon('ci:select-multiple', height=30),
                 id='fighter-selector-reset-button',
-                color='dark', radius='15px', variant='outline',
+                color='dark',
+                radius='15px',
+                variant='outline',
             ),
             dmc.Button(
                 html.Span('Remove All'),
                 leftIcon=get_icon('mdi:clear-circle-outline', height=30),
                 id='fighter-selector-clear-all-button',
-                color='dark', radius='15px', variant='outline',
+                color='dark',
+                radius='15px',
+                variant='outline',
             ),
         ],
     )
@@ -117,6 +124,7 @@ def get_settings_menu():
     )
 
     return settings_menu
+
 
 def get_page_container(dash_page_container):
     settings_menu = get_settings_menu()
@@ -136,7 +144,7 @@ def get_page_container(dash_page_container):
                     html.Div(
                         id='page-container',
                         children=[settings_menu, dash_page_container],
-                        style={'display': 'none'}, # Just for the initial load
+                        style={'display': 'none'},  # Just for the initial load
                     ),
                 ],
             ),
@@ -145,11 +153,13 @@ def get_page_container(dash_page_container):
 
     return page_container
 
+
 def get_footer():
     return html.Div(
         id='footer',
         children=[get_credits()],
     )
+
 
 def get_credits():
     app_credits = html.Div(

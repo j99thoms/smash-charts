@@ -8,10 +8,15 @@ DEFAULT_BAR_CHART_ATTRIBUTE = 'weight'
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = 'fastfall_speed'
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = 'run_speed'
 
+
 def get_scatter_plot(
-        var_1, var_2, screen_width,
-        excluded_fighter_ids, selected_game, image_size_multiplier=1,
-    ):
+    var_1,
+    var_2,
+    screen_width,
+    excluded_fighter_ids,
+    selected_game,
+    image_size_multiplier=1,
+):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
     if var_2 is None:
@@ -24,32 +29,41 @@ def get_scatter_plot(
     # Retrieve the data needed for the scatter plot
     plot_df = get_fighter_attributes_df(
         data_type='continuous',
-        excluded_fighter_ids=excluded_fighter_ids, game=selected_game,
+        excluded_fighter_ids=excluded_fighter_ids,
+        game=selected_game,
     )
     if var_2 == var_1:
-         plot_df = plot_df[['fighter', 'img_url', var_1]]
+        plot_df = plot_df[['fighter', 'img_url', var_1]]
     else:
         plot_df = plot_df[['fighter', 'img_url', var_1, var_2]]
     plot_df = plot_df.dropna()
 
     # Create the scatter plot
-    plot = alt.Chart(plot_df).encode(
-        alt.X(var_1, title=format_attribute_name(var_1)).scale(zero=False),
-        alt.Y(var_2, title=format_attribute_name(var_2)).scale(zero=False),
-        alt.Tooltip(['fighter', var_1, var_2]),
-        alt.Url('img_url'),
-    ).mark_image(
-        height=image_size,
-        width=image_size,
-    ).properties(
-        height=plot_height,
-        width=plot_width,
-    ).configure_axis(
-        titleFontSize=axis_title_size,
-        labelFontSize=axis_label_size,
-    ).interactive()
+    plot = (
+        alt.Chart(plot_df)
+        .encode(
+            alt.X(var_1, title=format_attribute_name(var_1)).scale(zero=False),
+            alt.Y(var_2, title=format_attribute_name(var_2)).scale(zero=False),
+            alt.Tooltip(['fighter', var_1, var_2]),
+            alt.Url('img_url'),
+        )
+        .mark_image(
+            height=image_size,
+            width=image_size,
+        )
+        .properties(
+            height=plot_height,
+            width=plot_width,
+        )
+        .configure_axis(
+            titleFontSize=axis_title_size,
+            labelFontSize=axis_label_size,
+        )
+        .interactive()
+    )
 
     return plot
+
 
 def get_scatter_plot_title(var_1, var_2):
     if var_1 is None:
@@ -60,6 +74,7 @@ def get_scatter_plot_title(var_1, var_2):
     title = f'{format_attribute_name(var_1)} vs. {format_attribute_name(var_2)}'
 
     return title
+
 
 def get_scatter_plot_font_sizes(plot_width):
     max_axis_title_size = 20
@@ -75,6 +90,7 @@ def get_scatter_plot_font_sizes(plot_width):
     axis_label_size = max(axis_label_size, min_axis_label_size)
 
     return axis_title_size, axis_label_size
+
 
 def get_scatter_plot_sizes(screen_width):
     if screen_width > 1200:
@@ -98,12 +114,14 @@ def get_scatter_plot_sizes(screen_width):
 
     return plot_height, plot_width, image_size
 
+
 def get_corr_matrix_plot(var_1, var_2, screen_width):
     correlations_df = get_correlations_df()
 
-    num_attributes = len(correlations_df) ** (1/2)
+    num_attributes = len(correlations_df) ** (1 / 2)
     plot_height, plot_width, circle_size = get_corr_matrix_plot_sizes(
-        screen_width, num_attributes,
+        screen_width,
+        num_attributes,
     )
     axis_label_size = get_corr_matrix_plot_font_sizes(plot_width)
 
@@ -122,21 +140,27 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
     )
 
     # Create the base canvas for the correlation plot
-    base_plot = alt.Chart(correlations_df).encode(
-        alt.X('Attribute 1:N').axis(
-            title=None,
-            labelAngle=-45,
-            labelColor=selected_attributes_label_red_color,
-            labelFontWeight=selected_attributes_label_bold_font,
-        ),
-        alt.Y('Attribute 2:N', axis=alt.Axis(title=None)).axis(
-            title=None,
-            labelColor=selected_attributes_label_red_color,
-            labelFontWeight=selected_attributes_label_bold_font,
-        ).scale(reverse=True),
-    ).properties(
-        height=plot_height,
-        width=plot_width,
+    base_plot = (
+        alt.Chart(correlations_df)
+        .encode(
+            alt.X('Attribute 1:N').axis(
+                title=None,
+                labelAngle=-45,
+                labelColor=selected_attributes_label_red_color,
+                labelFontWeight=selected_attributes_label_bold_font,
+            ),
+            alt.Y('Attribute 2:N', axis=alt.Axis(title=None))
+            .axis(
+                title=None,
+                labelColor=selected_attributes_label_red_color,
+                labelFontWeight=selected_attributes_label_bold_font,
+            )
+            .scale(reverse=True),
+        )
+        .properties(
+            height=plot_height,
+            width=plot_width,
+        )
     )
 
     # For the two selected attributes being plotted on the scatter plot,
@@ -156,7 +180,9 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
 
     # Add the circles to the base canvas for the correlation plot
     circles = base_plot.encode(
-        alt.Color('Correlation:Q').legend(orient='top').scale(
+        alt.Color('Correlation:Q')
+        .legend(orient='top')
+        .scale(
             domain=[-1, 1],
             scheme='redblue',
         ),
@@ -186,15 +212,21 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
 
     # Overlay the text plot on top of the circles plot
     # so that the text appears inside the circles.
-    plot = (circles + text).configure_axis(
-        grid=False,
-    ).configure_view(
-        stroke=None,
-    ).configure_axis(
-        labelFontSize=axis_label_size,
+    plot = (
+        (circles + text)
+        .configure_axis(
+            grid=False,
+        )
+        .configure_view(
+            stroke=None,
+        )
+        .configure_axis(
+            labelFontSize=axis_label_size,
+        )
     )
 
     return plot
+
 
 def get_corr_matrix_plot_font_sizes(plot_width):
     max_axis_label_size = 16
@@ -204,6 +236,7 @@ def get_corr_matrix_plot_font_sizes(plot_width):
     axis_label_size = max(axis_label_size, min_axis_label_size)
 
     return axis_label_size
+
 
 def get_corr_matrix_plot_sizes(screen_width, num_attributes):
     if screen_width > 1200:
@@ -221,9 +254,10 @@ def get_corr_matrix_plot_sizes(screen_width, num_attributes):
 
     circle_diameter = plot_width / num_attributes
     circle_radius = circle_diameter / 2
-    circle_size = int(math.pi * (circle_radius ** 2))
+    circle_size = int(math.pi * (circle_radius**2))
 
     return plot_height, plot_width, circle_size
+
 
 def get_corr_text_size(circle_size):
     # Smaller circle --> smaller font size
@@ -239,6 +273,7 @@ def get_corr_text_size(circle_size):
         return 7
     # If the circle size is <= 250, don't display any text inside the circle
     return 0
+
 
 def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     if var is None:
@@ -256,7 +291,8 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
 
     # Retrieve the data needed for the bar chart
     plot_df = get_fighter_attributes_df(
-        excluded_fighter_ids=excluded_fighter_ids, game=selected_game,
+        excluded_fighter_ids=excluded_fighter_ids,
+        game=selected_game,
     )
     plot_df = plot_df[['fighter', 'img_url', var]]
     plot_df = plot_df.dropna()
@@ -280,18 +316,24 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     # Add the bars to the base canvas for the bar chart
     if chart_orientation == 'horizontal':
         bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.Y(var, title=format_attribute_name(var)).axis(
-                orient='left', titlePadding=0,
-            ).scale(
-                domainMax = max_val * 1.15,
+            alt.Y(var, title=format_attribute_name(var))
+            .axis(
+                orient='left',
+                titlePadding=0,
+            )
+            .scale(
+                domainMax=max_val * 1.15,
             ),
         )
     else:
         bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.X(var, title=format_attribute_name(var)).axis(
-                orient='bottom', titlePadding=2,
-            ).scale(
-                domainMax = max_val * 1.15,
+            alt.X(var, title=format_attribute_name(var))
+            .axis(
+                orient='bottom',
+                titlePadding=2,
+            )
+            .scale(
+                domainMax=max_val * 1.15,
             ),
         )
 
@@ -351,16 +393,21 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
 
     # Configure the plot to look nice:
     # Tight layout and appropriate axis font sizes
-    plot = plot.configure_concat(
-        spacing=-(32 - image_size), # trial and error - it works
-    ).configure_view(
-        strokeOpacity=0,
-    ).configure_axis(
-        labelFontSize=axis_label_size,
-        titleFontSize=axis_title_size,
+    plot = (
+        plot.configure_concat(
+            spacing=-(32 - image_size),  # trial and error - it works
+        )
+        .configure_view(
+            strokeOpacity=0,
+        )
+        .configure_axis(
+            labelFontSize=axis_label_size,
+            titleFontSize=axis_title_size,
+        )
     )
 
     return plot
+
 
 def get_bar_chart_title(var):
     if var is None:
@@ -369,6 +416,7 @@ def get_bar_chart_title(var):
     title = f'Distribution of {format_attribute_name(var)}s'
 
     return title
+
 
 def get_bar_chart_font_sizes(plot_width):
     max_axis_title_size = 20
@@ -385,10 +433,11 @@ def get_bar_chart_font_sizes(plot_width):
 
     return axis_title_size, axis_label_size
 
+
 def get_bar_chart_sizes(screen_width, chart_orientation):
     if chart_orientation == 'horizontal':
         plot_height = 250
-        plot_width = int(screen_width * 0.86) # Plot takes up 86% of the screen
+        plot_width = int(screen_width * 0.86)  # Plot takes up 86% of the screen
 
         max_image_size = 24
         min_image_size = 15
@@ -408,39 +457,51 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
 
     return plot_height, plot_width, image_size
 
-def get_fighter_selector_chart(excluded_char_ids = None, selected_game = 'ultimate'):
+
+def get_fighter_selector_chart(excluded_char_ids=None, selected_game='ultimate'):
     if excluded_char_ids is None:
         excluded_char_ids = []
     fighter_df = get_fighter_attributes_df(game=selected_game)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_char_ids)
 
     fighter_selector = alt.selection_point(
-        name='fighter_selector', toggle='true', empty=False, clear=False,
-        value=999, # Hack to deal with unexpected behaviour when the selector is empty
+        name='fighter_selector',
+        toggle='true',
+        empty=False,
+        clear=False,
+        value=999,  # Hack to deal with unexpected behaviour when the selector is empty
     )
 
     n_rows, n_cols = fighter_df[['row_number', 'col_number']].max()
 
     plot_height = plot_width = 270
-    plot = alt.Chart(fighter_df).encode(
-        alt.X('col_number', axis=None),
-        alt.Y('row_number', axis=None).scale(reverse=True),
-        alt.Url('img_url'),
-        alt.Tooltip(['fighter', 'fighter_number']),
-        opacity=alt.condition(
-            # fighter_selector XOR datum.excluded
-            (fighter_selector | alt.datum.excluded) &
-            ~(fighter_selector & alt.datum.excluded),
-            alt.value(0.25), alt.value(1),
-        ),
-    ).mark_image(
-        width=plot_width//n_cols,
-        height=plot_height//n_rows,
-    ).configure_view(
-        strokeOpacity=0,
-    ).properties(
-        width=plot_width,
-        height=plot_height,
-    ).add_params(fighter_selector)
+    plot = (
+        alt.Chart(fighter_df)
+        .encode(
+            alt.X('col_number', axis=None),
+            alt.Y('row_number', axis=None).scale(reverse=True),
+            alt.Url('img_url'),
+            alt.Tooltip(['fighter', 'fighter_number']),
+            opacity=alt.condition(
+                # fighter_selector XOR datum.excluded
+                (fighter_selector | alt.datum.excluded)
+                & ~(fighter_selector & alt.datum.excluded),
+                alt.value(0.25),
+                alt.value(1),
+            ),
+        )
+        .mark_image(
+            width=plot_width // n_cols,
+            height=plot_height // n_rows,
+        )
+        .configure_view(
+            strokeOpacity=0,
+        )
+        .properties(
+            width=plot_width,
+            height=plot_height,
+        )
+        .add_params(fighter_selector)
+    )
 
     return plot

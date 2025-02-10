@@ -17,7 +17,6 @@ from utils import (
 
 
 def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
-
     # Update the page title
     # based on the current page's url and the user's screen size
     @app.callback(
@@ -62,10 +61,10 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         Input('url', 'pathname'),
     )
     def update_active_navlink(page_url):
-        home_active = (page_url == '/')
-        correlations_active = (page_url == '/attribute-correlations')
-        distributions_active = (page_url == '/attribute-distributions')
-        info_active = (page_url == '/attribute-info')
+        home_active = page_url == '/'
+        correlations_active = page_url == '/attribute-correlations'
+        distributions_active = page_url == '/attribute-distributions'
+        info_active = page_url == '/attribute-info'
 
         return 2 * (
             home_active,
@@ -165,8 +164,9 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     def update_navigation_drawer_status(n_outer, n_inner, page_url, is_opened):
         triggered_id = ctx.triggered_id
 
-        if (
-            triggered_id in ('hamburger-menu-button-drawer-outer', 'hamburger-menu-button-drawer-inner')
+        if triggered_id in (
+            'hamburger-menu-button-drawer-outer',
+            'hamburger-menu-button-drawer-inner',
         ):
             # A hamburger menu was clicked
             is_opened = not is_opened
@@ -212,7 +212,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         prevent_initial_call=True,
     )
     def record_settings_btn_last_press(n_clicks):
-      return {'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+        return {'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
     # Update fighter selector chart
     @app.callback(
@@ -225,13 +225,19 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         State('excluded-fighter-numbers', 'data'),
     )
     def update_fighter_selector_chart(
-        is_opened, selected_game, reset_click,
-        excluded_char_ids_mem, excluded_fighter_numbers,
+        is_opened,
+        selected_game,
+        reset_click,
+        excluded_char_ids_mem,
+        excluded_fighter_numbers,
     ):
         if ctx.triggered_id == 'fighter-selector-reset-button':
             return None, {'ids': []}
         if ctx.triggered_id == 'game-selector-buttons':
-            excluded_char_ids = convert_excluded_char_ids(excluded_fighter_numbers, selected_game)
+            excluded_char_ids = convert_excluded_char_ids(
+                excluded_fighter_numbers,
+                selected_game,
+            )
         else:
             excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
 
@@ -254,9 +260,13 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         prevent_initial_call=True,
     )
     def update_selected_fighters(
-        selector_signal, reset_click, selector_mem,
-        excluded_char_ids_mem, settings_btn_last_press,
-        selected_game, excluded_fighter_numbers,
+        selector_signal,
+        reset_click,
+        selector_mem,
+        excluded_char_ids_mem,
+        settings_btn_last_press,
+        selected_game,
+        excluded_fighter_numbers,
     ):
         if ctx.triggered_id == 'fighter-selector-reset-button':
             return {'selected': []}, {'ids': []}, initialize_excluded_fighters()
@@ -275,7 +285,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         ):
             last_press_time = settings_btn_last_press['time']
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds = 2.5)
+            delta = timedelta(seconds=2.5)
             if last_press_time <= datetime.now() <= (last_press_time + delta):
                 return {'selected': []}, excluded_char_ids_mem, excluded_fighter_numbers
 
@@ -284,7 +294,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             selected_char_ids = []
         else:
             ids = selected_char_ids_string.split(',')
-            selected_char_ids = [int(id) - 1 for id in ids] # Altair off-by-one
+            selected_char_ids = [int(id) - 1 for id in ids]  # Altair off-by-one
             if 998 in selected_char_ids:
                 selected_char_ids.remove(998)
 
@@ -296,23 +306,33 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 
         # All changes between new/old selections:
         diff = list(set(selected_char_ids) ^ set(prev_selected_char_ids))
-        if (len(diff) != 1):
+        if len(diff) != 1:
             # Should not have > 1 change except if chart was reset,
             # which is already dealt with above
-            return {'selected': selected_char_ids}, excluded_char_ids_mem, excluded_fighter_numbers
+            return (
+                {'selected': selected_char_ids},
+                excluded_char_ids_mem,
+                excluded_fighter_numbers,
+            )
         pressed_id = diff[0]
 
         excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
-        if (pressed_id in excluded_char_ids):
+        if pressed_id in excluded_char_ids:
             excluded_char_ids.remove(pressed_id)
         else:
             excluded_char_ids.append(pressed_id)
 
         excluded_fighter_numbers = update_excluded_fighter_numbers(
-            excluded_fighter_numbers, excluded_char_ids, selected_game,
+            excluded_fighter_numbers,
+            excluded_char_ids,
+            selected_game,
         )
 
-        return {'selected': selected_char_ids}, {'ids': excluded_char_ids}, excluded_fighter_numbers
+        return (
+            {'selected': selected_char_ids},
+            {'ids': excluded_char_ids},
+            excluded_fighter_numbers,
+        )
 
     # Keep track of the user's screen width
     app.clientside_callback(

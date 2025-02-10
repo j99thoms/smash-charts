@@ -10,8 +10,10 @@ IMG_DIR = 'assets/img'
 TXT_DIR = 'assets/txt'
 DATA_DIR = '../data/clean'
 
+
 def get_icon(icon, height=16):
     return DashIconify(icon=icon, height=height)
+
 
 def get_logo():
     logo = html.A(
@@ -22,6 +24,7 @@ def get_logo():
     )
 
     return logo
+
 
 def create_text_block(children):
     text_block = html.Div(
@@ -48,6 +51,7 @@ def create_text_block(children):
 
     return text_block
 
+
 def get_attribute_info_block():
     attribute_info_header = html.H4(
         children=[html.U('Attribute Info')],
@@ -66,6 +70,7 @@ def get_attribute_info_block():
 
     return attribute_info_block
 
+
 def get_introduction_block():
     introduction_paragraphs = get_introduction_paragraphs()
 
@@ -74,6 +79,7 @@ def get_introduction_block():
     )
 
     return introduction_block
+
 
 def get_attribute_info_paragraphs():
     with open(f'{TXT_DIR}/attribute_info.txt') as text:
@@ -86,6 +92,7 @@ def get_attribute_info_paragraphs():
 
     return attribute_info_paragraphs
 
+
 def get_introduction_paragraphs():
     with open(f'{TXT_DIR}/introduction.txt') as text:
         introduction_txt = text.readlines()
@@ -96,6 +103,7 @@ def get_introduction_paragraphs():
     )
 
     return introduction_paragraphs
+
 
 def get_smash_wiki_credits():
     smash_wiki_hyperlink = html.A(
@@ -118,7 +126,13 @@ def get_smash_wiki_credits():
 
     return smash_wiki_credits
 
-def get_attribute_selector_dropdown(div_id, default_value, data_type='all', game='ultimate'):
+
+def get_attribute_selector_dropdown(
+    div_id,
+    default_value,
+    data_type='all',
+    game='ultimate',
+):
     dropdown_options = get_dropdown_options(data_type=data_type, game=game)
     attribute_selector_dropdown = dcc.Dropdown(
         id=div_id,
@@ -128,10 +142,12 @@ def get_attribute_selector_dropdown(div_id, default_value, data_type='all', game
 
     return attribute_selector_dropdown
 
+
 def get_vertical_spacer(height):
     vertical_spacer = html.Div(style={'height': f'{height}px'})
 
     return vertical_spacer
+
 
 def parse_paragraphs(lines, paragraph_class_name):
     paragraphs = []
@@ -163,6 +179,7 @@ def parse_paragraphs(lines, paragraph_class_name):
 
     return paragraphs
 
+
 def parse_bolds(line):
     # Regex pattern to match text surrounded by '**'
     bold_pattern = r'(\*\*.*\*\*)'
@@ -177,17 +194,18 @@ def parse_bolds(line):
 
         # Find the locations of the start and end of the first bold segment
         first_delim = line.find('**')
-        second_delim = line[first_delim + 2:].find('**') + first_delim + 2
+        second_delim = line[first_delim + 2 :].find('**') + first_delim + 2
 
         if first_delim > 0:
             line_segments.append(line[:first_delim])
 
-        line_segments.append(html.B(line[first_delim + 2:second_delim]))
+        line_segments.append(html.B(line[first_delim + 2 : second_delim]))
 
-        for segment in parse_bolds(line[second_delim + 2:]):
+        for segment in parse_bolds(line[second_delim + 2 :]):
             line_segments.append(segment)
 
     return line_segments
+
 
 def get_page_title(page_url):
     title_text = page_url.strip('/').replace('-', ' ').title()
@@ -195,18 +213,16 @@ def get_page_title(page_url):
 
     return page_title
 
+
 def get_app_title(screen_width):
     if screen_width > 1400:
-            # App title is all on one line
-            title_text = (
-                'Explore Super Smash Bros Fighters '
-                'with Interactive Visualizations!'
-            )
-            app_title = html.H1(
-                title_text,
-                id='page-title',
-                style={'font-size': '1.7vw', 'padding-top': '10px'},
-            )
+        # App title is all on one line
+        title_text = 'Explore Super Smash Bros Fighters with Interactive Visualizations!'
+        app_title = html.H1(
+            title_text,
+            id='page-title',
+            style={'font-size': '1.7vw', 'padding-top': '10px'},
+        )
     else:
         # App title is split across two lines
         title_text_upper = 'Explore Super Smash Bros. Fighters'
@@ -219,36 +235,45 @@ def get_app_title(screen_width):
             font_size = 19
 
         app_title = [
-            html.H1(title_text_upper,
-                    id='page-title-upper',
-                    style={'font-size': f'{font_size}px'},
+            html.H1(
+                title_text_upper,
+                id='page-title-upper',
+                style={'font-size': f'{font_size}px'},
             ),
-            html.H1(title_text_lower,
-                    id='page-title-lower',
-                    style={'font-size': f'{font_size}px', 'margin-top': '-10px'},
-                ),
-            ]
+            html.H1(
+                title_text_lower,
+                id='page-title-lower',
+                style={'font-size': f'{font_size}px', 'margin-top': '-10px'},
+            ),
+        ]
 
     return app_title
 
+
 def get_screen_width(display_size_str):
     # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
-    screen_width = display_size_str.split(' ')[4] # Looks like "1440px"
+    screen_width = display_size_str.split(' ')[4]  # Looks like "1440px"
     screen_width = int(screen_width.strip('px'))
 
     return screen_width
 
-def get_fighter_attributes_df(data_type='all', game='ultimate', excluded_fighter_ids=None):
+
+def get_fighter_attributes_df(
+    data_type='all',
+    game='ultimate',
+    excluded_fighter_ids=None,
+):
     fighter_attributes_df = pd.read_csv(f'{DATA_DIR}/{game}_fighter_params.csv')
 
-    fighter_attributes_df = fighter_attributes_df.iloc[:-1] # rm Giga Bowser
+    fighter_attributes_df = fighter_attributes_df.iloc[:-1]  # rm Giga Bowser
 
     ordinal_columns = ['number_of_jumps', 'jump_frames']
 
     data_type = data_type.lower()
     if data_type == 'continuous':
         fighter_attributes_df = fighter_attributes_df.drop(
-            columns=(ordinal_columns), errors='ignore',
+            columns=(ordinal_columns),
+            errors='ignore',
         )
     elif data_type == 'all':
         pass
@@ -258,22 +283,25 @@ def get_fighter_attributes_df(data_type='all', game='ultimate', excluded_fighter
     fighter_attributes_df = append_row_col_for_fighter_selector(fighter_attributes_df)
 
     fighter_attributes_df['img_url'] = (
-        IMG_DIR + '/heads/'
-        + fighter_attributes_df['fighter_number'] + '_'
-        + fighter_attributes_df['fighter'].\
-            str.lower().\
-            str.replace(' ', '_', regex=False).\
-            str.replace('&', 'and', regex=False).\
-            str.replace('\.|\(|\)', '', regex=True)
+        IMG_DIR
+        + '/heads/'
+        + fighter_attributes_df['fighter_number']
+        + '_'
+        + fighter_attributes_df['fighter']
+        .str.lower()
+        .str.replace(' ', '_', regex=False)
+        .str.replace('&', 'and', regex=False)
+        .str.replace('\.|\(|\)', '', regex=True)
         + '.png'
     )
 
     if excluded_fighter_ids is not None:
-       fighter_attributes_df = fighter_attributes_df.loc[
-           ~fighter_attributes_df.index.isin(excluded_fighter_ids)
+        fighter_attributes_df = fighter_attributes_df.loc[
+            ~fighter_attributes_df.index.isin(excluded_fighter_ids)
         ]
 
     return fighter_attributes_df
+
 
 def get_correlations_df():
     fighter_attributes_df = get_fighter_attributes_df(
@@ -281,20 +309,22 @@ def get_correlations_df():
     ).drop(columns=['row_number', 'col_number'])
 
     column_names = fighter_attributes_df.columns.tolist()
-    formatted_names = [
-        format_attribute_name(column_name) for column_name in column_names
-    ]
+    formatted_names = [format_attribute_name(column_name) for column_name in column_names]
     fighter_attributes_df = fighter_attributes_df.rename(
         columns=dict(zip(column_names, formatted_names)),
     )
 
     corr_df = fighter_attributes_df.corr(numeric_only=True, method='pearson')
-    corr_df = corr_df.reset_index().melt(id_vars='index').rename(
-        columns={
-            'index': 'Attribute 1',
-            'variable': 'Attribute 2',
-            'value': 'Correlation',
-        },
+    corr_df = (
+        corr_df.reset_index()
+        .melt(id_vars='index')
+        .rename(
+            columns={
+                'index': 'Attribute 1',
+                'variable': 'Attribute 2',
+                'value': 'Correlation',
+            },
+        )
     )
 
     corr_df['Correlation'] = corr_df['Correlation'].round(4)
@@ -303,6 +333,7 @@ def get_correlations_df():
     corr_df['abs_corr'] = corr_df['Correlation'].abs()
 
     return corr_df
+
 
 def get_dropdown_options(data_type, game):
     fighter_attributes_df = get_fighter_attributes_df(data_type=data_type, game=game)
@@ -321,8 +352,10 @@ def get_dropdown_options(data_type, game):
 
     return dropdown_options
 
+
 def format_attribute_name(column_name):
     return column_name.replace('_', ' ').title()
+
 
 def append_row_col_for_fighter_selector(fighter_df):
     fighter_df = fighter_df.sort_values(by='fighter_number', ignore_index=True)
@@ -330,7 +363,7 @@ def append_row_col_for_fighter_selector(fighter_df):
     # Calculate number of rows and columns needed for a square grid
     n_fighters = len(fighter_df)
     n_rows = math.ceil(math.sqrt(n_fighters))
-    n_cols  = math.ceil(n_fighters / n_rows)
+    n_cols = math.ceil(n_fighters / n_rows)
 
     # Generate row-column pairs and add them as new columns
     row_cols = [*product(range(n_rows), range(n_cols))][:n_fighters]
@@ -338,12 +371,14 @@ def append_row_col_for_fighter_selector(fighter_df):
 
     return fighter_df
 
+
 def get_excluded_char_ids(excluded_char_ids_mem):
     if excluded_char_ids_mem is None:
         return []
 
     ids = excluded_char_ids_mem['ids']
     return [] if ids is None else ids
+
 
 def convert_excluded_char_ids(excluded_fighter_numbers, selected_game):
     excluded_fighter_numbers_df = pd.DataFrame(excluded_fighter_numbers)
@@ -357,6 +392,7 @@ def convert_excluded_char_ids(excluded_fighter_numbers, selected_game):
 
     return excluded_ids
 
+
 def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
     cur_excluded_fighters_df = pd.DataFrame(cur_excluded_fighters)
     fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
@@ -364,32 +400,122 @@ def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
     fighter_df['excluded_in_selected'] = fighter_df.index.isin(ids)
 
     excluded_fighters_df = pd.merge(
-        cur_excluded_fighters_df, fighter_df, how='left', on='fighter_number',
+        cur_excluded_fighters_df,
+        fighter_df,
+        how='left',
+        on='fighter_number',
     )
-    excluded_fighters_df['excluded'] = excluded_fighters_df['excluded_in_selected'].\
-        fillna(excluded_fighters_df['excluded'])
+    excluded_fighters_df['excluded'] = excluded_fighters_df[
+        'excluded_in_selected'
+    ].fillna(excluded_fighters_df['excluded'])
 
     return excluded_fighters_df[['fighter_number', 'excluded']].to_dict()
 
+
 def initialize_excluded_fighters():
-    df = pd.DataFrame({
-        'fighter_number': ['01', '02', '03', '04', '04E', '05', '06', '07', '08',
-                           '09', '10', '11', '12', '13', '13E', '14', '15', '15B',
-                           '16', '17', '18', '19', '20', '21', '21E', '22', '23',
-                           '24', '25', '25E', '26', '27', '28', '28E', '29', '30',
-                           '31', '32', '33', '34', '35', '36', '37', '38', '39',
-                           '40', '41', '42', '43', '44', '45', '46', '47', '48',
-                           '49', '50', '51', '52', '53', '54', '55', '56', '57',
-                           '58', '59', '60', '60E', '61', '62', '63', '64', '65',
-                           '66', '66E', '67', '68', '69', '70', '71', '72', '73',
-                           '74', '75', '76', '77', '78', '79', '80', '81', '82'],
-    })
-    df['excluded'] = False # All fighters are initially included
+    df = pd.DataFrame(
+        {
+            'fighter_number': [
+                '01',
+                '02',
+                '03',
+                '04',
+                '04E',
+                '05',
+                '06',
+                '07',
+                '08',
+                '09',
+                '10',
+                '11',
+                '12',
+                '13',
+                '13E',
+                '14',
+                '15',
+                '15B',
+                '16',
+                '17',
+                '18',
+                '19',
+                '20',
+                '21',
+                '21E',
+                '22',
+                '23',
+                '24',
+                '25',
+                '25E',
+                '26',
+                '27',
+                '28',
+                '28E',
+                '29',
+                '30',
+                '31',
+                '32',
+                '33',
+                '34',
+                '35',
+                '36',
+                '37',
+                '38',
+                '39',
+                '40',
+                '41',
+                '42',
+                '43',
+                '44',
+                '45',
+                '46',
+                '47',
+                '48',
+                '49',
+                '50',
+                '51',
+                '52',
+                '53',
+                '54',
+                '55',
+                '56',
+                '57',
+                '58',
+                '59',
+                '60',
+                '60E',
+                '61',
+                '62',
+                '63',
+                '64',
+                '65',
+                '66',
+                '66E',
+                '67',
+                '68',
+                '69',
+                '70',
+                '71',
+                '72',
+                '73',
+                '74',
+                '75',
+                '76',
+                '77',
+                '78',
+                '79',
+                '80',
+                '81',
+                '82',
+            ],
+        },
+    )
+    df['excluded'] = False  # All fighters are initially included
 
     return df.to_dict()
 
+
 def make_dash_table(df):
-    """ Return a dash definition of an HTML table for a Pandas dataframe """
+    """Return a dash definition of an HTML table for a Pandas dataframe"""
     table = []
     for _index, row in df.iterrows():
         html_row = []
@@ -399,8 +525,9 @@ def make_dash_table(df):
 
     return table
 
+
 def get_window_title(page_name):
-    page_title =  page_name.replace('pages.', '').replace('_', ' ').title()
+    page_title = page_name.replace('pages.', '').replace('_', ' ').title()
 
     if page_title == 'Home':
         return 'Smash Charts'
