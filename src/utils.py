@@ -155,9 +155,8 @@ def parse_paragraphs(lines, paragraph_class_name):
 
     for line in lines:
         if line != '\n':
-            line = line.removesuffix('\n')
-            for segment in parse_bolds(line):
-                p_children.append(segment)
+            line_segments = parse_bolds(line.removesuffix('\n'))
+            p_children.extend(line_segments)
         else:
             # Current line is "\n", so end the paragraph and start a new one
             paragraphs.append(
@@ -311,7 +310,7 @@ def get_correlations_df():
     column_names = fighter_attributes_df.columns.tolist()
     formatted_names = [format_attribute_name(column_name) for column_name in column_names]
     fighter_attributes_df = fighter_attributes_df.rename(
-        columns=dict(zip(column_names, formatted_names)),
+        columns=dict(zip(column_names, formatted_names, strict=True)),
     )
 
     corr_df = fighter_attributes_df.corr(numeric_only=True, method='pearson')
@@ -347,7 +346,7 @@ def get_dropdown_options(data_type, game):
 
     dropdown_options = [
         {'value': column, 'label': name}
-        for column, name in zip(attribute_columns, attribute_names)
+        for column, name in zip(attribute_columns, attribute_names, strict=True)
     ]
 
     return dropdown_options
@@ -367,7 +366,7 @@ def append_row_col_for_fighter_selector(fighter_df):
 
     # Generate row-column pairs and add them as new columns
     row_cols = [*product(range(n_rows), range(n_cols))][:n_fighters]
-    fighter_df['row_number'], fighter_df['col_number'] = zip(*row_cols)
+    fighter_df['row_number'], fighter_df['col_number'] = zip(*row_cols, strict=True)
 
     return fighter_df
 
@@ -519,8 +518,7 @@ def make_dash_table(df):
     table = []
     for _index, row in df.iterrows():
         html_row = []
-        for i in range(len(row)):
-            html_row.append(html.Td([row[i]]))
+        html_row = [html.Td([row[i]]) for i in range(len(row))]
         table.append(html.Tr(html_row))
 
     return table
