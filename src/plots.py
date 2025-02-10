@@ -408,7 +408,9 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
 
     return plot_height, plot_width, image_size
 
-def get_fighter_selector_chart(excluded_char_ids = [], selected_game = 'ultimate'):
+def get_fighter_selector_chart(excluded_char_ids = None, selected_game = 'ultimate'):
+    if excluded_char_ids is None:
+        excluded_char_ids = []
     fighter_df = get_fighter_attributes_df(game=selected_game)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_char_ids)
 
