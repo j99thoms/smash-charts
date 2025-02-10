@@ -153,17 +153,6 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
         alt.value(3),
         alt.value(1),
     )
-    selected_attributes_circle_dashed_outline = alt.condition(
-            f"""
-            datum['Attribute 1'] == '{var_1}' 
-            && datum['Attribute 2'] == '{var_2}' 
-            || 
-            datum['Attribute 2'] == '{var_1}' 
-            && datum['Attribute 1'] == '{var_2}'
-            """,
-            alt.value((2,2)),
-            alt.value((1,0)),
-    )
 
     # Add the circles to the base canvas for the correlation plot
     circles = base_plot.encode(
@@ -173,7 +162,6 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
         ),
         alt.Tooltip(['Attribute 1', 'Attribute 2', 'Correlation']),
         strokeWidth=selected_attributes_circle_thick_stroke,
-        # strokeDash=selected_attributes_circle_dashed_outline
     ).mark_circle(
         size=circle_size,
         stroke='black',
