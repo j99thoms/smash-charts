@@ -33,15 +33,15 @@ def get_header():
 
     # For opening the drawer
     hamburger_menu_drawer_outer = get_menu_button(
-        div_id="hamburger-menu-button-drawer-outer",
-        type="hamburger",
+        div_id='hamburger-menu-button-drawer-outer',
+        type='hamburger',
         initial_load=True,
     )
 
     # For opening the settings menu
     settings_menu_button = get_menu_button(
-        div_id="settings-menu-button",
-        type="settings",
+        div_id='settings-menu-button',
+        type='settings',
         initial_load=False,
     )
 
@@ -63,7 +63,7 @@ def get_header():
                     'melee': 'SSB Melee',
                 },
                 value='ultimate',
-                id="game-selector-buttons",
+                id='game-selector-buttons',
             ),
         ],
     )
@@ -72,46 +72,46 @@ def get_header():
 
 def get_settings_menu():
     settings_menu_contents = html.Div(
-        id="settings-menu-wrapper",
+        id='settings-menu-wrapper',
         children=[
-            html.H3("Settings"),
+            html.H3('Settings'),
             get_vertical_spacer(height=10),
-            html.H5("Select Fighters:"),
+            html.H5('Select Fighters:'),
             dvc.Vega(
-                id="fighter-selector-chart",
+                id='fighter-selector-chart',
                 spec=None,
-                signalsToObserve=["fighter_selector"],
-                opt={"renderer": "svg", "actions": False},
+                signalsToObserve=['fighter_selector'],
+                opt={'renderer': 'svg', 'actions': False},
             ),
-            dcc.Store(id="char-selector-mem", storage_type="memory"),
-            dcc.Store(id="excluded-char-ids-mem", storage_type="memory"),
-            dcc.Store(id="settings-btn-last-press", storage_type="memory"),
+            dcc.Store(id='char-selector-mem', storage_type='memory'),
+            dcc.Store(id='excluded-char-ids-mem', storage_type='memory'),
+            dcc.Store(id='settings-btn-last-press', storage_type='memory'),
             dcc.Store(
-                id="excluded-fighter-numbers", storage_type="memory",
+                id='excluded-fighter-numbers', storage_type='memory',
                 data = initialize_excluded_fighters(),
             ),
             dmc.Button(
-                html.Span("Select All"),
-                leftIcon=get_icon("ci:select-multiple", height=30),
-                id="fighter-selector-reset-button",
-                color="dark", radius="15px", variant="outline",
+                html.Span('Select All'),
+                leftIcon=get_icon('ci:select-multiple', height=30),
+                id='fighter-selector-reset-button',
+                color='dark', radius='15px', variant='outline',
             ),
             dmc.Button(
-                html.Span("Remove All"),
-                leftIcon=get_icon("mdi:clear-circle-outline", height=30),
-                id="fighter-selector-clear-all-button",
-                color="dark", radius="15px", variant="outline",
+                html.Span('Remove All'),
+                leftIcon=get_icon('mdi:clear-circle-outline', height=30),
+                id='fighter-selector-clear-all-button',
+                color='dark', radius='15px', variant='outline',
             ),
         ],
     )
 
     settings_menu = dmc.Drawer(
         children=settings_menu_contents,
-        id="settings-menu-drawer",
+        id='settings-menu-drawer',
         withCloseButton=True,
         transitionDuration=100,
         size=350,
-        position="right",
+        position='right',
         padding=15,
         zIndex=80000,
     )
@@ -147,7 +147,7 @@ def get_page_container(dash_page_container):
 
 def get_footer():
     return html.Div(
-        id="footer",
+        id='footer',
         children=[get_credits()],
     )
 
@@ -155,25 +155,25 @@ def get_credits():
     app_credits = html.Div(
         children=[
             html.A(
-                "Smash Charts", 
-                href="https://github.com/J99thoms/Super-Smash-Dashboard",
-                target="_blank",
-                style={"color": "white"},
+                'Smash Charts', 
+                href='https://github.com/J99thoms/Super-Smash-Dashboard',
+                target='_blank',
+                style={'color': 'white'},
             ),
-            " was created by ",
+            ' was created by ',
             html.A(
-                "Jakob Thoms", 
-                href="https://github.com/J99thoms",
-                target="_blank",
-                style={"color": "white"},
+                'Jakob Thoms', 
+                href='https://github.com/J99thoms',
+                target='_blank',
+                style={'color': 'white'},
             ),
-            ".",
+            '.',
         ],
         style={
-            "text-align": "right", 
-            "padding-right": "10px", 
-            "padding-left": "10px", 
-            "font-size": "83%",
+            'text-align': 'right', 
+            'padding-right': '10px', 
+            'padding-left': '10px', 
+            'font-size': '83%',
         },
     )
     

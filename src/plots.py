@@ -4,9 +4,9 @@ import altair as alt
 
 from utils import format_attribute_name, get_correlations_df, get_fighter_attributes_df
 
-DEFAULT_BAR_CHART_ATTRIBUTE = "weight"
-DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = "fastfall_speed"
-DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = "run_speed"
+DEFAULT_BAR_CHART_ATTRIBUTE = 'weight'
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = 'fastfall_speed'
+DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = 'run_speed'
 
 def get_scatter_plot(
         var_1, var_2, screen_width,
@@ -23,7 +23,7 @@ def get_scatter_plot(
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_fighter_attributes_df(
-        data_type="continuous",
+        data_type='continuous',
         excluded_fighter_ids=excluded_fighter_ids, game=selected_game,
     )
     if var_2 == var_1:
@@ -57,7 +57,7 @@ def get_scatter_plot_title(var_1, var_2):
     if var_2 is None:
         var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
-    title = f"{format_attribute_name(var_1)} vs. {format_attribute_name(var_2)}"
+    title = f'{format_attribute_name(var_1)} vs. {format_attribute_name(var_2)}'
 
     return title
 
@@ -167,7 +167,7 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
 
     # Add the circles to the base canvas for the correlation plot
     circles = base_plot.encode(
-        alt.Color('Correlation:Q').legend(orient="top").scale(
+        alt.Color('Correlation:Q').legend(orient='top').scale(
             domain=[-1, 1],
             scheme='redblue',
         ),
@@ -258,9 +258,9 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
     if screen_width > 900:
-        chart_orientation = "horizontal"
+        chart_orientation = 'horizontal'
     else:
-        chart_orientation = "vertical"
+        chart_orientation = 'vertical'
     plot_height, plot_width, image_size = get_bar_chart_sizes(
         screen_width=screen_width,
         chart_orientation=chart_orientation,
@@ -279,7 +279,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     max_val = sorted_df[var].to_list()[0]
 
     # Create the base canvas for the bar chart
-    if chart_orientation == "horizontal":
+    if chart_orientation == 'horizontal':
         base_plot = alt.Chart(plot_df).encode(
             alt.X('fighter', sort=sorted_fighter_list, title=None, axis=None),
             alt.Tooltip(['fighter', var]),
@@ -291,7 +291,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
         )
 
     # Add the bars to the base canvas for the bar chart
-    if chart_orientation == "horizontal":
+    if chart_orientation == 'horizontal':
         bars = base_plot.mark_bar(opacity=0.7).encode(
             alt.Y(var, title=format_attribute_name(var)).axis(
                 orient='left', titlePadding=0,
@@ -309,7 +309,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
         )
 
     # Add the fighter icons to the base canvas for the bar chart
-    if chart_orientation == "horizontal":
+    if chart_orientation == 'horizontal':
         icons = base_plot.mark_image(
             height=image_size,
             width=image_size,
@@ -349,13 +349,13 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
         height=plot_height,
         width=plot_width,
     )
-    if chart_orientation == "horizontal":
+    if chart_orientation == 'horizontal':
         icons = icons.properties(width=plot_width)
     else:
         icons = icons.properties(height=plot_height)
 
     # Overlay the fighter icons plot on top of the bar chart plot
-    if chart_orientation == "horizontal":
+    if chart_orientation == 'horizontal':
         # Charcter icons appear below each bar
         plot = alt.vconcat(bars, icons)
     else:
@@ -379,7 +379,7 @@ def get_bar_chart_title(var):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
     
-    title = f"Distribution of {format_attribute_name(var)}s"
+    title = f'Distribution of {format_attribute_name(var)}s'
 
     return title
 
@@ -399,7 +399,7 @@ def get_bar_chart_font_sizes(plot_width):
     return axis_title_size, axis_label_size
 
 def get_bar_chart_sizes(screen_width, chart_orientation):
-    if chart_orientation == "horizontal":
+    if chart_orientation == 'horizontal':
         plot_height = 250
         plot_width = int(screen_width * 0.86) # Plot takes up 86% of the screen
 
@@ -421,12 +421,12 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
 
     return plot_height, plot_width, image_size
 
-def get_fighter_selector_chart(excluded_char_ids = [], selected_game = "ultimate"):
+def get_fighter_selector_chart(excluded_char_ids = [], selected_game = 'ultimate'):
     fighter_df = get_fighter_attributes_df(game=selected_game)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_char_ids)
 
     fighter_selector = alt.selection_point(
-        name="fighter_selector", toggle='true', empty=False, clear=False,
+        name='fighter_selector', toggle='true', empty=False, clear=False,
         value=999, # Hack to deal with unexpected behaviour when the selector is empty
     )
 

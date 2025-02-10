@@ -6,9 +6,9 @@ import pandas as pd
 from dash import dcc, html
 from dash_iconify import DashIconify
 
-IMG_DIR = "assets/img"
-TXT_DIR = "assets/txt"
-DATA_DIR = "../data/clean"
+IMG_DIR = 'assets/img'
+TXT_DIR = 'assets/txt'
+DATA_DIR = '../data/clean'
 
 def get_icon(icon, height=16):
     return DashIconify(icon=icon, height=height)
@@ -17,30 +17,30 @@ def get_logo():
     logo = html.A(
         className='logo',
         children=[html.Img(src=f'{IMG_DIR}/logo-small.png')],
-        href="/",
-        target="_self",
+        href='/',
+        target='_self',
     )
 
     return logo
 
 def create_text_block(children):
     text_block = html.Div(
-        className="text-block",
+        className='text-block',
         children=[
             html.Div(
                 children=[
                     html.Div(
                         children=children,
                         style={
-                            "width": "98%",
-                            "float": "right",
+                            'width': '98%',
+                            'float': 'right',
                         },
                     ),
                 ],
                 style={
-                    "width": "98%",
-                    "float": "left",
-                    "margin-top": "10px",
+                    'width': '98%',
+                    'float': 'left',
+                    'margin-top': '10px',
                 },
             ),
         ],
@@ -50,8 +50,8 @@ def create_text_block(children):
 
 def get_attribute_info_block():
     attribute_info_header = html.H4(
-        children=[html.U("Attribute Info")],
-        style={"text-align": "center"},
+        children=[html.U('Attribute Info')],
+        style={'text-align': 'center'},
     )
     attribute_info_paragraphs = get_attribute_info_paragraphs()
     smash_wiki_credits = get_smash_wiki_credits()
@@ -76,49 +76,49 @@ def get_introduction_block():
     return introduction_block
 
 def get_attribute_info_paragraphs():
-    with open(f"{TXT_DIR}/attribute_info.txt", "r") as text:
+    with open(f'{TXT_DIR}/attribute_info.txt', 'r') as text:
         attribute_info_txt = text.readlines()
 
     attribute_info_paragraphs = parse_paragraphs(
         lines=attribute_info_txt,
-        paragraph_class_name="attribute-info-paragraph",
+        paragraph_class_name='attribute-info-paragraph',
     )
 
     return attribute_info_paragraphs
 
 def get_introduction_paragraphs():
-    with open(f"{TXT_DIR}/introduction.txt", "r") as text:
+    with open(f'{TXT_DIR}/introduction.txt', 'r') as text:
         introduction_txt = text.readlines()
 
     introduction_paragraphs = parse_paragraphs(
         lines=introduction_txt,
-        paragraph_class_name="introduction-paragraph",
+        paragraph_class_name='introduction-paragraph',
     )
 
     return introduction_paragraphs
 
 def get_smash_wiki_credits():
     smash_wiki_hyperlink = html.A(
-        children="SmashWiki",
-        href="https://www.ssbwiki.com/",
-        target="_blank",
+        children='SmashWiki',
+        href='https://www.ssbwiki.com/',
+        target='_blank',
     )
     smash_wiki_credits = html.Div(
         children=[
-            "These attribute descriptions are based on ",
-            "the descriptions which can be found on ",
+            'These attribute descriptions are based on ',
+            'the descriptions which can be found on ',
             smash_wiki_hyperlink,
-            ".",
+            '.',
         ],
         style={
-            "margin-top": "30px",
-            "font-size": "85%",
+            'margin-top': '30px',
+            'font-size': '85%',
         },
     )
     
     return smash_wiki_credits
 
-def get_attribute_selector_dropdown(div_id, default_value, data_type="all", game="ultimate"):
+def get_attribute_selector_dropdown(div_id, default_value, data_type='all', game='ultimate'):
     dropdown_options = get_dropdown_options(data_type=data_type, game=game)
     attribute_selector_dropdown = dcc.Dropdown(
         id=div_id,
@@ -129,7 +129,7 @@ def get_attribute_selector_dropdown(div_id, default_value, data_type="all", game
     return attribute_selector_dropdown
 
 def get_vertical_spacer(height):
-    vertical_spacer = html.Div(style={"height": f"{height}px"})
+    vertical_spacer = html.Div(style={'height': f'{height}px'})
 
     return vertical_spacer
 
@@ -138,8 +138,8 @@ def parse_paragraphs(lines, paragraph_class_name):
     p_children = []
 
     for line in lines:
-        if line != "\n":
-            if line.endswith("\n"):
+        if line != '\n':
+            if line.endswith('\n'):
                 line = line[:-1]
             for segment in parse_bolds(line):
                 p_children.append(segment)
@@ -177,8 +177,8 @@ def parse_bolds(line):
         line_segments = []
 
         # Find the locations of the start and end of the first bold segment
-        first_delim = line.find("**")
-        second_delim = line[first_delim + 2:].find("**") + first_delim + 2
+        first_delim = line.find('**')
+        second_delim = line[first_delim + 2:].find('**') + first_delim + 2
 
         if first_delim > 0:
             line_segments.append(line[:first_delim])
@@ -191,7 +191,7 @@ def parse_bolds(line):
     return line_segments
 
 def get_page_title(page_url):
-    title_text = page_url.strip("/").replace("-", " ").title()
+    title_text = page_url.strip('/').replace('-', ' ').title()
     page_title = html.H1(title_text, id='page_title')
 
     return page_title
@@ -200,18 +200,18 @@ def get_app_title(screen_width):
     if screen_width > 1400:
             # App title is all on one line
             title_text = (
-                "Explore Super Smash Bros Fighters "
-                "with Interactive Visualizations!"
+                'Explore Super Smash Bros Fighters '
+                'with Interactive Visualizations!'
             )
             app_title = html.H1(
                 title_text,
                 id='page-title',
-                style={"font-size": "1.7vw", "padding-top": "10px"},
+                style={'font-size': '1.7vw', 'padding-top': '10px'},
             )
     else:
         # App title is split across two lines
-        title_text_upper = "Explore Super Smash Bros. Fighters"
-        title_text_lower = "with Interactive Visualizations!"
+        title_text_upper = 'Explore Super Smash Bros. Fighters'
+        title_text_lower = 'with Interactive Visualizations!'
         if screen_width > 750:
             font_size = 24
         elif screen_width > 650:
@@ -222,11 +222,11 @@ def get_app_title(screen_width):
         app_title = [
             html.H1(title_text_upper,
                     id='page-title-upper',
-                    style={"font-size": f"{font_size}px"},
+                    style={'font-size': f'{font_size}px'},
             ),
             html.H1(title_text_lower,
                     id='page-title-lower',
-                    style={"font-size": f"{font_size}px", "margin-top": "-10px"},
+                    style={'font-size': f'{font_size}px', 'margin-top': '-10px'},
                 ),
             ]
 
@@ -234,24 +234,24 @@ def get_app_title(screen_width):
 
 def get_screen_width(display_size_str):
     # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
-    screen_width = display_size_str.split(" ")[4] # Looks like "1440px"
-    screen_width = int(screen_width.strip("px"))
+    screen_width = display_size_str.split(' ')[4] # Looks like "1440px"
+    screen_width = int(screen_width.strip('px'))
 
     return screen_width
 
-def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter_ids=None):
-    fighter_attributes_df = pd.read_csv(f"{DATA_DIR}/{game}_fighter_params.csv")
+def get_fighter_attributes_df(data_type='all', game='ultimate', excluded_fighter_ids=None):
+    fighter_attributes_df = pd.read_csv(f'{DATA_DIR}/{game}_fighter_params.csv')
 
     fighter_attributes_df = fighter_attributes_df.iloc[:-1] # rm Giga Bowser
 
-    ordinal_columns = ["number_of_jumps", "jump_frames"]
+    ordinal_columns = ['number_of_jumps', 'jump_frames']
 
     data_type = data_type.lower()
-    if data_type == "continuous":
+    if data_type == 'continuous':
         fighter_attributes_df = fighter_attributes_df.drop(
             columns=(ordinal_columns), errors='ignore',
         )
-    elif data_type == "all":
+    elif data_type == 'all':
         pass
     else:
         raise ValueError("data_type should be either 'continuous' or 'all'.")
@@ -259,14 +259,14 @@ def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter
     fighter_attributes_df = append_row_col_for_fighter_selector(fighter_attributes_df)
 
     fighter_attributes_df['img_url'] = (
-        IMG_DIR + "/heads/"
-        + fighter_attributes_df['fighter_number'] + "_"
+        IMG_DIR + '/heads/'
+        + fighter_attributes_df['fighter_number'] + '_'
         + fighter_attributes_df['fighter'].\
             str.lower().\
-            str.replace(" ", "_", regex=False).\
-            str.replace("&", "and", regex=False).\
-            str.replace("\.|\(|\)", "", regex=True)
-        + ".png"
+            str.replace(' ', '_', regex=False).\
+            str.replace('&', 'and', regex=False).\
+            str.replace('\.|\(|\)', '', regex=True)
+        + '.png'
     )
 
     if excluded_fighter_ids is not None:
@@ -278,7 +278,7 @@ def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter
 
 def get_correlations_df():
     fighter_attributes_df = get_fighter_attributes_df(
-        data_type="continuous",
+        data_type='continuous',
     ).drop(columns=['row_number', 'col_number'])
 
     column_names = fighter_attributes_df.columns.tolist()
@@ -323,10 +323,10 @@ def get_dropdown_options(data_type, game):
     return dropdown_options
 
 def format_attribute_name(column_name):
-    return column_name.replace("_", " ").title()
+    return column_name.replace('_', ' ').title()
 
 def append_row_col_for_fighter_selector(fighter_df):
-    fighter_df = fighter_df.sort_values(by="fighter_number", ignore_index=True)
+    fighter_df = fighter_df.sort_values(by='fighter_number', ignore_index=True)
 
     # Calculate number of rows and columns needed for a square grid
     n_fighters = len(fighter_df)
@@ -374,16 +374,16 @@ def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
 
 def initialize_excluded_fighters():
     df = pd.DataFrame({
-        'fighter_number': ["01", "02", "03", "04", "04E", "05", "06", "07", "08",
-                           "09", "10", "11", "12", "13", "13E", "14", "15", "15B",
-                           "16", "17", "18", "19", "20", "21", "21E", "22", "23",
-                           "24", "25", "25E", "26", "27", "28", "28E", "29", "30",
-                           "31", "32", "33", "34", "35", "36", "37", "38", "39",
-                           "40", "41", "42", "43", "44", "45", "46", "47", "48",
-                           "49", "50", "51", "52", "53", "54", "55", "56", "57",
-                           "58", "59", "60", "60E", "61", "62", "63", "64", "65",
-                           "66", "66E", "67", "68", "69", "70", "71", "72", "73",
-                           "74", "75", "76", "77", "78", "79", "80", "81", "82"],
+        'fighter_number': ['01', '02', '03', '04', '04E', '05', '06', '07', '08',
+                           '09', '10', '11', '12', '13', '13E', '14', '15', '15B',
+                           '16', '17', '18', '19', '20', '21', '21E', '22', '23',
+                           '24', '25', '25E', '26', '27', '28', '28E', '29', '30',
+                           '31', '32', '33', '34', '35', '36', '37', '38', '39',
+                           '40', '41', '42', '43', '44', '45', '46', '47', '48',
+                           '49', '50', '51', '52', '53', '54', '55', '56', '57',
+                           '58', '59', '60', '60E', '61', '62', '63', '64', '65',
+                           '66', '66E', '67', '68', '69', '70', '71', '72', '73',
+                           '74', '75', '76', '77', '78', '79', '80', '81', '82'],
     })
     df['excluded'] = False # All fighters are initially included
 
@@ -401,9 +401,9 @@ def make_dash_table(df):
     return table
 
 def get_window_title(page_name):
-    page_title =  page_name.replace("pages.", "").replace("_", " ").title()
+    page_title =  page_name.replace('pages.', '').replace('_', ' ').title()
 
-    if page_title == "Home":
-        return "Smash Charts"
+    if page_title == 'Home':
+        return 'Smash Charts'
     else:
-        return page_title + " | Smash Charts"
+        return page_title + ' | Smash Charts'

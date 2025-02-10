@@ -19,28 +19,28 @@ from utils import (
 dash.register_page(__name__, title=get_window_title(__name__))
 
 layout = html.Div(
-    className="inner-page-container",
+    className='inner-page-container',
     children=[
         dbc.Row([
             # Attribute selection (1x dropdown list)
             html.Div(
                 children=[
                     html.Div(
-                        children=html.H4("Choose an attribute:"),
+                        children=html.H4('Choose an attribute:'),
                         style={
-                            "width": "270px",
-                            "padding-left": "5px",
+                            'width': '270px',
+                            'padding-left': '5px',
                         },
                     ),
                     html.Div(
-                        id="bar-dropdown-container",
+                        id='bar-dropdown-container',
                         children=[
                             get_attribute_selector_dropdown(
-                                div_id="bar-dropdown",
+                                div_id='bar-dropdown',
                                 default_value=DEFAULT_BAR_CHART_ATTRIBUTE,
                             ),
                         ],
-                        style={"width": "270px"},
+                        style={'width': '270px'},
                     ),
                     # Invisible divs used to track last selected var:
                     html.Div(
@@ -50,8 +50,8 @@ layout = html.Div(
                     ),
                 ],
                 style={
-                    "width": "95%",
-                    "float": "right",
+                    'width': '95%',
+                    'float': 'right',
                 },
             ),
         ]),
@@ -64,26 +64,26 @@ layout = html.Div(
             html.H3(
                 id='bar-title',
                 style={
-                    "height": "6%", 
-                    "width": "100%", 
-                    "text-align": "center",
+                    'height': '6%', 
+                    'width': '100%', 
+                    'text-align': 'center',
                 },
             ),
             dvc.Vega(
-                id="bar-chart",
-                className="bar-chart-frame",
-                opt={"renderer": "svg", "actions": False},
+                id='bar-chart',
+                className='bar-chart-frame',
+                opt={'renderer': 'svg', 'actions': False},
             ),
         ]),
-        dcc.Store(id="bar-prev-excluded-char-ids-mem", storage_type="session"),
+        dcc.Store(id='bar-prev-excluded-char-ids-mem', storage_type='session'),
     ],
 )
 
 
 # Update dropdown list when game is changed
 @callback(
-    Output("bar-dropdown-container", "children"),
-    Input("game-selector-buttons", "value"),
+    Output('bar-dropdown-container', 'children'),
+    Input('game-selector-buttons', 'value'),
     State('last-selected-bar-var', 'children'),
 )
 def update_bar_dropdown(
@@ -95,7 +95,7 @@ def update_bar_dropdown(
         default_value = DEFAULT_BAR_CHART_ATTRIBUTE
 
     dropdown = get_attribute_selector_dropdown(
-        div_id="bar-dropdown",
+        div_id='bar-dropdown',
         default_value=default_value,
         game=selected_game,
     )
@@ -105,7 +105,7 @@ def update_bar_dropdown(
 # Track which variable was selected last
 @callback(
     Output('last-selected-bar-var', 'children'),
-    Input("bar-dropdown", "value"),
+    Input('bar-dropdown', 'value'),
     State('last-selected-bar-var', 'children'),
 )
 def update_last_selected_bar_var(
@@ -118,17 +118,17 @@ def update_last_selected_bar_var(
 
 # Update the bar chart
 @callback(
-    Output("bar-chart", "spec"),
+    Output('bar-chart', 'spec'),
     Output('bar-title', 'children'),
-    Output("bar-prev-excluded-char-ids-mem", "data"),
-    Input("bar-dropdown", "value"),
-    Input("display-size", "children"),
-    Input("excluded-char-ids-mem", "data"),
-    Input("game-selector-buttons", "value"),
+    Output('bar-prev-excluded-char-ids-mem', 'data'),
+    Input('bar-dropdown', 'value'),
+    Input('display-size', 'children'),
+    Input('excluded-char-ids-mem', 'data'),
+    Input('game-selector-buttons', 'value'),
     State('last-selected-bar-var', 'children'),
-    State("bar-prev-excluded-char-ids-mem", "data"),
-    State("excluded-char-ids-mem", "modified_timestamp"),
-    State("settings-btn-last-press", "data"),
+    State('bar-prev-excluded-char-ids-mem', 'data'),
+    State('excluded-char-ids-mem', 'modified_timestamp'),
+    State('settings-btn-last-press', 'data'),
 )
 def update_bar_chart(
     selected_attribute, display_size_str, excluded_char_ids_mem, selected_game,
@@ -144,7 +144,7 @@ def update_bar_chart(
     if (
         excluded_char_ids_mem is not None
           and set(excluded_char_ids) == set(prev_excluded_char_ids)
-          and ctx.triggered_id == "excluded-char-ids-mem" 
+          and ctx.triggered_id == 'excluded-char-ids-mem' 
     ):
         now = datetime.now()
 
@@ -153,14 +153,14 @@ def update_bar_chart(
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
             delta = timedelta(seconds = 2)
             if last_press_time <= now <= (last_press_time + delta):
-                raise PreventUpdate("Halting because update is unnecessary.")
+                raise PreventUpdate('Halting because update is unnecessary.')
 
         if excluded_char_ids_last_update is not None and excluded_char_ids_last_update > 0:
             last_update_unix = excluded_char_ids_last_update / 1000
             last_update_time = datetime.fromtimestamp(last_update_unix)
             delta = timedelta(seconds = 2)
             if last_update_time <= now <= (last_update_time + delta):
-                raise PreventUpdate("Halting because update is unnecessary.")
+                raise PreventUpdate('Halting because update is unnecessary.')
 
     if selected_attribute is None:
         selected_attribute = last_selected_attribute
