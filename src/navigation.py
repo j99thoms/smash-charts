@@ -17,7 +17,7 @@ EXPANDED_SIDEBAR_NAVLINK_WIDTH = EXPANDED_SIDEBAR_WIDTH - EXPANDED_SIDEBAR_NAVLI
 DRAWER_SIZE = EXPANDED_SIDEBAR_WIDTH + EXPANDED_SIDEBAR_NAVLINK_MARGIN
 
 
-def get_menu_button(div_id, type, initial_load=False):
+def get_menu_button(div_id, button_type, initial_load=False):
     if initial_load:
         style = {'visibility': 'hidden'}  # Don't display during the initial load
     else:
@@ -28,16 +28,15 @@ def get_menu_button(div_id, type, initial_load=False):
         'settings': 'ci:settings',
     }
 
-    icon = icons_dict.get(type, 'ph:square')
+    icon = icons_dict.get(button_type, 'ph:square')
 
     menu_button = dmc.ActionIcon(
         get_icon(icon, height=36),
         id=div_id,
-        className=f'{type}-menu-button',
+        className=f'{button_type}-menu-button',
         color='dark',
         radius='20px',
         style=style,
-        # variant="outline"
     )
 
     return menu_button
@@ -77,12 +76,12 @@ def get_page_icon(page_name, height=24, variant=None):
     return get_icon(icon=icon, height=height)
 
 
-def get_navlink(page, type):
+def get_navlink(page, nav_type):
     navlink = dmc.NavLink(
         label=page['name'].title(),
         href=page['relative_path'],
         icon=get_page_icon(page_name=page['name'], height=32),
-        id=f'{type}-navlink-' + page['relative_path'],
+        id=f'{nav_type}-navlink-' + page['relative_path'],
         color='dark',
         variant='light',
         style=get_navlink_style(),
@@ -114,7 +113,7 @@ def get_drawer(pages):
     logo = get_logo()
     hamburger_menu_drawer_inner = get_menu_button(
         div_id='hamburger-menu-button-drawer-inner',
-        type='hamburger',
+        button_type='hamburger',
     )
     drawer_header = html.Div(
         id='drawer-header',
@@ -172,14 +171,14 @@ def get_navlink_styles(is_collapsed=False):
                 'overflow': 'visible',
                 'font-size': '15px',
                 'position': 'relative',
-                'left': f'{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 8}px',  # Line up with collapsed navlinks
+                'left': f'{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 8}px',
             },
             'body': {
                 'overflow': 'visible',
             },
             'icon': {
                 'position': 'relative',
-                'left': f'{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 4}px',  # Line up with collapsed navlinks
+                'left': f'{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 4}px',
             },
         }
 
@@ -216,12 +215,10 @@ def get_sidebar_style(is_collapsed=False, initial_load=False):
     elif is_collapsed:
         sidebar_style = {
             'width': f'{COLLAPSED_SIDEBAR_WIDTH}px',
-            # "border-right": "2px solid black",
         }
     else:
         sidebar_style = {
             'width': f'{EXPANDED_SIDEBAR_WIDTH}px',
-            # "border-right": "2px solid black",
         }
 
     return sidebar_style

@@ -35,14 +35,14 @@ def get_header():
     # For opening the drawer
     hamburger_menu_drawer_outer = get_menu_button(
         div_id='hamburger-menu-button-drawer-outer',
-        type='hamburger',
+        button_type='hamburger',
         initial_load=True,
     )
 
     # For opening the settings menu
     settings_menu_button = get_menu_button(
         div_id='settings-menu-button',
-        type='settings',
+        button_type='settings',
         initial_load=False,
     )
 
