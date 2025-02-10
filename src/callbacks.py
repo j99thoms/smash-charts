@@ -166,8 +166,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         triggered_id = ctx.triggered_id
 
         if (
-            triggered_id == 'hamburger-menu-button-drawer-outer'
-            or triggered_id == 'hamburger-menu-button-drawer-inner'
+            triggered_id in ('hamburger-menu-button-drawer-outer', 'hamburger-menu-button-drawer-inner')
         ):
             # A hamburger menu was clicked
             is_opened = not is_opened
@@ -272,7 +271,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 
         # See https://github.com/j99thoms/smash-charts/issues/18:
         if settings_btn_last_press is not None and (
-            selected_char_ids_string == '999' or selected_char_ids_string == ''
+            selected_char_ids_string in ('999', '')
         ):
             last_press_time = settings_btn_last_press['time']
             last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
