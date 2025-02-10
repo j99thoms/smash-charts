@@ -16,7 +16,7 @@ from utils import (
 )
 
 
-def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
+def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     # Update the page title
     # based on the current page's url and the user's screen size
     @app.callback(
