@@ -231,7 +231,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     ):
         if ctx.triggered_id == 'fighter-selector-reset-button':
             return None, {'ids': []}
-        elif ctx.triggered_id == 'game-selector-buttons':
+        if ctx.triggered_id == 'game-selector-buttons':
             excluded_char_ids = convert_excluded_char_ids(excluded_fighter_numbers, selected_game)
         else:
             excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
@@ -261,7 +261,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     ):
         if ctx.triggered_id == 'fighter-selector-reset-button':
             return {'selected': []}, {'ids': []}, initialize_excluded_fighters()
-        elif 'fighter_selector' not in selector_signal:
+        if 'fighter_selector' not in selector_signal:
             raise PreventUpdate
 
         selector_dict = selector_signal['fighter_selector']
@@ -301,8 +301,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             # Should not have > 1 change except if chart was reset,
             # which is already dealt with above
             return {'selected': selected_char_ids}, excluded_char_ids_mem, excluded_fighter_numbers
-        else:
-            pressed_id = diff[0]
+        pressed_id = diff[0]
 
         excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
         if (pressed_id in excluded_char_ids):

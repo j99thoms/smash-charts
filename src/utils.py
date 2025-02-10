@@ -405,5 +405,4 @@ def get_window_title(page_name):
 
     if page_title == 'Home':
         return 'Smash Charts'
-    else:
-        return page_title + ' | Smash Charts'
+    return page_title + ' | Smash Charts'

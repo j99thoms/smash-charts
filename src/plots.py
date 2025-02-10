@@ -241,17 +241,16 @@ def get_corr_text_size(circle_size):
     # Smaller circle --> smaller font size
     if circle_size > 600:
         return 11
-    elif circle_size > 500:
+    if circle_size > 500:
         return 10
-    elif circle_size > 400:
+    if circle_size > 400:
         return 9
-    elif circle_size > 300:
+    if circle_size > 300:
         return 8
-    elif circle_size > 250:
+    if circle_size > 250:
         return 7
-    else:
-        # If the circle size is <= 250, don't display any text inside the circle
-        return 0
+    # If the circle size is <= 250, don't display any text inside the circle
+    return 0
 
 def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     if var is None:
