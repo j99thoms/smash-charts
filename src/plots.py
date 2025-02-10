@@ -167,13 +167,11 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
     # highlight their circles on the correlation plot by giving their outline
     # a thicker stroke width and a dashed stroke.
     selected_attributes_circle_thick_stroke = alt.condition(
-        f"""
-            datum['Attribute 1'] == '{var_1}' 
-            && datum['Attribute 2'] == '{var_2}' 
-            || 
-            datum['Attribute 2'] == '{var_1}' 
-            && datum['Attribute 1'] == '{var_2}'
-        """,
+        (
+            f"datum['Attribute 1'] == '{var_1}' && datum['Attribute 2'] == '{var_2}'"
+            '||'
+            f"datum['Attribute 2'] == '{var_1}' && datum['Attribute 1'] == '{var_2}'"
+        ),
         alt.value(3),
         alt.value(1),
     )
