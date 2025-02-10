@@ -64,8 +64,8 @@ layout = html.Div(
             html.H3(
                 id='bar-title',
                 style={
-                    'height': '6%', 
-                    'width': '100%', 
+                    'height': '6%',
+                    'width': '100%',
                     'text-align': 'center',
                 },
             ),
@@ -132,7 +132,7 @@ def update_last_selected_bar_var(
 )
 def update_bar_chart(
     selected_attribute, display_size_str, excluded_char_ids_mem, selected_game,
-    last_selected_attribute, prev_excluded_char_ids_mem, 
+    last_selected_attribute, prev_excluded_char_ids_mem,
     excluded_char_ids_last_update, settings_btn_last_press,
 ):
     screen_width = get_screen_width(display_size_str)
@@ -144,7 +144,7 @@ def update_bar_chart(
     if (
         excluded_char_ids_mem is not None
           and set(excluded_char_ids) == set(prev_excluded_char_ids)
-          and ctx.triggered_id == 'excluded-char-ids-mem' 
+          and ctx.triggered_id == 'excluded-char-ids-mem'
     ):
         now = datetime.now()
 

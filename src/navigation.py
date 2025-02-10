@@ -33,7 +33,7 @@ def get_menu_button(div_id, type, initial_load=False):
         icon = icons_dict[type]
     else:
         icon = 'ph:square'
-    
+
     menu_button = dmc.ActionIcon(
         get_icon(icon, height=36),
         id=div_id,
@@ -61,7 +61,7 @@ def get_page_icon(page_name, height=24, variant=None):
         variant = '-' + variant
     else:
         variant = ''
-    
+
     icons_dict = {
         'Home': f'ph:house{variant}',
         'Attribute correlations': f'ph:chart-scatter{variant}',
@@ -146,19 +146,19 @@ def get_navlink_styles(is_collapsed=False):
                 # "background-color": "yellow"
             },
             'body': {
-                'overflow': 'visible', 
-                'position': 'relative', 
+                'overflow': 'visible',
+                'position': 'relative',
                 'left': '-58px',
                 'top': '28px',
-                'text-align' : 'center', 
+                'text-align' : 'center',
                 'min-height': '48px',
                 'min-width': f'{COLLAPSED_SIDEBAR_NAVLINK_WIDTH}px',
                 'line-height': '0.0em',
                 # "background-color": "red",
             },
             'icon': {
-                'position': 'relative', 
-                'top': '-12px', 
+                'position': 'relative',
+                'top': '-12px',
                 'left': '8px',
                 # "background-color": "blue"
             },
@@ -168,14 +168,14 @@ def get_navlink_styles(is_collapsed=False):
             'label': {
                 'overflow': 'visible',
                 'font-size': '15px',
-                'position': 'relative', 
+                'position': 'relative',
                 'left': f'{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 8}px', # Line up with collapsed navlinks
             },
             'body': {
                 'overflow': 'visible',
             },
             'icon': {
-                'position': 'relative', 
+                'position': 'relative',
                 'left': f'{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 4}px',  # Line up with collapsed navlinks
             },
         }
@@ -205,7 +205,7 @@ def get_navlink_style(is_collapsed=False):
 def get_sidebar_style(is_collapsed=False, initial_load=False):
     if initial_load:
         sidebar_style = {
-            'display': 'none', 
+            'display': 'none',
             'width': f'{EXPANDED_SIDEBAR_WIDTH}px',
         }
     elif is_collapsed:
@@ -220,7 +220,7 @@ def get_sidebar_style(is_collapsed=False, initial_load=False):
         }
 
     return sidebar_style
-    
+
 def get_dummy_sidebar_style(is_collapsed=False, initial_load=False):
     dummy_sidebar_style = get_sidebar_style(
         is_collapsed=is_collapsed,
@@ -228,7 +228,7 @@ def get_dummy_sidebar_style(is_collapsed=False, initial_load=False):
     )
     if not initial_load:
         dummy_sidebar_style['float'] = 'left'
-    
+
     return dummy_sidebar_style
 
 def get_sidebar_style_outputs(is_collapsed, num_pages):

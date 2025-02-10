@@ -34,7 +34,7 @@ layout = html.Div(
                     html.Div(
                         children=html.H4('Choose two attributes:'),
                         style={
-                            'width': '270px',  
+                            'width': '270px',
                             'padding-left': '5px',
                         },
                     ),
@@ -84,7 +84,7 @@ layout = html.Div(
                 html.H3(
                     id='scatter-title',
                     style={
-                        'height': '6%', 
+                        'height': '6%',
                         'width': '95%',
                     },
                 ),
@@ -113,7 +113,7 @@ layout = html.Div(
                 html.H3(
                     'Correlations',
                     style={
-                        'height': '6%', 
+                        'height': '6%',
                         'width': '90%',
                         'text-align': 'center',
                     },
@@ -211,7 +211,7 @@ def update_scatter_plot(
     scatter_var_1, scatter_var_2, display_size_str,
     excluded_char_ids_mem, selected_game, image_size_slider_val,
     last_selected_var_1, last_selected_var_2,
-    prev_excluded_char_ids_mem, excluded_char_ids_last_update, 
+    prev_excluded_char_ids_mem, excluded_char_ids_last_update,
     settings_btn_last_press,
 ):
     screen_width = get_screen_width(display_size_str)
@@ -223,7 +223,7 @@ def update_scatter_plot(
     if (
         excluded_char_ids_mem is not None
           and set(excluded_char_ids) == set(prev_excluded_char_ids)
-          and ctx.triggered_id == 'excluded-char-ids-mem' 
+          and ctx.triggered_id == 'excluded-char-ids-mem'
     ):
         now = datetime.now()
 
@@ -252,7 +252,7 @@ def update_scatter_plot(
         image_size_multiplier = (0.25 * val ** 2) + (0.25 * val) + 0.5
     else:
         image_size_multiplier = 1
-   
+
     plot = get_scatter_plot(
          var_1=scatter_var_1,
          var_2=scatter_var_2,

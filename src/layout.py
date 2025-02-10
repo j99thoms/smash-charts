@@ -155,14 +155,14 @@ def get_credits():
     app_credits = html.Div(
         children=[
             html.A(
-                'Smash Charts', 
+                'Smash Charts',
                 href='https://github.com/J99thoms/Super-Smash-Dashboard',
                 target='_blank',
                 style={'color': 'white'},
             ),
             ' was created by ',
             html.A(
-                'Jakob Thoms', 
+                'Jakob Thoms',
                 href='https://github.com/J99thoms',
                 target='_blank',
                 style={'color': 'white'},
@@ -170,11 +170,11 @@ def get_credits():
             '.',
         ],
         style={
-            'text-align': 'right', 
-            'padding-right': '10px', 
-            'padding-left': '10px', 
+            'text-align': 'right',
+            'padding-right': '10px',
+            'padding-left': '10px',
             'font-size': '83%',
         },
     )
-    
+
     return app_credits

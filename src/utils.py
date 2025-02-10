@@ -46,7 +46,7 @@ def create_text_block(children):
         ],
     )
 
-    return text_block    
+    return text_block
 
 def get_attribute_info_block():
     attribute_info_header = html.H4(
@@ -63,7 +63,7 @@ def get_attribute_info_block():
             smash_wiki_credits,
         ],
     )
-    
+
     return attribute_info_block
 
 def get_introduction_block():
@@ -115,7 +115,7 @@ def get_smash_wiki_credits():
             'font-size': '85%',
         },
     )
-    
+
     return smash_wiki_credits
 
 def get_attribute_selector_dropdown(div_id, default_value, data_type='all', game='ultimate'):
@@ -125,7 +125,7 @@ def get_attribute_selector_dropdown(div_id, default_value, data_type='all', game
         options=dropdown_options,
         value=default_value,
     )
-   
+
     return attribute_selector_dropdown
 
 def get_vertical_spacer(height):
@@ -167,7 +167,7 @@ def parse_paragraphs(lines, paragraph_class_name):
 def parse_bolds(line):
     # Regex pattern to match text surrounded by '**'
     bold_pattern = r'(\*\*.*\*\*)'
-    
+
     if not re.search(bold_pattern, line):
         # There are no bold segments in the line,
         # so the line has only one segment (the whole line)
@@ -182,7 +182,7 @@ def parse_bolds(line):
 
         if first_delim > 0:
             line_segments.append(line[:first_delim])
-            
+
         line_segments.append(html.B(line[first_delim + 2:second_delim]))
 
         for segment in parse_bolds(line[second_delim + 2:]):
@@ -297,7 +297,7 @@ def get_correlations_df():
             'value': 'Correlation',
         },
     )
-    
+
     corr_df['Correlation'] = corr_df['Correlation'].round(4)
     corr_df['corr_2dec'] = corr_df['Correlation'].round(2)
     corr_df['corr_1dec'] = corr_df['Correlation'].round(1)
@@ -319,7 +319,7 @@ def get_dropdown_options(data_type, game):
         {'value': column, 'label': name}
         for column, name in zip(attribute_columns, attribute_names)
     ]
-    
+
     return dropdown_options
 
 def format_attribute_name(column_name):
@@ -397,7 +397,7 @@ def make_dash_table(df):
         for i in range(len(row)):
             html_row.append(html.Td([row[i]]))
         table.append(html.Tr(html_row))
-        
+
     return table
 
 def get_window_title(page_name):

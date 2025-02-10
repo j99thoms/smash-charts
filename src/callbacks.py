@@ -47,7 +47,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             page_title = html.H1('404 - Page not found', id='page-title')
 
         return page_title
-        
+
     # Update the active navlink (for both the drawer and the sidebar)
     # based on the current page's url
     @app.callback(
@@ -164,7 +164,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     )
     def update_navigation_drawer_status(n_outer, n_inner, page_url, is_opened):
         triggered_id = ctx.triggered_id
-        
+
         if (
             triggered_id == 'hamburger-menu-button-drawer-outer'
             or triggered_id == 'hamburger-menu-button-drawer-inner'

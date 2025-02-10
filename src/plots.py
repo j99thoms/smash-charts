@@ -31,7 +31,7 @@ def get_scatter_plot(
     else:
         plot_df = plot_df[['fighter', 'img_url', var_1, var_2]]
     plot_df = plot_df.dropna()
-    
+
     # Create the scatter plot
     plot = alt.Chart(plot_df).encode(
         alt.X(var_1, title=format_attribute_name(var_1)).scale(zero=False),
@@ -87,7 +87,7 @@ def get_scatter_plot_sizes(screen_width):
         plot_width = int(screen_width / 4.0)
     else:
         plot_width = int(screen_width / 4.5)
-    
+
     plot_height = plot_width
 
     max_image_size = 40
@@ -186,7 +186,7 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
         corr_text = 'corr_2dec'
     else:
         corr_text = 'corr_1dec'
-    
+
     # Add the text to the base canvas for the correlation plot
     text = base_plot.encode(
         alt.Text(corr_text),
@@ -378,7 +378,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
 def get_bar_chart_title(var):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
-    
+
     title = f'Distribution of {format_attribute_name(var)}s'
 
     return title
