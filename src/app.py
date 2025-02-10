@@ -18,10 +18,10 @@ app = Dash(
     use_pages=True,
     external_stylesheets=[
         themes.MATERIA,
-        GOOGLE_FONTS # Include google fonts
+        GOOGLE_FONTS, # Include google fonts
     ],
     suppress_callback_exceptions=True,
-     update_title=None
+     update_title=None,
 )
 app.title = "Smash Charts"
 server = app.server
@@ -31,7 +31,7 @@ server = app.server
 pages = [*dash.page_registry.values()]
 drawer_pages = [
     "/attribute-correlations",
-    "/attribute-distributions"
+    "/attribute-distributions",
 ]
 sidebar_pages = [
     page['relative_path']
@@ -42,14 +42,14 @@ sidebar_pages = [
 # Window size breakpoints - used for dynamic layout updates based on screen size
 window_size_breakpoints = dash_breakpoints.WindowBreakpoints(
     id="breakpoints",
-    widthBreakpointThresholdsPx=[*range(400, 1800, 50)]
+    widthBreakpointThresholdsPx=[*range(400, 1800, 50)],
 )
 
 app_html = get_app_html(pages, dash.page_container)
 app_html += [
     dcc.Location(id='url'),
     html.Div(id="display-size"),
-    window_size_breakpoints
+    window_size_breakpoints,
 ]
 
 app.layout = dmc.MantineProvider(
@@ -65,14 +65,14 @@ app.layout = dmc.MantineProvider(
     inherit=True,
     withGlobalStyles=True,
     withNormalizeCSS=True,
-    children=app_html
+    children=app_html,
 )
 
 get_callbacks(
     app=app,
     num_pages=len(pages),
     drawer_pages=drawer_pages,
-    sidebar_pages=sidebar_pages
+    sidebar_pages=sidebar_pages,
 )
 
 if __name__ == '__main__':

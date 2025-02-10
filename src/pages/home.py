@@ -7,5 +7,5 @@ dash.register_page(__name__,  title=get_window_title(__name__), path='/')
 
 layout = html.Div(
     className="inner-page-container",
-    children=[get_introduction_block()]
+    children=[get_introduction_block()],
 )

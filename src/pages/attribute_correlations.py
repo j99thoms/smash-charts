@@ -35,8 +35,8 @@ layout = html.Div(
                         children=html.H4("Choose two attributes:"),
                         style={
                             "width": "270px",  
-                            "padding-left": "5px"
-                        }
+                            "padding-left": "5px",
+                        },
                     ),
                     html.Div(
                         id="scatter-dropdown-container",
@@ -44,38 +44,38 @@ layout = html.Div(
                             get_attribute_selector_dropdown(
                                 div_id="scatter-dropdown-1",
                                 default_value=DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
-                                data_type="continuous"
+                                data_type="continuous",
                             ),
                             get_vertical_spacer(height=8),
                             get_attribute_selector_dropdown(
                                 div_id="scatter-dropdown-2",
                                 default_value=DEFAULT_SCATTER_PLOT_ATTRIBUTE_2,
-                                data_type="continuous"
-                            )
+                                data_type="continuous",
+                            ),
                         ],
-                        style={"width": "270px"}
+                        style={"width": "270px"},
                     ),
                     # Invisible divs used to track last selected vars:
                     html.Div(
                         id='last-selected-scatter-var-1',
                         children=DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
-                        style={'display': 'None'}
+                        style={'display': 'None'},
                     ),
                     html.Div(
                         id='last-selected-scatter-var-2',
                         children=DEFAULT_SCATTER_PLOT_ATTRIBUTE_2,
-                        style={'display': 'None'}
-                    )
+                        style={'display': 'None'},
+                    ),
                 ],
                 style={
                     "width": "95%",
-                    "float": "right"
-                }
-            )
+                    "float": "right",
+                },
+            ),
         ]),
         dbc.Row([
             # Spacer
-            get_vertical_spacer(height=20)
+            get_vertical_spacer(height=20),
         ]),
         dbc.Row([
             # Plots
@@ -85,16 +85,16 @@ layout = html.Div(
                     id='scatter-title',
                     style={
                         "height": "6%", 
-                        "width": "95%"
-                    }
+                        "width": "95%",
+                    },
                 ),
                 html.Div([
                     dvc.Vega(
                         id="scatter-plot",
                         className="scatter-plot-frame", #TODO: Dynamic height
-                        opt={"renderer": "svg", "actions": False}
+                        opt={"renderer": "svg", "actions": False},
                     )],
-                    style={"position": "relative", "float": "left", "width": "90%"}
+                    style={"position": "relative", "float": "left", "width": "90%"},
                 ),
                 html.Div([
                     dcc.Slider(
@@ -105,8 +105,8 @@ layout = html.Div(
                         updatemode='drag',
                         tooltip={"placement": "right", "transform": "imageSizeMultiplier"},
                     )],
-                    style={"position": "relative", "float": "left", "width": "5%"}
-                )
+                    style={"position": "relative", "float": "left", "width": "5%"},
+                ),
             ]),
             dbc.Col([
                 # Correlation matrix plot
@@ -115,19 +115,19 @@ layout = html.Div(
                     style={
                         "height": "6%", 
                         "width": "90%",
-                        "text-align": "center"
-                    }
+                        "text-align": "center",
+                    },
                 ),
                 dvc.Vega(
                     id="corr-matrix-plot",
                     className="corr-matrix-plot-frame", #TODO: Dynamic height
                     opt={"renderer": "svg", "actions": False},
-                    style={"margin-bottom": "30px"}
-                )
-            ])
+                    style={"margin-bottom": "30px"},
+                ),
+            ]),
         ]),
         dcc.Store(id="scatter-prev-excluded-char-ids-mem", storage_type="session"),
-    ]
+    ],
 )
 
 
@@ -136,10 +136,10 @@ layout = html.Div(
     Output("scatter-dropdown-container", "children"),
     Input("game-selector-buttons", "value"),
     State("last-selected-scatter-var-1", "children"),
-    State("last-selected-scatter-var-2", "children")
+    State("last-selected-scatter-var-2", "children"),
 )
 def update_scatter_dropdowns(
-    selected_game, last_selected_var_1, last_selected_var_2
+    selected_game, last_selected_var_1, last_selected_var_2,
 ):
     valid_attributes = get_fighter_attributes_df(game=selected_game).columns
 
@@ -158,15 +158,15 @@ def update_scatter_dropdowns(
             div_id="scatter-dropdown-1",
             default_value=default_value_1,
             data_type="continuous",
-            game=selected_game
+            game=selected_game,
         ),
         get_vertical_spacer(height=8),
         get_attribute_selector_dropdown(
             div_id="scatter-dropdown-2",
             default_value=default_value_2,
             data_type="continuous",
-            game=selected_game
-        )
+            game=selected_game,
+        ),
     ]
 
     return dropdowns
@@ -178,10 +178,10 @@ def update_scatter_dropdowns(
     Input("scatter-dropdown-1", "value"),
     Input("scatter-dropdown-2", "value"),
     State("last-selected-scatter-var-1", "children"),
-    State("last-selected-scatter-var-2", "children")
+    State("last-selected-scatter-var-2", "children"),
 )
 def update_last_selected_scatter_vars(
-    scatter_var_1, scatter_var_2, last_selected_var_1, last_selected_var_2
+    scatter_var_1, scatter_var_2, last_selected_var_1, last_selected_var_2,
 ):
     if scatter_var_1 is not None:
         last_selected_var_1 = scatter_var_1
@@ -205,14 +205,14 @@ def update_last_selected_scatter_vars(
     State("last-selected-scatter-var-2", "children"),
     State("scatter-prev-excluded-char-ids-mem", "data"),
     State("excluded-char-ids-mem", "modified_timestamp"),
-    State("settings-btn-last-press", "data")
+    State("settings-btn-last-press", "data"),
 )
 def update_scatter_plot(
     scatter_var_1, scatter_var_2, display_size_str,
     excluded_char_ids_mem, selected_game, image_size_slider_val,
     last_selected_var_1, last_selected_var_2,
     prev_excluded_char_ids_mem, excluded_char_ids_last_update, 
-    settings_btn_last_press
+    settings_btn_last_press,
 ):
     screen_width = get_screen_width(display_size_str)
 
@@ -259,7 +259,7 @@ def update_scatter_plot(
          screen_width=screen_width,
          excluded_fighter_ids=excluded_char_ids,
          selected_game=selected_game,
-         image_size_multiplier=image_size_multiplier
+         image_size_multiplier=image_size_multiplier,
     )
 
     title = get_scatter_plot_title(scatter_var_1, scatter_var_2)
@@ -273,11 +273,11 @@ def update_scatter_plot(
     Input("scatter-dropdown-2", "value"),
     Input("display-size", "children"),
     State("last-selected-scatter-var-1", "children"),
-    State("last-selected-scatter-var-2", "children")
+    State("last-selected-scatter-var-2", "children"),
 )
 def update_corr_matrix_plot(
     scatter_var_1, scatter_var_2, display_size_str,
-    last_selected_var_1, last_selected_var_2
+    last_selected_var_1, last_selected_var_2,
 ):
     screen_width = get_screen_width(display_size_str)
 
@@ -289,7 +289,7 @@ def update_corr_matrix_plot(
     plot = get_corr_matrix_plot(
         var_1=scatter_var_1,
         var_2=scatter_var_2,
-        screen_width=screen_width
+        screen_width=screen_width,
     )
 
     return plot.to_dict()

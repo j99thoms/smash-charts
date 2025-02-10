@@ -26,7 +26,7 @@ def get_menu_button(div_id, type, initial_load=False):
 
     icons_dict = {
         'hamburger': 'ci:hamburger-md',
-        'settings': 'ci:settings'
+        'settings': 'ci:settings',
     }
 
     if type in icons_dict:
@@ -40,7 +40,7 @@ def get_menu_button(div_id, type, initial_load=False):
         className=f'{type}-menu-button',
         color="dark",
         radius="20px",
-        style=style
+        style=style,
         # variant="outline"
     )
 
@@ -66,7 +66,7 @@ def get_page_icon(page_name, height=24, variant=None):
         'Home': f'ph:house{variant}',
         'Attribute correlations': f'ph:chart-scatter{variant}',
         'Attribute distributions': f'ph:chart-bar{variant}',
-        'Attribute info': f'ph:info{variant}'
+        'Attribute info': f'ph:info{variant}',
     }
 
     if page_name in icons_dict:
@@ -86,7 +86,7 @@ def get_navlink(page, type):
         color='dark',
         variant="light",
         style=get_navlink_style(),
-        styles=get_navlink_styles()
+        styles=get_navlink_styles(),
     )
 
     return navlink
@@ -101,9 +101,9 @@ def get_sidebar(pages):
                 children=sidebar_contents,
                 id="sidebar",
                 style=get_sidebar_style(initial_load=True),
-                fixed=True
-            )
-        ]
+                fixed=True,
+            ),
+        ],
     )
 
     return sidebar
@@ -112,11 +112,11 @@ def get_drawer(pages):
     logo = get_logo()
     hamburger_menu_drawer_inner = get_menu_button(
         div_id="hamburger-menu-button-drawer-inner",
-        type="hamburger"
+        type="hamburger",
     )
     drawer_header = html.Div(
         id='drawer-header',
-        children=[hamburger_menu_drawer_inner, logo]
+        children=[hamburger_menu_drawer_inner, logo],
     )
 
     drawer_contents = get_drawer_contents(pages)
@@ -142,7 +142,7 @@ def get_navlink_styles(is_collapsed=False):
             "label": {
                 "overflow": "visible",
                 "font-size": "11px",
-                "line-height": "0.85"
+                "line-height": "0.85",
                 # "background-color": "yellow"
             },
             "body": {
@@ -161,7 +161,7 @@ def get_navlink_styles(is_collapsed=False):
                 "top": "-12px", 
                 "left": "8px",
                 # "background-color": "blue"
-            }
+            },
         }
     else:
         navlink_styles = {
@@ -172,12 +172,12 @@ def get_navlink_styles(is_collapsed=False):
                 "left": f"{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 8}px", # Line up with collapsed navlinks
             },
             "body": {
-                "overflow": "visible"
+                "overflow": "visible",
             },
             "icon": {
                 "position": "relative", 
                 "left": f"{COLLAPSED_SIDEBAR_NAVLINK_MARGIN - 4}px",  # Line up with collapsed navlinks
-            }
+            },
         }
 
     return navlink_styles
@@ -206,7 +206,7 @@ def get_sidebar_style(is_collapsed=False, initial_load=False):
     if initial_load:
         sidebar_style = {
             "display": "none", 
-            "width": f"{EXPANDED_SIDEBAR_WIDTH}px"
+            "width": f"{EXPANDED_SIDEBAR_WIDTH}px",
         }
     elif is_collapsed:
         sidebar_style = {
@@ -224,7 +224,7 @@ def get_sidebar_style(is_collapsed=False, initial_load=False):
 def get_dummy_sidebar_style(is_collapsed=False, initial_load=False):
     dummy_sidebar_style = get_sidebar_style(
         is_collapsed=is_collapsed,
-        initial_load=initial_load
+        initial_load=initial_load,
     )
     if not initial_load:
         dummy_sidebar_style['float'] = "left"
@@ -240,7 +240,7 @@ def get_sidebar_style_outputs(is_collapsed, num_pages):
     return tuple(
             num_pages * [navlink_styles]
             + num_pages * [navlink_style]
-            + [sidebar_style, dummy_sidebar_style]
+            + [sidebar_style, dummy_sidebar_style],
         )
 
 def get_page_container_style(sidebar_status):
@@ -250,26 +250,26 @@ def get_page_container_style(sidebar_status):
                 Error during get_page_container_style. 
                 The input 'sidebar_status' should be one of \
                 "collapsed", "expanded", or "hidden".
-            """
+            """,
         )
 
     if sidebar_status == "hidden":
         page_container_style = {
-            "width": "99%"
+            "width": "99%",
         }
     else:
         if sidebar_status == "collapsed":
             sidebar_offset = int(
                 COLLAPSED_SIDEBAR_WIDTH
-                + (2/3)*COLLAPSED_SIDEBAR_NAVLINK_MARGIN # idk, it just works
+                + (2/3)*COLLAPSED_SIDEBAR_NAVLINK_MARGIN, # idk, it just works
             )
         else: # expanded
             sidebar_offset = int(
                 EXPANDED_SIDEBAR_WIDTH
-                + (2/3)*EXPANDED_SIDEBAR_NAVLINK_MARGIN # idk, it just works
+                + (2/3)*EXPANDED_SIDEBAR_NAVLINK_MARGIN, # idk, it just works
             )
         page_container_style = {
-            "width": f"calc(100vw - {sidebar_offset}px)"
+            "width": f"calc(100vw - {sidebar_offset}px)",
         }
 
     return page_container_style

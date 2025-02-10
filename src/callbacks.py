@@ -23,18 +23,18 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     @app.callback(
         Output('page-title-container', 'children'),
         Input('url', 'pathname'),
-        Input('display-size', 'children')
+        Input('display-size', 'children'),
     )
     def update_page_title(page_url, display_size_str):
         # Some pages use the app's title as the page title,
         # other pages have a specific title for that page instead.
         app_title_pages = [
             "/",
-            "/attribute-info"
+            "/attribute-info",
         ]
         specific_title_pages = [
             "/attribute-correlations",
-            "/attribute-distributions"
+            "/attribute-distributions",
         ]
 
         if page_url in specific_title_pages:
@@ -71,7 +71,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             home_active,
             correlations_active,
             distributions_active,
-            info_active
+            info_active,
         )
 
     # Update the sidebar's status (expanded / collapsed / hidden)
@@ -105,19 +105,19 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             # Collapse the sidebar
             sidebar_styles = get_sidebar_style_outputs(
                 is_collapsed=True,
-                num_pages=num_pages
+                num_pages=num_pages,
             )
             page_container_style = get_page_container_style(
-                sidebar_status="collapsed"
+                sidebar_status="collapsed",
             )
         else:
             # Expand the sidebar
             sidebar_styles = get_sidebar_style_outputs(
                 is_collapsed=False,
-                num_pages=num_pages
+                num_pages=num_pages,
             )
             page_container_style = get_page_container_style(
-                sidebar_status="expanded"
+                sidebar_status="expanded",
             )
 
         # Update the page's layout depending on the current page's url
@@ -130,7 +130,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             sidebar_container_style = {"display": "none"}
             drawer_hamburger_menu_style = None
             page_container_style = get_page_container_style(
-                sidebar_status="hidden"
+                sidebar_status="hidden",
             )
         else:
             # This only happens if the user navigates to a non-existent page
@@ -138,7 +138,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             sidebar_container_style = {"display": "none"}
             drawer_hamburger_menu_style = {"display": "none"}
             page_container_style = get_page_container_style(
-                sidebar_status="hidden"
+                sidebar_status="hidden",
             )
 
         dummy_sidebar_container_style = sidebar_container_style
@@ -148,7 +148,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             page_container_style,
             sidebar_container_style,
             dummy_sidebar_container_style,
-            drawer_hamburger_menu_style
+            drawer_hamburger_menu_style,
         )
 
     # Update the drawer's status (opened / closed)
@@ -160,7 +160,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         Input("hamburger-menu-button-drawer-inner", "n_clicks"),
         Input("url", "pathname"),
         State("drawer", "opened"),
-        prevent_initial_call=True
+        prevent_initial_call=True,
     )
     def update_navigation_drawer_status(n_outer, n_inner, page_url, is_opened):
         triggered_id = ctx.triggered_id
@@ -188,7 +188,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         Input("url", "pathname"),
         Input("fighter-selector-reset-button", "n_clicks"),
         State("settings-menu-drawer", "opened"),
-        prevent_initial_call=True
+        prevent_initial_call=True,
     )
     def update_settings_drawer_status(n_clicks, reset_click, page_url, is_opened):
         button_style = None
@@ -210,7 +210,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     @app.callback(
         Output("settings-btn-last-press", "data"),
         Input("settings-menu-button", "n_clicks"),
-        prevent_initial_call=True
+        prevent_initial_call=True,
     )
     def record_settings_btn_last_press(n_clicks):
       return {'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -227,7 +227,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
     )
     def update_fighter_selector_chart(
         is_opened, selected_game, reset_click,
-        excluded_char_ids_mem, excluded_fighter_numbers
+        excluded_char_ids_mem, excluded_fighter_numbers,
     ):
         if ctx.triggered_id == "fighter-selector-reset-button":
             return None, {'ids': []}
@@ -252,12 +252,12 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
         State("settings-btn-last-press", "data"),
         State("game-selector-buttons", "value"),
         State("excluded-fighter-numbers", "data"),
-        prevent_initial_call=True
+        prevent_initial_call=True,
     )
     def update_selected_fighters(
         selector_signal, reset_click, selector_mem,
         excluded_char_ids_mem, settings_btn_last_press,
-        selected_game, excluded_fighter_numbers
+        selected_game, excluded_fighter_numbers,
     ):
         if ctx.triggered_id == "fighter-selector-reset-button":
             return {'selected': []}, {'ids': []}, initialize_excluded_fighters()
@@ -311,7 +311,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
             excluded_char_ids.append(pressed_id)
 
         excluded_fighter_numbers = update_excluded_fighter_numbers(
-            excluded_fighter_numbers, excluded_char_ids, selected_game
+            excluded_fighter_numbers, excluded_char_ids, selected_game,
         )
 
         return {'selected': selected_char_ids}, {'ids': excluded_char_ids}, excluded_fighter_numbers

@@ -18,7 +18,7 @@ def get_logo():
         className='logo',
         children=[html.Img(src=f'{IMG_DIR}/logo-small.png')],
         href="/",
-        target="_self"
+        target="_self",
     )
 
     return logo
@@ -33,17 +33,17 @@ def create_text_block(children):
                         children=children,
                         style={
                             "width": "98%",
-                            "float": "right"
-                        }
-                    )
+                            "float": "right",
+                        },
+                    ),
                 ],
                 style={
                     "width": "98%",
                     "float": "left",
-                    "margin-top": "10px"
-                }
-            )
-        ]
+                    "margin-top": "10px",
+                },
+            ),
+        ],
     )
 
     return text_block    
@@ -51,7 +51,7 @@ def create_text_block(children):
 def get_attribute_info_block():
     attribute_info_header = html.H4(
         children=[html.U("Attribute Info")],
-        style={"text-align": "center"}
+        style={"text-align": "center"},
     )
     attribute_info_paragraphs = get_attribute_info_paragraphs()
     smash_wiki_credits = get_smash_wiki_credits()
@@ -60,8 +60,8 @@ def get_attribute_info_block():
         children=[
             attribute_info_header,
             *attribute_info_paragraphs,
-            smash_wiki_credits
-        ]
+            smash_wiki_credits,
+        ],
     )
     
     return attribute_info_block
@@ -70,7 +70,7 @@ def get_introduction_block():
     introduction_paragraphs = get_introduction_paragraphs()
 
     introduction_block = create_text_block(
-        children=introduction_paragraphs
+        children=introduction_paragraphs,
     )
 
     return introduction_block
@@ -81,7 +81,7 @@ def get_attribute_info_paragraphs():
 
     attribute_info_paragraphs = parse_paragraphs(
         lines=attribute_info_txt,
-        paragraph_class_name="attribute-info-paragraph"
+        paragraph_class_name="attribute-info-paragraph",
     )
 
     return attribute_info_paragraphs
@@ -92,7 +92,7 @@ def get_introduction_paragraphs():
 
     introduction_paragraphs = parse_paragraphs(
         lines=introduction_txt,
-        paragraph_class_name="introduction-paragraph"
+        paragraph_class_name="introduction-paragraph",
     )
 
     return introduction_paragraphs
@@ -101,19 +101,19 @@ def get_smash_wiki_credits():
     smash_wiki_hyperlink = html.A(
         children="SmashWiki",
         href="https://www.ssbwiki.com/",
-        target="_blank"
+        target="_blank",
     )
     smash_wiki_credits = html.Div(
         children=[
             "These attribute descriptions are based on ",
             "the descriptions which can be found on ",
             smash_wiki_hyperlink,
-            "."
+            ".",
         ],
         style={
             "margin-top": "30px",
-            "font-size": "85%"
-        }
+            "font-size": "85%",
+        },
     )
     
     return smash_wiki_credits
@@ -123,7 +123,7 @@ def get_attribute_selector_dropdown(div_id, default_value, data_type="all", game
     attribute_selector_dropdown = dcc.Dropdown(
         id=div_id,
         options=dropdown_options,
-        value=default_value
+        value=default_value,
     )
    
     return attribute_selector_dropdown
@@ -148,8 +148,8 @@ def parse_paragraphs(lines, paragraph_class_name):
             paragraphs.append(
                 html.P(
                     className=paragraph_class_name,
-                    children=p_children
-                )
+                    children=p_children,
+                ),
             )
             p_children = []
 
@@ -158,8 +158,8 @@ def parse_paragraphs(lines, paragraph_class_name):
         paragraphs.append(
             html.P(
                 className=paragraph_class_name,
-                children=p_children
-            )
+                children=p_children,
+            ),
         )
 
     return paragraphs
@@ -206,7 +206,7 @@ def get_app_title(screen_width):
             app_title = html.H1(
                 title_text,
                 id='page-title',
-                style={"font-size": "1.7vw", "padding-top": "10px"}
+                style={"font-size": "1.7vw", "padding-top": "10px"},
             )
     else:
         # App title is split across two lines
@@ -222,12 +222,12 @@ def get_app_title(screen_width):
         app_title = [
             html.H1(title_text_upper,
                     id='page-title-upper',
-                    style={"font-size": f"{font_size}px"}
+                    style={"font-size": f"{font_size}px"},
             ),
             html.H1(title_text_lower,
                     id='page-title-lower',
-                    style={"font-size": f"{font_size}px", "margin-top": "-10px"}
-                )
+                    style={"font-size": f"{font_size}px", "margin-top": "-10px"},
+                ),
             ]
 
     return app_title
@@ -249,7 +249,7 @@ def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter
     data_type = data_type.lower()
     if data_type == "continuous":
         fighter_attributes_df = fighter_attributes_df.drop(
-            columns=(ordinal_columns), errors='ignore'
+            columns=(ordinal_columns), errors='ignore',
         )
     elif data_type == "all":
         pass
@@ -278,7 +278,7 @@ def get_fighter_attributes_df(data_type="all", game="ultimate", excluded_fighter
 
 def get_correlations_df():
     fighter_attributes_df = get_fighter_attributes_df(
-        data_type="continuous"
+        data_type="continuous",
     ).drop(columns=['row_number', 'col_number'])
 
     column_names = fighter_attributes_df.columns.tolist()
@@ -286,7 +286,7 @@ def get_correlations_df():
         format_attribute_name(column_name) for column_name in column_names
     ]
     fighter_attributes_df = fighter_attributes_df.rename(
-        columns=dict(zip(column_names, formatted_names))
+        columns=dict(zip(column_names, formatted_names)),
     )
 
     corr_df = fighter_attributes_df.corr(numeric_only=True, method='pearson')
@@ -294,8 +294,8 @@ def get_correlations_df():
         columns={
             'index': 'Attribute 1',
             'variable': 'Attribute 2',
-            'value': 'Correlation'
-        }
+            'value': 'Correlation',
+        },
     )
     
     corr_df['Correlation'] = corr_df['Correlation'].round(4)
@@ -365,7 +365,7 @@ def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
     fighter_df['excluded_in_selected'] = fighter_df.index.isin(ids)
 
     excluded_fighters_df = pd.merge(
-        cur_excluded_fighters_df, fighter_df, how='left', on='fighter_number'
+        cur_excluded_fighters_df, fighter_df, how='left', on='fighter_number',
     )
     excluded_fighters_df['excluded'] = excluded_fighters_df['excluded_in_selected'].\
         fillna(excluded_fighters_df['excluded'])
@@ -383,7 +383,7 @@ def initialize_excluded_fighters():
                            "49", "50", "51", "52", "53", "54", "55", "56", "57",
                            "58", "59", "60", "60E", "61", "62", "63", "64", "65",
                            "66", "66E", "67", "68", "69", "70", "71", "72", "73",
-                           "74", "75", "76", "77", "78", "79", "80", "81", "82"]
+                           "74", "75", "76", "77", "78", "79", "80", "81", "82"],
     })
     df['excluded'] = False # All fighters are initially included
 

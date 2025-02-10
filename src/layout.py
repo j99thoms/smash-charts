@@ -21,9 +21,9 @@ def get_app_html(pages, dash_page_container):
                 drawer,
                 sidebar,
                 page_container,
-                footer
-            ]
-        )
+                footer,
+            ],
+        ),
     ]
 
     return app_html
@@ -35,19 +35,19 @@ def get_header():
     hamburger_menu_drawer_outer = get_menu_button(
         div_id="hamburger-menu-button-drawer-outer",
         type="hamburger",
-        initial_load=True
+        initial_load=True,
     )
 
     # For opening the settings menu
     settings_menu_button = get_menu_button(
         div_id="settings-menu-button",
         type="settings",
-        initial_load=False
+        initial_load=False,
     )
 
     page_title = html.Div(
         children=[html.H1(html.Br(), id='page-title')],
-        id='page-title-container'
+        id='page-title-container',
     )
 
     header = html.Div(
@@ -63,9 +63,9 @@ def get_header():
                     'melee': 'SSB Melee',
                 },
                 value='ultimate',
-                id="game-selector-buttons"
-            )
-        ]
+                id="game-selector-buttons",
+            ),
+        ],
     )
 
     return header
@@ -81,28 +81,28 @@ def get_settings_menu():
                 id="fighter-selector-chart",
                 spec=None,
                 signalsToObserve=["fighter_selector"],
-                opt={"renderer": "svg", "actions": False}
+                opt={"renderer": "svg", "actions": False},
             ),
             dcc.Store(id="char-selector-mem", storage_type="memory"),
             dcc.Store(id="excluded-char-ids-mem", storage_type="memory"),
             dcc.Store(id="settings-btn-last-press", storage_type="memory"),
             dcc.Store(
                 id="excluded-fighter-numbers", storage_type="memory",
-                data = initialize_excluded_fighters()
+                data = initialize_excluded_fighters(),
             ),
             dmc.Button(
                 html.Span("Select All"),
                 leftIcon=get_icon("ci:select-multiple", height=30),
                 id="fighter-selector-reset-button",
-                color="dark", radius="15px", variant="outline"
+                color="dark", radius="15px", variant="outline",
             ),
             dmc.Button(
                 html.Span("Remove All"),
                 leftIcon=get_icon("mdi:clear-circle-outline", height=30),
                 id="fighter-selector-clear-all-button",
-                color="dark", radius="15px", variant="outline"
-            )
-        ]
+                color="dark", radius="15px", variant="outline",
+            ),
+        ],
     )
 
     settings_menu = dmc.Drawer(
@@ -113,7 +113,7 @@ def get_settings_menu():
         size=350,
         position="right",
         padding=15,
-        zIndex=80000
+        zIndex=80000,
     )
 
     return settings_menu
@@ -131,15 +131,15 @@ def get_page_container(dash_page_container):
                         id='dummy-sidebar-container',
                         children=html.Div(
                             id='dummy-sidebar',
-                        )
+                        ),
                     ),
                     html.Div(
                         id='page-container',
                         children=[settings_menu, dash_page_container],
-                        style={'display': 'none'} # Just for the initial load
+                        style={'display': 'none'}, # Just for the initial load
                     ),
                 ],
-            )
+            ),
         ],
     )
 
@@ -148,7 +148,7 @@ def get_page_container(dash_page_container):
 def get_footer():
     return html.Div(
         id="footer",
-        children=[get_credits()]
+        children=[get_credits()],
     )
 
 def get_credits():
@@ -158,23 +158,23 @@ def get_credits():
                 "Smash Charts", 
                 href="https://github.com/J99thoms/Super-Smash-Dashboard",
                 target="_blank",
-                style={"color": "white"}
+                style={"color": "white"},
             ),
             " was created by ",
             html.A(
                 "Jakob Thoms", 
                 href="https://github.com/J99thoms",
                 target="_blank",
-                style={"color": "white"}
+                style={"color": "white"},
             ),
-            "."
+            ".",
         ],
         style={
             "text-align": "right", 
             "padding-right": "10px", 
             "padding-left": "10px", 
-            "font-size": "83%"
-        }
+            "font-size": "83%",
+        },
     )
     
     return app_credits

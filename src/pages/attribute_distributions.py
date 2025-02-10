@@ -29,35 +29,35 @@ layout = html.Div(
                         children=html.H4("Choose an attribute:"),
                         style={
                             "width": "270px",
-                            "padding-left": "5px"
-                        }
+                            "padding-left": "5px",
+                        },
                     ),
                     html.Div(
                         id="bar-dropdown-container",
                         children=[
                             get_attribute_selector_dropdown(
                                 div_id="bar-dropdown",
-                                default_value=DEFAULT_BAR_CHART_ATTRIBUTE
-                            )
+                                default_value=DEFAULT_BAR_CHART_ATTRIBUTE,
+                            ),
                         ],
-                        style={"width": "270px"}
+                        style={"width": "270px"},
                     ),
                     # Invisible divs used to track last selected var:
                     html.Div(
                         id='last-selected-bar-var',
                         children=DEFAULT_BAR_CHART_ATTRIBUTE,
-                        style={'display': 'None'}
-                    )
+                        style={'display': 'None'},
+                    ),
                 ],
                 style={
                     "width": "95%",
-                    "float": "right"
-                }
-            )
+                    "float": "right",
+                },
+            ),
         ]),
         dbc.Row([
             # Spacer
-            get_vertical_spacer(height=20)
+            get_vertical_spacer(height=20),
         ]),
         dbc.Row([
             # Bar chart
@@ -66,17 +66,17 @@ layout = html.Div(
                 style={
                     "height": "6%", 
                     "width": "100%", 
-                    "text-align": "center"
-                }
+                    "text-align": "center",
+                },
             ),
             dvc.Vega(
                 id="bar-chart",
                 className="bar-chart-frame",
-                opt={"renderer": "svg", "actions": False}
-            )
+                opt={"renderer": "svg", "actions": False},
+            ),
         ]),
-        dcc.Store(id="bar-prev-excluded-char-ids-mem", storage_type="session")
-    ]
+        dcc.Store(id="bar-prev-excluded-char-ids-mem", storage_type="session"),
+    ],
 )
 
 
@@ -84,10 +84,10 @@ layout = html.Div(
 @callback(
     Output("bar-dropdown-container", "children"),
     Input("game-selector-buttons", "value"),
-    State('last-selected-bar-var', 'children')
+    State('last-selected-bar-var', 'children'),
 )
 def update_bar_dropdown(
-    selected_game, last_selected_attribute
+    selected_game, last_selected_attribute,
 ):
     if last_selected_attribute in get_fighter_attributes_df(game=selected_game).columns:
         default_value = last_selected_attribute
@@ -97,7 +97,7 @@ def update_bar_dropdown(
     dropdown = get_attribute_selector_dropdown(
         div_id="bar-dropdown",
         default_value=default_value,
-        game=selected_game
+        game=selected_game,
     )
 
     return dropdown
@@ -106,10 +106,10 @@ def update_bar_dropdown(
 @callback(
     Output('last-selected-bar-var', 'children'),
     Input("bar-dropdown", "value"),
-    State('last-selected-bar-var', 'children')
+    State('last-selected-bar-var', 'children'),
 )
 def update_last_selected_bar_var(
-    selected_attribute, last_selected_attribute
+    selected_attribute, last_selected_attribute,
 ):
     if selected_attribute is not None:
        last_selected_attribute = selected_attribute
@@ -128,12 +128,12 @@ def update_last_selected_bar_var(
     State('last-selected-bar-var', 'children'),
     State("bar-prev-excluded-char-ids-mem", "data"),
     State("excluded-char-ids-mem", "modified_timestamp"),
-    State("settings-btn-last-press", "data")
+    State("settings-btn-last-press", "data"),
 )
 def update_bar_chart(
     selected_attribute, display_size_str, excluded_char_ids_mem, selected_game,
     last_selected_attribute, prev_excluded_char_ids_mem, 
-    excluded_char_ids_last_update, settings_btn_last_press
+    excluded_char_ids_last_update, settings_btn_last_press,
 ):
     screen_width = get_screen_width(display_size_str)
 
@@ -169,7 +169,7 @@ def update_bar_chart(
         var=selected_attribute,
         screen_width=screen_width,
         excluded_fighter_ids=excluded_char_ids,
-        selected_game=selected_game
+        selected_game=selected_game,
     )
 
     title = get_bar_chart_title(selected_attribute)
