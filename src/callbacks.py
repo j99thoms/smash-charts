@@ -176,8 +176,8 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):
 
         return is_opened
 
-    # Update the settings menu's status (opened / closed)
-    # based on the current page's url and whether the user has clicked on the settings menu button.
+    # Update the settings menu's status (opened / closed) based on
+    # the current page's url and whether the user has clicked on the settings menu button.
     # This also closes the settings menu if the user resets the fighter selector chart.
     #   (This is b/c the chart refuses to update while the settings menu is open).
     @app.callback(

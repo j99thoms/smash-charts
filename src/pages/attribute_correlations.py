@@ -96,9 +96,9 @@ layout = html.Div(
                         ),
                         html.Div(
                             [
-                                dvc.Vega(
+                                dvc.Vega(  # TODO: Dynamic height for scatter plot
                                     id='scatter-plot',
-                                    className='scatter-plot-frame',  # TODO: Dynamic height
+                                    className='scatter-plot-frame',
                                     opt={'renderer': 'svg', 'actions': False},
                                 ),
                             ],
