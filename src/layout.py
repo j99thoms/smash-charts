@@ -51,6 +51,8 @@ def get_header():
         id='page-title-container',
     )
 
+    game_selector_buttons = get_game_selector_buttons()
+
     header = html.Div(
         id='header',
         children=[
@@ -58,18 +60,25 @@ def get_header():
             logo,
             page_title,
             settings_menu_button,
-            dcc.RadioItems(
-                options={
-                    'ultimate': 'SSB Ultimate',
-                    'melee': 'SSB Melee',
-                },
-                value='ultimate',
-                id='game-selector-buttons',
-            ),
+            game_selector_buttons,
         ],
     )
 
     return header
+
+
+def get_game_selector_buttons():
+    game_selector_buttons = dcc.RadioItems(
+        options={
+            'ultimate': 'SSB Ultimate',
+            'melee': 'SSB Melee',
+        },
+        value='ultimate',
+        id='game-selector-buttons',
+        style={'display': 'none'},  # Just for the initial load
+    )
+
+    return game_selector_buttons
 
 
 def get_settings_menu():

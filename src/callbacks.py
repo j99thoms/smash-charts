@@ -150,6 +150,21 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             drawer_hamburger_menu_style,
         )
 
+    # Don't display the game selector buttons on pages that use a sidebar
+    #  (i.e. the 'home' and 'attribute-info' pages).
+    @app.callback(
+        Output('game-selector-buttons', 'style'),
+        Input('url', 'pathname'),
+        State('game-selector-buttons', 'style'),
+    )
+    def update_game_selector_buttons_status(page_url, current_style):
+        new_style = {'display': 'none'} if page_url in sidebar_pages else None
+
+        if new_style == current_style:
+            raise PreventUpdate
+
+        return new_style
+
     # Update the drawer's status (opened / closed)
     # based on the current page's url
     # and whether the user has clicked on a hamburger menu button
