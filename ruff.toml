@@ -61,7 +61,6 @@ ignore = [
     "PLR2004", # don't report magic numbers
     "RET504",  # don't report unnecessary variable assignment before return
     "SIM108",  # don't prefer inline if/else statements over if-else blocks
-    "W605",    # don't report escape sequences in regular expressions
 ]
 
 # Avoid trying to fix violations of these rules:
@@ -69,7 +68,6 @@ unfixable = [
     "B905",    # zip-without-explicit-strict
     "RET504",  # variable assignment before return
     "SIM108",  # simple if-else blocks
-    "W605"     # escape sequences in regular expressions
 ]
 
 # Use single quotes for strings:
