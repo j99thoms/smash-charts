@@ -15,7 +15,7 @@ def get_scatter_plot(
     screen_width,
     excluded_fighter_ids,
     selected_game,
-    image_size_multiplier=1,
+    image_size_multiplier=1.0,
 ):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1

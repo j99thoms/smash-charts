@@ -290,7 +290,7 @@ def get_fighter_attributes_df(
         .str.lower()
         .str.replace(' ', '_', regex=False)
         .str.replace('&', 'and', regex=False)
-        .str.replace('\.|\(|\)', '', regex=True)
+        .str.replace(r'\.|\(|\)', '', regex=True)
         + '.png'
     )
 
