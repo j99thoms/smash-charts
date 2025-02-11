@@ -199,8 +199,8 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('settings-menu-drawer', 'opened'),
         Output('settings-menu-button', 'style'),
         Input('settings-menu-button', 'n_clicks'),
-        Input('url', 'pathname'),
         Input('fighter-selector-reset-button', 'n_clicks'),
+        Input('url', 'pathname'),
         State('settings-menu-drawer', 'opened'),
         prevent_initial_call=True,
     )
