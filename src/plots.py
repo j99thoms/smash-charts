@@ -456,7 +456,9 @@ def get_bar_chart_sizes(screen_width, chart_orientation):
     return plot_height, plot_width, image_size
 
 
-def get_fighter_selector_chart(excluded_char_ids=None, selected_game='ultimate'):
+def get_fighter_selector_chart(
+    excluded_char_ids=None, selected_game='ultimate', cache_breaker=999
+):
     if excluded_char_ids is None:
         excluded_char_ids = []
     fighter_df = get_fighter_attributes_df(game=selected_game)
@@ -467,7 +469,10 @@ def get_fighter_selector_chart(excluded_char_ids=None, selected_game='ultimate')
         toggle='true',
         empty=False,
         clear=False,
-        value=999,  # Hack to deal with unexpected behaviour when the selector is empty
+        # Setting a default value is a hack to deal with unexpected behaviour when
+        # the selector is empty... Conveniently, this is *also* a hack to force the
+        # chart to update by incrementing said default value. Two for the price of one!
+        value=cache_breaker,
     )
 
     n_rows, n_cols = fighter_df[['row_number', 'col_number']].max()

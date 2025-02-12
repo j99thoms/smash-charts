@@ -193,24 +193,18 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
 
     # Update the settings menu's status (opened / closed) based on
     # the current page's url and whether the user has clicked on the settings menu button.
-    # This also closes the settings menu if the user resets the fighter selector chart.
-    #   (This is b/c the chart refuses to update while the settings menu is open).
     @app.callback(
         Output('settings-menu-drawer', 'opened'),
         Output('settings-menu-button', 'style'),
         Input('settings-menu-button', 'n_clicks'),
-        Input('fighter-selector-reset-button', 'n_clicks'),
         Input('url', 'pathname'),
         State('settings-menu-drawer', 'opened'),
         prevent_initial_call=True,
     )
-    def update_settings_drawer_status(n_clicks, reset_click, page_url, is_opened):
+    def update_settings_drawer_status(n_clicks, page_url, is_opened):
         button_style = None
 
-        if ctx.triggered_id == 'fighter-selector-reset-button':
-            # Close the settings menu if the user resets the fighter selector chart
-            is_opened = False
-        elif ctx.triggered_id == 'settings-menu-button':
+        if ctx.triggered_id == 'settings-menu-button':
             # Menu button was clicked
             is_opened = not is_opened
         elif page_url in sidebar_pages:
@@ -233,11 +227,13 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     @app.callback(
         Output('fighter-selector-chart', 'spec'),
         Output('excluded-char-ids-mem', 'data'),
+        Output('cache-breaker', 'data'),
         Input('settings-menu-drawer', 'opened'),
         Input('game-selector-buttons', 'value'),
         Input('fighter-selector-reset-button', 'n_clicks'),
         State('excluded-char-ids-mem', 'data'),
         State('excluded-fighter-numbers', 'data'),
+        State('cache-breaker', 'data'),
     )
     def update_fighter_selector_chart(
         is_opened,
@@ -245,20 +241,23 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         reset_click,
         excluded_char_ids_mem,
         excluded_fighter_numbers,
+        cache_breaker,
     ):
         if ctx.triggered_id == 'fighter-selector-reset-button':
-            return None, {'ids': []}
-        if ctx.triggered_id == 'game-selector-buttons':
+            cache_breaker += 1
+            excluded_char_ids = []
+        elif ctx.triggered_id == 'game-selector-buttons':
             excluded_char_ids = convert_excluded_char_ids(
-                excluded_fighter_numbers,
-                selected_game,
+                excluded_fighter_numbers, selected_game
             )
         else:
             excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
 
-        chart = get_fighter_selector_chart(excluded_char_ids, selected_game)
+        chart = get_fighter_selector_chart(
+            excluded_char_ids, selected_game, cache_breaker
+        )
 
-        return chart.to_dict(), {'ids': excluded_char_ids}
+        return chart.to_dict(), {'ids': excluded_char_ids}, cache_breaker
 
     # Update excluded fighters
     @app.callback(
@@ -312,9 +311,8 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             selected_char_ids = [
                 int(char_id) - 1  # Altair off-by-one
                 for char_id in char_ids
+                if int(char_id) < 100 and int(char_id) >= 1
             ]
-            if 998 in selected_char_ids:
-                selected_char_ids.remove(998)
 
         # Get fighter ids previously selected in the chart's selection_point:
         if not selector_mem:
