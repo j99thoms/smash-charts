@@ -484,7 +484,7 @@ def get_fighter_selector_chart(
             alt.X('col_number', axis=None),
             alt.Y('row_number', axis=None).scale(reverse=True),
             alt.Url('img_url'),
-            alt.Tooltip(['fighter', 'fighter_number']),
+            alt.Tooltip(field='fighter', title=None),
             opacity=alt.condition(
                 # fighter_selector XOR datum.excluded
                 (fighter_selector | alt.datum.excluded)

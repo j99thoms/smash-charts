@@ -5,7 +5,7 @@
     top: 0px;
     margin-top: 0px;
     height: 60px;
-    z-index: 9999;
+    z-index: 998;
     background-color: white;
 }
 
@@ -168,6 +168,7 @@
 #sidebar {
     border: none;
     padding-top: 60px;
+    z-index: 997;
     /* background-color: rgba(255, 0, 0, 0.5); */
 }
 

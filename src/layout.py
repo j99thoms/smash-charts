@@ -93,6 +93,7 @@ def get_settings_menu():
                 spec=None,
                 signalsToObserve=['fighter_selector'],
                 opt={'renderer': 'svg', 'actions': False},
+                style={'z-index': '9999'},
             ),
             dcc.Store(id='cache-breaker', storage_type='memory', data=999),
             dcc.Store(id='char-selector-mem', storage_type='memory'),
@@ -130,7 +131,7 @@ def get_settings_menu():
         size=350,
         position='right',
         padding=15,
-        zIndex=80000,
+        zIndex=999,
     )
 
     return settings_menu
