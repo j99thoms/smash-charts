@@ -230,7 +230,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('cache-breaker', 'data'),
         Input('settings-menu-drawer', 'opened'),
         Input('game-selector-buttons', 'value'),
-        Input('fighter-selector-reset-button', 'n_clicks'),
+        Input('fighter-selector-select-all-button', 'n_clicks'),
         State('excluded-char-ids-mem', 'data'),
         State('excluded-fighter-numbers', 'data'),
         State('cache-breaker', 'data'),
@@ -238,12 +238,12 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     def update_fighter_selector_chart(
         is_opened,
         selected_game,
-        reset_click,
+        select_all_click,
         excluded_char_ids_mem,
         excluded_fighter_numbers,
         cache_breaker,
     ):
-        if ctx.triggered_id == 'fighter-selector-reset-button':
+        if ctx.triggered_id == 'fighter-selector-select-all-button':
             cache_breaker += 1
             excluded_char_ids = []
         elif ctx.triggered_id == 'game-selector-buttons':
@@ -265,7 +265,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('excluded-char-ids-mem', 'data', allow_duplicate=True),
         Output('excluded-fighter-numbers', 'data'),
         Input('fighter-selector-chart', 'signalData'),
-        Input('fighter-selector-reset-button', 'n_clicks'),
+        Input('fighter-selector-select-all-button', 'n_clicks'),
         State('char-selector-mem', 'data'),
         State('excluded-char-ids-mem', 'data'),
         State('settings-btn-last-press', 'data'),
@@ -275,14 +275,14 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     )
     def update_selected_fighters(
         selector_signal,
-        reset_click,
+        select_all_click,
         selector_mem,
         excluded_char_ids_mem,
         settings_btn_last_press,
         selected_game,
         excluded_fighter_numbers,
     ):
-        if ctx.triggered_id == 'fighter-selector-reset-button':
+        if ctx.triggered_id == 'fighter-selector-select-all-button':
             return {'selected': []}, {'ids': []}, initialize_excluded_fighters()
         if 'fighter_selector' not in selector_signal:
             raise PreventUpdate

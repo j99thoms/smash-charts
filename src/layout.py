@@ -107,7 +107,7 @@ def get_settings_menu():
             dmc.Button(
                 html.Span('Select All'),
                 leftIcon=get_icon('ci:select-multiple', height=30),
-                id='fighter-selector-reset-button',
+                id='fighter-selector-select-all-button',
                 color='dark',
                 radius='15px',
                 variant='outline',
