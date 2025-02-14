@@ -9,6 +9,7 @@ from utils import (
     convert_excluded_char_ids,
     get_app_title,
     get_excluded_char_ids,
+    get_fighter_attributes_df,
     get_page_title,
     get_screen_width,
     initialize_excluded_fighters,
@@ -231,6 +232,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Input('settings-menu-drawer', 'opened'),
         Input('game-selector-buttons', 'value'),
         Input('fighter-selector-select-all-button', 'n_clicks'),
+        Input('fighter-selector-clear-all-button', 'n_clicks'),
         State('excluded-char-ids-mem', 'data'),
         State('excluded-fighter-numbers', 'data'),
         State('cache-breaker', 'data'),
@@ -239,6 +241,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         is_opened,
         selected_game,
         select_all_click,
+        clear_all_click,
         excluded_char_ids_mem,
         excluded_fighter_numbers,
         cache_breaker,
@@ -246,6 +249,9 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if ctx.triggered_id == 'fighter-selector-select-all-button':
             cache_breaker += 1
             excluded_char_ids = []
+        elif ctx.triggered_id == 'fighter-selector-clear-all-button':
+            cache_breaker += 1
+            excluded_char_ids = [*get_fighter_attributes_df(game=selected_game).index]
         elif ctx.triggered_id == 'game-selector-buttons':
             excluded_char_ids = convert_excluded_char_ids(
                 excluded_fighter_numbers, selected_game
@@ -266,6 +272,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('excluded-fighter-numbers', 'data'),
         Input('fighter-selector-chart', 'signalData'),
         Input('fighter-selector-select-all-button', 'n_clicks'),
+        Input('fighter-selector-clear-all-button', 'n_clicks'),
         State('char-selector-mem', 'data'),
         State('excluded-char-ids-mem', 'data'),
         State('settings-btn-last-press', 'data'),
@@ -276,6 +283,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     def update_selected_fighters(
         selector_signal,
         select_all_click,
+        clear_all_click,
         selector_mem,
         excluded_char_ids_mem,
         settings_btn_last_press,
@@ -283,7 +291,17 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         excluded_fighter_numbers,
     ):
         if ctx.triggered_id == 'fighter-selector-select-all-button':
-            return {'selected': []}, {'ids': []}, initialize_excluded_fighters()
+            return (
+                {'selected': []},
+                {'ids': []},
+                initialize_excluded_fighters(excluded=None),
+            )
+        if ctx.triggered_id == 'fighter-selector-clear-all-button':
+            return (
+                {'selected': []},
+                {'ids': []},
+                initialize_excluded_fighters(excluded='all'),
+            )
         if 'fighter_selector' not in selector_signal:
             raise PreventUpdate
 

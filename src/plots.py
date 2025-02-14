@@ -297,7 +297,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
 
     sorted_df = plot_df.sort_values(by=var, ascending=False)
     sorted_fighter_list = sorted_df.fighter.to_list()
-    max_val = sorted_df[var].to_list()[0]
+    max_val = sorted_df[var].to_list()[0] if len(plot_df.index) > 0 else 0
 
     # Create the base canvas for the bar chart
     if chart_orientation == 'horizontal':

@@ -113,7 +113,7 @@ def get_settings_menu():
                 variant='outline',
             ),
             dmc.Button(
-                html.Span('Remove All'),
+                html.Span('Clear All'),
                 leftIcon=get_icon('mdi:clear-circle-outline', height=30),
                 id='fighter-selector-clear-all-button',
                 color='dark',

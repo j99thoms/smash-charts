@@ -411,7 +411,7 @@ def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
     return excluded_fighters_df[['fighter_number', 'excluded']].to_dict()
 
 
-def initialize_excluded_fighters():
+def initialize_excluded_fighters(excluded=None):
     df = pd.DataFrame(
         {
             'fighter_number': [
@@ -508,7 +508,12 @@ def initialize_excluded_fighters():
             ],
         },
     )
-    df['excluded'] = False  # All fighters are initially included
+    if excluded is None or excluded == '':
+        df['excluded'] = False
+    elif excluded == 'all':
+        df['excluded'] = True
+    else:
+        raise ValueError
 
     return df.to_dict()
 
