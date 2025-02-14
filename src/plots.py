@@ -283,12 +283,11 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
 
     if screen_width > 900:
         chart_orientation = 'horizontal'
+        plot_height, plot_width, image_size = get_horizontal_bar_chart_sizes(screen_width)
     else:
         chart_orientation = 'vertical'
-    plot_height, plot_width, image_size = get_bar_chart_sizes(
-        screen_width=screen_width,
-        chart_orientation=chart_orientation,
-    )
+        plot_height, plot_width, image_size = get_vertical_bar_chart_sizes(screen_width)
+
     axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
 
     # Retrieve the data needed for the bar chart
@@ -438,26 +437,29 @@ def get_bar_chart_font_sizes(plot_width):
     return axis_title_size, axis_label_size
 
 
-def get_bar_chart_sizes(screen_width, chart_orientation):
-    if chart_orientation == 'horizontal':
-        plot_height = 250
-        plot_width = int(screen_width * 0.86)  # Plot takes up 86% of the screen
+def get_horizontal_bar_chart_sizes(screen_width):
+    plot_height = 250
+    plot_width = int(screen_width * 0.86)  # Plot takes up 86% of the screen
 
-        max_image_size = 24
-        min_image_size = 15
-        image_size = int(plot_width / 62)
-        image_size = min(image_size, max_image_size)
-        image_size = max(image_size, min_image_size)
+    max_image_size = 24
+    min_image_size = 15
+    image_size = int(plot_width / 62)
+    image_size = min(image_size, max_image_size)
+    image_size = max(image_size, min_image_size)
+
+    return plot_height, plot_width, image_size
+
+
+def get_vertical_bar_chart_sizes(screen_width):
+    plot_height = 1200
+    image_size = 20
+
+    max_plot_width = 550
+    if screen_width > 550:
+        plot_width = int(screen_width * 0.8)
     else:
-        plot_height = 1200
-        image_size = 20
-
-        max_plot_width = 550
-        if screen_width > 550:
-            plot_width = int(screen_width * 0.8)
-        else:
-            plot_width = int(screen_width * 0.7)
-        plot_width = min(plot_width, max_plot_width)
+        plot_width = int(screen_width * 0.7)
+    plot_width = min(plot_width, max_plot_width)
 
     return plot_height, plot_width, image_size
 
