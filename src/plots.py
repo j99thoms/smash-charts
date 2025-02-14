@@ -38,14 +38,18 @@ def get_scatter_plot(
         plot_df = plot_df[['fighter', 'img_url', var_1, var_2]]
     plot_df = plot_df.dropna()
 
+    # Altair shorthand for encoding specification:
+    var_1_spec = f'{var_1}:Q'
+    var_2_spec = f'{var_2}:Q'
+
     # Create the scatter plot
     plot = (
         alt.Chart(plot_df)
         .encode(
-            alt.X(var_1, title=format_attribute_name(var_1)).scale(zero=False),
-            alt.Y(var_2, title=format_attribute_name(var_2)).scale(zero=False),
-            alt.Tooltip(['fighter', var_1, var_2]),
-            alt.Url('img_url'),
+            alt.X(var_1_spec, title=format_attribute_name(var_1)).scale(zero=False),
+            alt.Y(var_2_spec, title=format_attribute_name(var_2)).scale(zero=False),
+            alt.Tooltip(['fighter:N', var_1_spec, var_2_spec]),
+            alt.Url('img_url:N'),
         )
         .mark_image(
             height=image_size,
@@ -299,22 +303,24 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     sorted_fighter_list = sorted_df.fighter.to_list()
     max_val = sorted_df[var].to_list()[0] if len(plot_df.index) > 0 else 0
 
+    var_spec = f'{var}:Q'  # Altair shorthand for encoding specification
+
     # Create the base canvas for the bar chart
     if chart_orientation == 'horizontal':
         base_plot = alt.Chart(plot_df).encode(
-            alt.X('fighter', sort=sorted_fighter_list, title=None, axis=None),
-            alt.Tooltip(['fighter', var]),
+            alt.X('fighter:N', sort=sorted_fighter_list, title=None, axis=None),
+            alt.Tooltip(['fighter:N', var_spec]),
         )
     else:
         base_plot = alt.Chart(plot_df).encode(
-            alt.Y('fighter', title=None, sort=sorted_fighter_list, axis=None),
-            alt.Tooltip(['fighter', var]),
+            alt.Y('fighter:N', title=None, sort=sorted_fighter_list, axis=None),
+            alt.Tooltip(['fighter:N', var_spec]),
         )
 
     # Add the bars to the base canvas for the bar chart
     if chart_orientation == 'horizontal':
         bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.Y(var, title=format_attribute_name(var))
+            alt.Y(var_spec, title=format_attribute_name(var))
             .axis(
                 orient='left',
                 titlePadding=0,
@@ -325,7 +331,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
         )
     else:
         bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.X(var, title=format_attribute_name(var))
+            alt.X(var_spec, title=format_attribute_name(var))
             .axis(
                 orient='bottom',
                 titlePadding=2,
@@ -342,7 +348,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
             width=image_size,
         ).encode(
             alt.X(
-                'fighter',
+                'fighter:N',
                 sort=sorted_fighter_list,
                 title='fighter',
             ).axis(
@@ -351,7 +357,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
                 labels=False,
                 titlePadding=-10,
             ),
-            alt.Url('img_url'),
+            alt.Url('img_url:N'),
         )
     else:
         icons = base_plot.mark_image(
@@ -359,7 +365,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
             width=image_size,
         ).encode(
             alt.Y(
-                'fighter',
+                'fighter:N',
                 sort=sorted_fighter_list,
                 title='fighter',
             ).axis(
@@ -368,7 +374,7 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
                 labels=False,
                 titlePadding=-10,
             ),
-            alt.Url('img_url'),
+            alt.Url('img_url:N'),
         )
 
     # Configure the size of the chart
@@ -481,9 +487,9 @@ def get_fighter_selector_chart(
     plot = (
         alt.Chart(fighter_df)
         .encode(
-            alt.X('col_number', axis=None),
-            alt.Y('row_number', axis=None).scale(reverse=True),
-            alt.Url('img_url'),
+            alt.X('col_number:Q', axis=None),
+            alt.Y('row_number:Q', axis=None).scale(reverse=True),
+            alt.Url('img_url:N'),
             alt.Tooltip(field='fighter', title=None),
             opacity=alt.condition(
                 # fighter_selector XOR datum.excluded
