@@ -281,15 +281,6 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
-    if screen_width > 900:
-        chart_orientation = 'horizontal'
-        plot_height, plot_width, image_size = get_horizontal_bar_chart_sizes(screen_width)
-    else:
-        chart_orientation = 'vertical'
-        plot_height, plot_width, image_size = get_vertical_bar_chart_sizes(screen_width)
-
-    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
-
     # Retrieve the data needed for the bar chart
     plot_df = get_fighter_attributes_df(
         excluded_fighter_ids=excluded_fighter_ids,
@@ -298,118 +289,135 @@ def get_bar_chart(var, screen_width, excluded_fighter_ids, selected_game):
     plot_df = plot_df[['fighter', 'img_url', var]]
     plot_df = plot_df.dropna()
 
+    return (
+        get_horizontal_bar_chart(var, screen_width, plot_df)
+        if screen_width > 900
+        else get_vertical_bar_chart(var, screen_width, plot_df)
+    )
+
+
+def get_horizontal_bar_chart(var, screen_width, plot_df):
+    plot_height, plot_width, image_size = get_horizontal_bar_chart_sizes(screen_width)
+
     sorted_df = plot_df.sort_values(by=var, ascending=False)
     sorted_fighter_list = sorted_df.fighter.to_list()
     max_val = sorted_df[var].to_list()[0] if len(plot_df.index) > 0 else 0
 
-    var_spec = f'{var}:Q'  # Altair shorthand for encoding specification
+    # Altair shorthand for encoding spec
+    var_spec = f'{var}:Q'
 
     # Create the base canvas for the bar chart
-    if chart_orientation == 'horizontal':
-        base_plot = alt.Chart(plot_df).encode(
-            alt.X('fighter:N', sort=sorted_fighter_list, title=None, axis=None),
-            alt.Tooltip(['fighter:N', var_spec]),
-        )
-    else:
-        base_plot = alt.Chart(plot_df).encode(
-            alt.Y('fighter:N', title=None, sort=sorted_fighter_list, axis=None),
-            alt.Tooltip(['fighter:N', var_spec]),
-        )
+    base_plot = alt.Chart(plot_df).encode(
+        alt.X('fighter:N', sort=sorted_fighter_list, title=None, axis=None),
+        alt.Tooltip(['fighter:N', var_spec]),
+    )
 
     # Add the bars to the base canvas for the bar chart
-    if chart_orientation == 'horizontal':
-        bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.Y(var_spec, title=format_attribute_name(var))
-            .axis(
-                orient='left',
-                titlePadding=0,
-            )
-            .scale(
-                domainMax=max_val * 1.15,
-            ),
+    bars = base_plot.mark_bar(opacity=0.7).encode(
+        alt.Y(var_spec, title=format_attribute_name(var))
+        .axis(
+            orient='left',
+            titlePadding=0,
         )
-    else:
-        bars = base_plot.mark_bar(opacity=0.7).encode(
-            alt.X(var_spec, title=format_attribute_name(var))
-            .axis(
-                orient='bottom',
-                titlePadding=2,
-            )
-            .scale(
-                domainMax=max_val * 1.15,
-            ),
-        )
+        .scale(
+            domainMax=max_val * 1.15,
+        ),
+    )
 
     # Add the fighter icons to the base canvas for the bar chart
-    if chart_orientation == 'horizontal':
-        icons = base_plot.mark_image(
-            height=image_size,
-            width=image_size,
-        ).encode(
-            alt.X(
-                'fighter:N',
-                sort=sorted_fighter_list,
-                title='fighter',
-            ).axis(
-                domainOpacity=0,
-                ticks=False,
-                labels=False,
-                titlePadding=-10,
-            ),
-            alt.Url('img_url:N'),
-        )
-    else:
-        icons = base_plot.mark_image(
-            height=image_size,
-            width=image_size,
-        ).encode(
-            alt.Y(
-                'fighter:N',
-                sort=sorted_fighter_list,
-                title='fighter',
-            ).axis(
-                domainOpacity=0,
-                ticks=False,
-                labels=False,
-                titlePadding=-10,
-            ),
-            alt.Url('img_url:N'),
-        )
+    icons = base_plot.mark_image(
+        height=image_size,
+        width=image_size,
+    ).encode(
+        alt.X(
+            'fighter:N',
+            sort=sorted_fighter_list,
+            title='fighter',
+        ).axis(
+            domainOpacity=0,
+            ticks=False,
+            labels=False,
+            titlePadding=-10,
+        ),
+        alt.Url('img_url:N'),
+    )
 
     # Configure the size of the chart
-    bars = bars.properties(
-        height=plot_height,
-        width=plot_width,
-    )
-    if chart_orientation == 'horizontal':
-        icons = icons.properties(width=plot_width)
-    else:
-        icons = icons.properties(height=plot_height)
+    bars = bars.properties(height=plot_height, width=plot_width)
+    icons = icons.properties(width=plot_width)
 
-    # Overlay the fighter icons plot on top of the bar chart plot
-    if chart_orientation == 'horizontal':
-        # Charcter icons appear below each bar
-        plot = alt.vconcat(bars, icons)
-    else:
-        # Charcter icons appear to the left of each bar
-        plot = alt.hconcat(icons, bars)
+    # Charcter icons appear below each bar
+    plot = alt.vconcat(bars, icons)
 
-    # Configure the plot to look nice:
-    # Tight layout and appropriate axis font sizes
-    plot = (
-        plot.configure_concat(
-            spacing=-(32 - image_size),  # trial and error - it works
-        )
-        .configure_view(
-            strokeOpacity=0,
-        )
-        .configure_axis(
-            labelFontSize=axis_label_size,
-            titleFontSize=axis_title_size,
-        )
+    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
+
+    return (
+        plot.configure_concat(spacing=image_size - 32)
+        .configure_axis(labelFontSize=axis_label_size, titleFontSize=axis_title_size)
+        .configure_view(strokeOpacity=0)
     )
 
-    return plot
+
+def get_vertical_bar_chart(var, screen_width, plot_df):
+    plot_height, plot_width, image_size = get_vertical_bar_chart_sizes(screen_width)
+
+    sorted_df = plot_df.sort_values(by=var, ascending=False)
+    sorted_fighter_list = sorted_df.fighter.to_list()
+    max_val = sorted_df[var].to_list()[0] if len(plot_df.index) > 0 else 0
+
+    # Altair shorthand for encoding spec
+    var_spec = f'{var}:Q'
+
+    # Create the base canvas for the bar chart
+    base_plot = alt.Chart(plot_df).encode(
+        alt.Y('fighter:N', title=None, sort=sorted_fighter_list, axis=None),
+        alt.Tooltip(['fighter:N', var_spec]),
+    )
+
+    # Add the bars to the base canvas for the bar chart
+    bars = base_plot.mark_bar(opacity=0.7).encode(
+        alt.X(var_spec, title=format_attribute_name(var))
+        .axis(
+            orient='bottom',
+            titlePadding=2,
+        )
+        .scale(
+            domainMax=max_val * 1.15,
+        ),
+    )
+
+    # Add the fighter icons to the base canvas for the bar chart
+    icons = base_plot.mark_image(
+        height=image_size,
+        width=image_size,
+    ).encode(
+        alt.Y(
+            'fighter:N',
+            sort=sorted_fighter_list,
+            title='fighter',
+        ).axis(
+            domainOpacity=0,
+            ticks=False,
+            labels=False,
+            titlePadding=-10,
+        ),
+        alt.Url('img_url:N'),
+    )
+
+    # Configure the size of the chart
+    bars = bars.properties(height=plot_height, width=plot_width)
+    icons = icons.properties(height=plot_height)
+
+    # Charcter icons appear to the left of each bar
+    plot = alt.hconcat(icons, bars).configure_concat(spacing=image_size - 32)
+
+    axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
+
+    return (
+        plot.configure_concat(spacing=image_size - 32)
+        .configure_axis(labelFontSize=axis_label_size, titleFontSize=axis_title_size)
+        .configure_view(strokeOpacity=0)
+    )
 
 
 def get_bar_chart_title(var):
