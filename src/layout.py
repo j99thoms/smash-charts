@@ -51,8 +51,6 @@ def get_header():
         id='page-title-container',
     )
 
-    game_selector_buttons = get_game_selector_buttons()
-
     header = html.Div(
         id='header',
         children=[
@@ -60,7 +58,6 @@ def get_header():
             logo,
             page_title,
             settings_menu_button,
-            game_selector_buttons,
         ],
     )
 
@@ -87,6 +84,9 @@ def get_settings_menu():
         children=[
             html.H3('Settings'),
             get_vertical_spacer(height=10),
+            html.H5('Select Game:'),
+            get_game_selector_buttons(),
+            get_vertical_spacer(height=5),
             html.H5('Select Fighters:'),
             dvc.Vega(
                 id='fighter-selector-chart',
