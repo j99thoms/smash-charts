@@ -1,9 +1,7 @@
-from datetime import datetime, timedelta
-
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import Input, Output, State, callback, ctx, dcc, html
+from dash import Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
 
 from plots import DEFAULT_BAR_CHART_ATTRIBUTE, get_bar_chart, get_bar_chart_title
@@ -43,12 +41,6 @@ layout = html.Div(
                             ],
                             style={'width': '270px'},
                         ),
-                        # Invisible divs used to track last selected var:
-                        html.Div(
-                            id='last-selected-bar-var',
-                            children=DEFAULT_BAR_CHART_ATTRIBUTE,
-                            style={'display': 'None'},
-                        ),
                     ],
                     style={
                         'width': '95%',
@@ -81,7 +73,16 @@ layout = html.Div(
                 ),
             ],
         ),
-        dcc.Store(id='bar-prev-excluded-char-ids-mem', storage_type='session'),
+        dcc.Store(
+            id='bar-chart-params',
+            storage_type='memory',
+            data={
+                'var': DEFAULT_BAR_CHART_ATTRIBUTE,
+                'screen_width': 900,
+                'excluded_fighter_ids': [],
+                'selected_game': 'ultimate',
+            },
+        ),
     ],
 )
 
@@ -90,14 +91,13 @@ layout = html.Div(
 @callback(
     Output('bar-dropdown-container', 'children'),
     Input('game-selector-buttons', 'value'),
-    State('last-selected-bar-var', 'children'),
+    State('bar-chart-params', 'data'),
 )
-def update_bar_dropdown(
-    selected_game,
-    last_selected_attribute,
-):
-    if last_selected_attribute in get_fighter_attributes_df(game=selected_game).columns:
-        default_value = last_selected_attribute
+def update_bar_dropdown(selected_game, bar_chart_params):
+    prev_selected_var = bar_chart_params['var']
+
+    if prev_selected_var in get_fighter_attributes_df(game=selected_game).columns:
+        default_value = prev_selected_var
     else:
         default_value = DEFAULT_BAR_CHART_ATTRIBUTE
 
@@ -110,86 +110,60 @@ def update_bar_dropdown(
     return dropdown
 
 
-# Track which variable was selected last
+# Update bar chart parameters object
 @callback(
-    Output('last-selected-bar-var', 'children'),
+    Output('bar-chart-params', 'data'),
     Input('bar-dropdown', 'value'),
-    State('last-selected-bar-var', 'children'),
+    Input('display-size', 'children'),
+    Input('excluded-char-ids-mem', 'data'),
+    Input('game-selector-buttons', 'value'),
+    State('bar-chart-params', 'data'),
 )
-def update_last_selected_bar_var(
-    selected_attribute,
-    last_selected_attribute,
+def update_scatter_plot_params(
+    selected_var,
+    display_size_str,
+    excluded_char_ids_mem,
+    selected_game,
+    bar_chart_params,
 ):
-    if selected_attribute is not None:
-        last_selected_attribute = selected_attribute
+    screen_width = get_screen_width(display_size_str)
+    excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
 
-    return last_selected_attribute
+    prev_selected_var = bar_chart_params['var']
+    prev_screen_width = bar_chart_params['screen_width']
+    prev_excluded_char_ids = bar_chart_params['excluded_fighter_ids']
+    prev_selected_game = bar_chart_params['selected_game']
+
+    if selected_var is None:
+        selected_var = prev_selected_var
+    if screen_width is None:
+        screen_width = prev_screen_width
+
+    # Prevent unnecessary updates:
+    if (
+        selected_var == prev_selected_var
+        and screen_width == prev_screen_width
+        and set(excluded_char_ids) == set(prev_excluded_char_ids)
+        and selected_game == prev_selected_game
+    ):
+        raise PreventUpdate
+
+    return {
+        'var': selected_var,
+        'screen_width': screen_width,
+        'excluded_fighter_ids': excluded_char_ids,
+        'selected_game': selected_game,
+    }
 
 
 # Update the bar chart
 @callback(
     Output('bar-chart', 'spec'),
     Output('bar-title', 'children'),
-    Output('bar-prev-excluded-char-ids-mem', 'data'),
-    Input('bar-dropdown', 'value'),
-    Input('display-size', 'children'),
-    Input('excluded-char-ids-mem', 'data'),
-    Input('game-selector-buttons', 'value'),
-    State('last-selected-bar-var', 'children'),
-    State('bar-prev-excluded-char-ids-mem', 'data'),
-    State('excluded-char-ids-mem', 'modified_timestamp'),
-    State('settings-btn-last-press', 'data'),
+    Input('bar-chart-params', 'data'),
 )
-def update_bar_chart(
-    selected_attribute,
-    display_size_str,
-    excluded_char_ids_mem,
-    selected_game,
-    last_selected_attribute,
-    prev_excluded_char_ids_mem,
-    excluded_char_ids_last_update,
-    settings_btn_last_press,
-):
-    screen_width = get_screen_width(display_size_str)
-
-    excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
-    prev_excluded_char_ids = get_excluded_char_ids(prev_excluded_char_ids_mem)
-
-    # Prevent unnecessary updates:
-    if (
-        excluded_char_ids_mem is not None
-        and set(excluded_char_ids) == set(prev_excluded_char_ids)
-        and ctx.triggered_id == 'excluded-char-ids-mem'
-    ):
-        now = datetime.now()
-
-        if settings_btn_last_press is not None:
-            last_press_time = settings_btn_last_press['time']
-            last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds=2)
-            if last_press_time <= now <= (last_press_time + delta):
-                raise PreventUpdate('Halting because update is unnecessary.')
-
-        if (
-            excluded_char_ids_last_update is not None
-            and excluded_char_ids_last_update > 0
-        ):
-            last_update_unix = excluded_char_ids_last_update / 1000
-            last_update_time = datetime.fromtimestamp(last_update_unix)
-            delta = timedelta(seconds=2)
-            if last_update_time <= now <= (last_update_time + delta):
-                raise PreventUpdate('Halting because update is unnecessary.')
-
-    if selected_attribute is None:
-        selected_attribute = last_selected_attribute
-
-    plot = get_bar_chart(
-        var=selected_attribute,
-        screen_width=screen_width,
-        excluded_fighter_ids=excluded_char_ids,
-        selected_game=selected_game,
+def update_bar_chart(bar_chart_params):
+    return (
+        get_bar_chart(**bar_chart_params).to_dict(),
+        get_bar_chart_title(bar_chart_params['var']),
     )
-
-    title = get_bar_chart_title(selected_attribute)
-
-    return plot.to_dict(), title, excluded_char_ids_mem
