@@ -101,7 +101,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         # If the user is on a page with a drawer (no sidebar),
         # then this happens behind the scenes so that the sidebar
         # is the correct size when the user navigates to a page with a sidebar.
-        if screen_width < 900:
+        if screen_width is not None and screen_width < 900:
             # Collapse the sidebar
             sidebar_styles = get_sidebar_style_outputs(
                 is_collapsed=True,

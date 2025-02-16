@@ -214,7 +214,7 @@ def get_page_title(page_url):
 
 
 def get_app_title(screen_width):
-    if screen_width > 1400:
+    if screen_width is None or screen_width > 1400:
         # App title is all on one line
         title_text = 'Explore Super Smash Bros Fighters with Interactive Visualizations!'
         app_title = html.H1(
