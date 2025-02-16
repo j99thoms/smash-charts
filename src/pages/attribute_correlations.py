@@ -1,9 +1,7 @@
-from datetime import datetime, timedelta
-
 import dash
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
-from dash import Input, Output, State, callback, ctx, dcc, html
+from dash import Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
 
 from plots import (
@@ -55,17 +53,6 @@ layout = html.Div(
                                 ),
                             ],
                             style={'width': '270px'},
-                        ),
-                        # Invisible divs used to track last selected vars:
-                        html.Div(
-                            id='last-selected-scatter-var-1',
-                            children=DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
-                            style={'display': 'None'},
-                        ),
-                        html.Div(
-                            id='last-selected-scatter-var-2',
-                            children=DEFAULT_SCATTER_PLOT_ATTRIBUTE_2,
-                            style={'display': 'None'},
                         ),
                     ],
                     style={
@@ -153,7 +140,18 @@ layout = html.Div(
                 ),
             ],
         ),
-        dcc.Store(id='scatter-prev-excluded-char-ids-mem', storage_type='session'),
+        dcc.Store(
+            id='scatter-plot-params',
+            storage_type='memory',
+            data={
+                'var_1': DEFAULT_SCATTER_PLOT_ATTRIBUTE_1,
+                'var_2': DEFAULT_SCATTER_PLOT_ATTRIBUTE_2,
+                'screen_width': 900,
+                'excluded_fighter_ids': [],
+                'selected_game': 'ultimate',
+                'image_size_multiplier': 1.0,
+            },
+        ),
     ],
 )
 
@@ -162,23 +160,20 @@ layout = html.Div(
 @callback(
     Output('scatter-dropdown-container', 'children'),
     Input('game-selector-buttons', 'value'),
-    State('last-selected-scatter-var-1', 'children'),
-    State('last-selected-scatter-var-2', 'children'),
+    State('scatter-plot-params', 'data'),
 )
-def update_scatter_dropdowns(
-    selected_game,
-    last_selected_var_1,
-    last_selected_var_2,
-):
+def update_scatter_dropdowns(selected_game, scatter_plot_params):
     valid_attributes = get_fighter_attributes_df(game=selected_game).columns
+    prev_scatter_var_1 = scatter_plot_params['var_1']
+    prev_scatter_var_2 = scatter_plot_params['var_2']
 
-    if last_selected_var_1 in valid_attributes:
-        default_value_1 = last_selected_var_1
+    if prev_scatter_var_1 in valid_attributes:
+        default_value_1 = prev_scatter_var_1
     else:
         default_value_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
 
-    if last_selected_var_2 in valid_attributes:
-        default_value_2 = last_selected_var_2
+    if prev_scatter_var_2 in valid_attributes:
+        default_value_2 = prev_scatter_var_2
     else:
         default_value_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
@@ -201,142 +196,103 @@ def update_scatter_dropdowns(
     return dropdowns
 
 
-# Track which variables were selected last
+# Update scatter plot parameters object
 @callback(
-    Output('last-selected-scatter-var-1', 'children'),
-    Output('last-selected-scatter-var-2', 'children'),
-    Input('scatter-dropdown-1', 'value'),
-    Input('scatter-dropdown-2', 'value'),
-    State('last-selected-scatter-var-1', 'children'),
-    State('last-selected-scatter-var-2', 'children'),
-)
-def update_last_selected_scatter_vars(
-    scatter_var_1,
-    scatter_var_2,
-    last_selected_var_1,
-    last_selected_var_2,
-):
-    if scatter_var_1 is not None:
-        last_selected_var_1 = scatter_var_1
-    if scatter_var_2 is not None:
-        last_selected_var_2 = scatter_var_2
-
-    return last_selected_var_1, last_selected_var_2
-
-
-# Update the scatter plot
-@callback(
-    Output('scatter-plot', 'spec'),
-    Output('scatter-title', 'children'),
-    Output('scatter-prev-excluded-char-ids-mem', 'data'),
+    Output('scatter-plot-params', 'data'),
     Input('scatter-dropdown-1', 'value'),
     Input('scatter-dropdown-2', 'value'),
     Input('display-size', 'children'),
     Input('excluded-char-ids-mem', 'data'),
     Input('game-selector-buttons', 'value'),
     Input('scatter-image-size-slider', 'value'),
-    State('last-selected-scatter-var-1', 'children'),
-    State('last-selected-scatter-var-2', 'children'),
-    State('scatter-prev-excluded-char-ids-mem', 'data'),
-    State('excluded-char-ids-mem', 'modified_timestamp'),
-    State('settings-btn-last-press', 'data'),
+    State('scatter-plot-params', 'data'),
 )
-def update_scatter_plot(
+def update_scatter_plot_params(
     scatter_var_1,
     scatter_var_2,
     display_size_str,
     excluded_char_ids_mem,
     selected_game,
     image_size_slider_val,
-    last_selected_var_1,
-    last_selected_var_2,
-    prev_excluded_char_ids_mem,
-    excluded_char_ids_last_update,
-    settings_btn_last_press,
+    scatter_plot_params,
 ):
     screen_width = get_screen_width(display_size_str)
-
     excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
-    prev_excluded_char_ids = get_excluded_char_ids(prev_excluded_char_ids_mem)
+    image_size_multiplier = calc_image_size_multiplier(image_size_slider_val)
+
+    prev_scatter_var_1 = scatter_plot_params['var_1']
+    prev_scatter_var_2 = scatter_plot_params['var_2']
+    prev_screen_width = scatter_plot_params['screen_width']
+    prev_excluded_char_ids = scatter_plot_params['excluded_fighter_ids']
+    prev_selected_game = scatter_plot_params['selected_game']
+    prev_image_size_multiplier = scatter_plot_params['image_size_multiplier']
+
+    if scatter_var_1 is None:
+        scatter_var_1 = prev_scatter_var_1
+    if scatter_var_2 is None:
+        scatter_var_2 = prev_scatter_var_2
+    if screen_width is None:
+        screen_width = prev_screen_width
+    if abs(image_size_multiplier - prev_image_size_multiplier) < 0.02:
+        image_size_multiplier = prev_image_size_multiplier
 
     # Prevent unnecessary updates:
     if (
-        excluded_char_ids_mem is not None
+        scatter_var_1 == prev_scatter_var_1
+        and scatter_var_2 == prev_scatter_var_2
+        and screen_width == prev_screen_width
         and set(excluded_char_ids) == set(prev_excluded_char_ids)
-        and ctx.triggered_id == 'excluded-char-ids-mem'
+        and selected_game == prev_selected_game
+        and round(image_size_multiplier, 2) == round(prev_image_size_multiplier, 2)
     ):
-        now = datetime.now()
+        raise PreventUpdate
 
-        if settings_btn_last_press is not None:
-            last_press_time = settings_btn_last_press['time']
-            last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds=2)
-            if last_press_time <= now <= (last_press_time + delta):
-                raise PreventUpdate('Halting because update is unnecessary.')
+    return {
+        'var_1': scatter_var_1,
+        'var_2': scatter_var_2,
+        'screen_width': screen_width,
+        'excluded_fighter_ids': excluded_char_ids,
+        'selected_game': selected_game,
+        'image_size_multiplier': image_size_multiplier,
+    }
 
-        if (
-            excluded_char_ids_last_update is not None
-            and excluded_char_ids_last_update > 0
-        ):
-            last_update_unix = excluded_char_ids_last_update / 1000
-            last_update_time = datetime.fromtimestamp(last_update_unix)
-            delta = timedelta(seconds=2)
-            if last_update_time <= now <= (last_update_time + delta):
-                raise PreventUpdate('Halting because update is unnecessary.')
 
-    if scatter_var_1 is None:
-        scatter_var_1 = last_selected_var_1
-    if scatter_var_2 is None:
-        scatter_var_2 = last_selected_var_2
+# Update the scatter plot
+@callback(
+    Output('scatter-plot', 'spec'),
+    Output('scatter-title', 'children'),
+    Input('scatter-plot-params', 'data'),
+)
+def update_scatter_plot(scatter_plot_params):
+    title_params = {
+        key: scatter_plot_params[key]
+        for key in ['var_1', 'var_2']
+        if key in scatter_plot_params
+    }
 
-    if isinstance(image_size_slider_val, int | float):
-        # f(0) = 1/2; f(1) = 1; f(2) = 2
-        val = image_size_slider_val
-        image_size_multiplier = (0.25 * val**2) + (0.25 * val) + 0.5
-    else:
-        image_size_multiplier = 1
-
-    plot = get_scatter_plot(
-        var_1=scatter_var_1,
-        var_2=scatter_var_2,
-        screen_width=screen_width,
-        excluded_fighter_ids=excluded_char_ids,
-        selected_game=selected_game,
-        image_size_multiplier=image_size_multiplier,
+    return (
+        get_scatter_plot(**scatter_plot_params).to_dict(),
+        get_scatter_plot_title(**title_params),
     )
-
-    title = get_scatter_plot_title(scatter_var_1, scatter_var_2)
-
-    return plot.to_dict(), title, excluded_char_ids_mem
 
 
 # Update the correlation matrix plot
 @callback(
     Output('corr-matrix-plot', 'spec'),
-    Input('scatter-dropdown-1', 'value'),
-    Input('scatter-dropdown-2', 'value'),
-    Input('display-size', 'children'),
-    State('last-selected-scatter-var-1', 'children'),
-    State('last-selected-scatter-var-2', 'children'),
+    Input('scatter-plot-params', 'data'),
 )
-def update_corr_matrix_plot(
-    scatter_var_1,
-    scatter_var_2,
-    display_size_str,
-    last_selected_var_1,
-    last_selected_var_2,
-):
-    screen_width = get_screen_width(display_size_str)
+def update_corr_matrix_plot(scatter_plot_params):
+    corr_matrix_params = {
+        key: scatter_plot_params[key]
+        for key in ['var_1', 'var_2', 'screen_width']
+        if key in scatter_plot_params
+    }
 
-    if scatter_var_1 is None:
-        scatter_var_1 = last_selected_var_1
-    if scatter_var_2 is None:
-        scatter_var_2 = last_selected_var_2
+    return get_corr_matrix_plot(**corr_matrix_params).to_dict()
 
-    plot = get_corr_matrix_plot(
-        var_1=scatter_var_1,
-        var_2=scatter_var_2,
-        screen_width=screen_width,
-    )
 
-    return plot.to_dict()
+def calc_image_size_multiplier(x):
+    if not isinstance(x, int | float):
+        return 1.0
+    # f(0) = 1/2; f(1) = 1; f(2) = 2
+    return (0.25 * x**2) + (0.25 * x) + 0.5
