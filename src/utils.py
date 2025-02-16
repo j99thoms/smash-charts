@@ -251,8 +251,11 @@ def get_app_title(screen_width):
 
 def get_screen_width(display_size_str):
     # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
-    screen_width = display_size_str.split(' ')[4]  # Looks like "1440px"
-    screen_width = int(screen_width.strip('px'))
+    try:
+        screen_width = display_size_str.split(' ')[4]  # Looks like "1440px"
+        screen_width = int(screen_width.strip('px'))
+    except (IndexError, ValueError):
+        return None
 
     return screen_width
 
