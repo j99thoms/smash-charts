@@ -86,6 +86,13 @@ cleaned_fighter_params_filename <- file.path(
 )
 write_csv(cleaned_fighter_params, cleaned_fighter_params_filename)
 
+# fighter lookup table
+fighter_lookup_table <- select(cleaned_fighter_params, fighter_number, fighter)
+fighter_lookup_table_filename <- file.path(
+  DATA_DIR, 'clean/melee_fighter_lookup_table.csv'
+)
+write_csv(fighter_lookup_table, fighter_lookup_table_filename)
+
 # attribute lookup table
 attribute_lookup_table <- tibble(
   attribute = names(select(cleaned_fighter_params, -c(fighter_number, fighter)))
