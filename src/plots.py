@@ -198,10 +198,7 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
     # If the circle size is > 900, display each correlation with 2 decimals.
     # Otherwise, only use 1 decimal for each correlation,
     # so that the text fits in the circle.
-    if circle_size > 900:
-        corr_text = 'corr_2dec'
-    else:
-        corr_text = 'corr_1dec'
+    corr_text = 'corr_2dec' if circle_size > 900 else 'corr_1dec'
 
     # Add the text to the base canvas for the correlation plot
     text = base_plot.encode(

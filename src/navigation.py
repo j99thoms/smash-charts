@@ -18,10 +18,8 @@ DRAWER_SIZE = EXPANDED_SIDEBAR_WIDTH + EXPANDED_SIDEBAR_NAVLINK_MARGIN
 
 
 def get_menu_button(div_id, button_type, initial_load=False):
-    if initial_load:
-        style = {'visibility': 'hidden'}  # Don't display during the initial load
-    else:
-        style = None
+    # Don't display during the initial load:
+    style = {'visibility': 'hidden'} if initial_load else None
 
     icons_dict = {
         'hamburger': 'ci:hamburger-md',
@@ -55,10 +53,7 @@ def get_drawer_contents(pages):
 
 
 def get_page_icon(page_name, height=24, variant=None):
-    if variant:
-        variant = '-' + variant
-    else:
-        variant = ''
+    variant = '_' + variant if variant else ''  # append '_' to variant if not None
 
     icons_dict = {
         'Home': f'ph:house{variant}',
