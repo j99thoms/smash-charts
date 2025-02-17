@@ -28,7 +28,7 @@ def get_menu_button(div_id, button_type, initial_load=False):
 
     icon = icons_dict.get(button_type, 'ph:square')
 
-    menu_button = dmc.ActionIcon(
+    return dmc.ActionIcon(
         get_icon(icon, height=36),
         id=div_id,
         className=f'{button_type}-menu-button',
@@ -37,19 +37,13 @@ def get_menu_button(div_id, button_type, initial_load=False):
         style=style,
     )
 
-    return menu_button
-
 
 def get_sidebar_contents(pages):
-    sidebar_contents = [get_navlink(page, 'sidebar') for page in pages]
-
-    return sidebar_contents
+    return [get_navlink(page, 'sidebar') for page in pages]
 
 
 def get_drawer_contents(pages):
-    drawer_contents = [get_navlink(page, 'drawer') for page in pages]
-
-    return drawer_contents
+    return [get_navlink(page, 'drawer') for page in pages]
 
 
 def get_page_icon(page_name, height=24, variant=None):
@@ -68,7 +62,7 @@ def get_page_icon(page_name, height=24, variant=None):
 
 
 def get_navlink(page, nav_type):
-    navlink = dmc.NavLink(
+    return dmc.NavLink(
         label=page['name'].title(),
         href=page['relative_path'],
         icon=get_page_icon(page_name=page['name'], height=32),
@@ -79,13 +73,11 @@ def get_navlink(page, nav_type):
         styles=get_navlink_styles(),
     )
 
-    return navlink
-
 
 def get_sidebar(pages):
     sidebar_contents = get_sidebar_contents(pages)
 
-    sidebar = html.Div(
+    return html.Div(
         id='sidebar-container',
         children=[
             dmc.Navbar(
@@ -96,8 +88,6 @@ def get_sidebar(pages):
             ),
         ],
     )
-
-    return sidebar
 
 
 def get_drawer(pages):
@@ -113,7 +103,7 @@ def get_drawer(pages):
 
     drawer_contents = get_drawer_contents(pages)
 
-    drawer = dmc.Drawer(
+    return dmc.Drawer(
         children=[drawer_header, *drawer_contents],
         id='drawer',
         withCloseButton=False,
@@ -122,8 +112,6 @@ def get_drawer(pages):
         padding=0,
         zIndex=90000,
     )
-
-    return drawer
 
 
 def get_navlink_styles(is_collapsed=False):

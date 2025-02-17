@@ -16,18 +16,16 @@ def get_icon(icon, height=16):
 
 
 def get_logo():
-    logo = html.A(
+    return html.A(
         className='logo',
         children=[html.Img(src=f'{IMG_DIR}/logo-small.png')],
         href='/',
         target='_self',
     )
 
-    return logo
-
 
 def create_text_block(children):
-    text_block = html.Div(
+    return html.Div(
         className='text-block',
         children=[
             html.Div(
@@ -49,8 +47,6 @@ def create_text_block(children):
         ],
     )
 
-    return text_block
-
 
 def get_attribute_info_block():
     attribute_info_header = html.H4(
@@ -60,7 +56,7 @@ def get_attribute_info_block():
     attribute_info_paragraphs = get_attribute_info_paragraphs()
     smash_wiki_credits = get_smash_wiki_credits()
 
-    attribute_info_block = create_text_block(
+    return create_text_block(
         children=[
             attribute_info_header,
             *attribute_info_paragraphs,
@@ -68,41 +64,31 @@ def get_attribute_info_block():
         ],
     )
 
-    return attribute_info_block
-
 
 def get_introduction_block():
     introduction_paragraphs = get_introduction_paragraphs()
 
-    introduction_block = create_text_block(
-        children=introduction_paragraphs,
-    )
-
-    return introduction_block
+    return create_text_block(children=introduction_paragraphs)
 
 
 def get_attribute_info_paragraphs():
     with open(f'{TXT_DIR}/attribute_info.txt') as text:
         attribute_info_txt = text.readlines()
 
-    attribute_info_paragraphs = parse_paragraphs(
+    return parse_paragraphs(
         lines=attribute_info_txt,
         paragraph_class_name='attribute-info-paragraph',
     )
-
-    return attribute_info_paragraphs
 
 
 def get_introduction_paragraphs():
     with open(f'{TXT_DIR}/introduction.txt') as text:
         introduction_txt = text.readlines()
 
-    introduction_paragraphs = parse_paragraphs(
+    return parse_paragraphs(
         lines=introduction_txt,
         paragraph_class_name='introduction-paragraph',
     )
-
-    return introduction_paragraphs
 
 
 def get_smash_wiki_credits():
@@ -111,7 +97,8 @@ def get_smash_wiki_credits():
         href='https://www.ssbwiki.com/',
         target='_blank',
     )
-    smash_wiki_credits = html.Div(
+
+    return html.Div(
         children=[
             'These attribute descriptions are based on ',
             'the descriptions which can be found on ',
@@ -124,8 +111,6 @@ def get_smash_wiki_credits():
         },
     )
 
-    return smash_wiki_credits
-
 
 def get_attribute_selector_dropdown(
     div_id,
@@ -134,19 +119,16 @@ def get_attribute_selector_dropdown(
     game='ultimate',
 ):
     dropdown_options = get_dropdown_options(data_type=data_type, game=game)
-    attribute_selector_dropdown = dcc.Dropdown(
+
+    return dcc.Dropdown(
         id=div_id,
         options=dropdown_options,
         value=default_value,
     )
 
-    return attribute_selector_dropdown
-
 
 def get_vertical_spacer(height):
-    vertical_spacer = html.Div(style={'height': f'{height}px'})
-
-    return vertical_spacer
+    return html.Div(style={'height': f'{height}px'})
 
 
 def parse_paragraphs(lines, paragraph_class_name):
@@ -208,9 +190,8 @@ def parse_bolds(line):
 
 def get_page_title(page_url):
     title_text = page_url.strip('/').replace('-', ' ').title()
-    page_title = html.H1(title_text, id='page_title')
 
-    return page_title
+    return html.H1(title_text, id='page_title')
 
 
 def get_app_title(screen_width):
@@ -347,12 +328,10 @@ def get_dropdown_options(data_type, game):
         format_attribute_name(column_name) for column_name in attribute_columns
     ]
 
-    dropdown_options = [
+    return [
         {'value': column, 'label': name}
         for column, name in zip(attribute_columns, attribute_names, strict=True)
     ]
-
-    return dropdown_options
 
 
 def format_attribute_name(column_name):
@@ -390,9 +369,8 @@ def convert_excluded_fighter_ids(excluded_fighter_numbers, selected_game):
     excluded_numbers = excluded_fighter_numbers_df.loc[excluded_mask, 'fighter_number']
 
     fighter_df['excluded'] = fighter_df['fighter_number'].isin(excluded_numbers)
-    excluded_ids = fighter_df[fighter_df['excluded']].index.tolist()
 
-    return excluded_ids
+    return fighter_df[fighter_df['excluded']].index.tolist()
 
 
 def update_excluded_fighter_numbers(

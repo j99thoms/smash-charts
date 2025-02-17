@@ -13,7 +13,7 @@ def get_app_html(pages, dash_page_container):
     page_container = get_page_container(dash_page_container)
     footer = get_footer()
 
-    app_html = [
+    return [
         html.Div(
             id='user-window',
             children=[
@@ -25,8 +25,6 @@ def get_app_html(pages, dash_page_container):
             ],
         ),
     ]
-
-    return app_html
 
 
 def get_header():
@@ -51,7 +49,7 @@ def get_header():
         id='page-title-container',
     )
 
-    header = html.Div(
+    return html.Div(
         id='header',
         children=[
             hamburger_menu_drawer_outer,
@@ -61,11 +59,9 @@ def get_header():
         ],
     )
 
-    return header
-
 
 def get_game_selector_buttons():
-    game_selector_buttons = dcc.RadioItems(
+    return dcc.RadioItems(
         options={
             'ultimate': 'SSB Ultimate',
             'melee': 'SSB Melee',
@@ -73,8 +69,6 @@ def get_game_selector_buttons():
         value='ultimate',
         id='game-selector-buttons',
     )
-
-    return game_selector_buttons
 
 
 def get_settings_menu():
@@ -122,7 +116,7 @@ def get_settings_menu():
         ],
     )
 
-    settings_menu = dmc.Drawer(
+    return dmc.Drawer(
         children=settings_menu_contents,
         id='settings-menu-drawer',
         withCloseButton=True,
@@ -133,13 +127,11 @@ def get_settings_menu():
         zIndex=999,
     )
 
-    return settings_menu
-
 
 def get_page_container(dash_page_container):
     settings_menu = get_settings_menu()
 
-    page_container = html.Div(
+    return html.Div(
         id='wrapper-outer',
         children=[
             html.Div(
@@ -161,18 +153,13 @@ def get_page_container(dash_page_container):
         ],
     )
 
-    return page_container
-
 
 def get_footer():
-    return html.Div(
-        id='footer',
-        children=[get_credits()],
-    )
+    return html.Div(id='footer', children=[get_credits()])
 
 
 def get_credits():
-    app_credits = html.Div(
+    return html.Div(
         children=[
             html.A(
                 'Smash Charts',
@@ -196,5 +183,3 @@ def get_credits():
             'font-size': '83%',
         },
     )
-
-    return app_credits

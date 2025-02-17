@@ -177,7 +177,7 @@ def update_scatter_dropdowns(selected_game, scatter_plot_params):
     else:
         default_value_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
-    dropdowns = [
+    return [
         get_attribute_selector_dropdown(
             div_id='scatter-dropdown-1',
             default_value=default_value_1,
@@ -192,8 +192,6 @@ def update_scatter_dropdowns(selected_game, scatter_plot_params):
             game=selected_game,
         ),
     ]
-
-    return dropdowns
 
 
 # Update scatter plot parameters object

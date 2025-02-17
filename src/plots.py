@@ -75,9 +75,7 @@ def get_scatter_plot_title(var_1, var_2):
     if var_2 is None:
         var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
-    title = f'{format_attribute_name(var_1)} vs. {format_attribute_name(var_2)}'
-
-    return title
+    return f'{format_attribute_name(var_1)} vs. {format_attribute_name(var_2)}'
 
 
 def get_scatter_plot_font_sizes(plot_width):
@@ -228,13 +226,12 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
 
 
 def get_corr_matrix_plot_font_sizes(plot_width):
+    axis_label_size = int(plot_width / 26)
+
+    # Clamp and return:
     max_axis_label_size = 16
     min_axis_label_size = 10
-    axis_label_size = int(plot_width / 26)
-    axis_label_size = min(axis_label_size, max_axis_label_size)
-    axis_label_size = max(axis_label_size, min_axis_label_size)
-
-    return axis_label_size
+    return max(min(axis_label_size, max_axis_label_size), min_axis_label_size)
 
 
 def get_corr_matrix_plot_sizes(screen_width, num_attributes):
@@ -421,9 +418,7 @@ def get_bar_chart_title(var):
     if var is None:
         var = DEFAULT_BAR_CHART_ATTRIBUTE
 
-    title = f'Distribution of {format_attribute_name(var)}s'
-
-    return title
+    return f'Distribution of {format_attribute_name(var)}s'
 
 
 def get_bar_chart_font_sizes(plot_width):

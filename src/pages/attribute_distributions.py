@@ -101,13 +101,11 @@ def update_bar_dropdown(selected_game, bar_chart_params):
     else:
         default_value = DEFAULT_BAR_CHART_ATTRIBUTE
 
-    dropdown = get_attribute_selector_dropdown(
+    return get_attribute_selector_dropdown(
         div_id='bar-dropdown',
         default_value=default_value,
         game=selected_game,
     )
-
-    return dropdown
 
 
 # Update bar chart parameters object
