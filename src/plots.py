@@ -51,22 +51,12 @@ def get_scatter_plot(
             alt.Tooltip(['fighter:N', var_1_spec, var_2_spec]),
             alt.Url('img_url:N'),
         )
-        .mark_image(
-            height=image_size,
-            width=image_size,
-        )
-        .properties(
-            height=plot_height,
-            width=plot_width,
-        )
-        .configure_axis(
-            titleFontSize=axis_title_size,
-            labelFontSize=axis_label_size,
-        )
-        .interactive()
+        .mark_image(height=image_size, width=image_size)
+        .properties(height=plot_height, width=plot_width)
+        .configure_axis(titleFontSize=axis_title_size, labelFontSize=axis_label_size)
     )
 
-    return plot
+    return plot.interactive()
 
 
 def get_scatter_plot_title(var_1, var_2):
@@ -209,20 +199,9 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
 
     # Overlay the text plot on top of the circles plot
     # so that the text appears inside the circles.
-    plot = (
-        (circles + text)
-        .configure_axis(
-            grid=False,
-        )
-        .configure_view(
-            stroke=None,
-        )
-        .configure_axis(
-            labelFontSize=axis_label_size,
-        )
-    )
+    plot = circles + text
 
-    return plot
+    return plot.configure_axis(grid=False, labelFontSize=axis_label_size)
 
 
 def get_corr_matrix_plot_font_sizes(plot_width):
@@ -486,7 +465,7 @@ def get_fighter_selector_chart(
     n_rows, n_cols = fighter_df[['row_number', 'col_number']].max()
 
     plot_height = plot_width = 270
-    plot = (
+    return (
         alt.Chart(fighter_df)
         .encode(
             alt.X('col_number:Q', axis=None),
@@ -505,14 +484,7 @@ def get_fighter_selector_chart(
             width=plot_width // n_cols,
             height=plot_height // n_rows,
         )
-        .configure_view(
-            strokeOpacity=0,
-        )
-        .properties(
-            width=plot_width,
-            height=plot_height,
-        )
+        .properties(width=plot_width, height=plot_height)
+        .configure_view(strokeOpacity=0)
         .add_params(fighter_selector)
     )
-
-    return plot
