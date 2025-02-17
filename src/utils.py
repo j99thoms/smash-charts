@@ -241,55 +241,60 @@ def get_screen_width(display_size_str):
     return screen_width
 
 
-def get_fighter_attributes_df(
-    data_type='all',
-    game='ultimate',
-    excluded_fighter_ids=None,
-):
-    fighter_attributes_df = pd.read_csv(f'{DATA_DIR}/{game}_fighter_params.csv')
+def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwargs):
+    fighter_attributes_df = pd.read_csv(f'{DATA_DIR}/{game}_fighter_params.csv', **kwargs)
 
     fighter_attributes_df = fighter_attributes_df.iloc[:-1]  # rm Giga Bowser
-
-    ordinal_columns = ['number_of_jumps', 'jump_frames']
-
-    data_type = data_type.lower()
-    if data_type == 'continuous':
-        fighter_attributes_df = fighter_attributes_df.drop(
-            columns=(ordinal_columns),
-            errors='ignore',
-        )
-    elif data_type == 'all':
-        pass
-    else:
-        raise ValueError("data_type should be either 'continuous' or 'all'.")
-
-    fighter_attributes_df = append_row_col_for_fighter_selector(fighter_attributes_df)
-
-    fighter_attributes_df['img_url'] = (
-        IMG_DIR
-        + '/heads/'
-        + fighter_attributes_df['fighter_number']
-        + '_'
-        + fighter_attributes_df['fighter']
-        .str.lower()
-        .str.replace(' ', '_', regex=False)
-        .str.replace('&', 'and', regex=False)
-        .str.replace(r'\.|\(|\)', '', regex=True)
-        + '.png'
-    )
 
     if excluded_fighter_ids is not None:
         fighter_attributes_df = fighter_attributes_df.loc[
             ~fighter_attributes_df.index.isin(excluded_fighter_ids)
         ]
 
-    return fighter_attributes_df
+    return append_row_col_for_fighter_selector(append_img_urls(fighter_attributes_df))
+
+
+def append_row_col_for_fighter_selector(fighters_df):
+    fighters_df = fighters_df.sort_values(by='fighter_number', ignore_index=True)
+
+    # Calculate number of rows and columns needed for a square grid
+    n_fighters = len(fighters_df)
+    n_rows = math.ceil(math.sqrt(n_fighters))
+    n_cols = math.ceil(n_fighters / n_rows)
+
+    # Generate row-column pairs and add them as new columns
+    row_cols = [*product(range(n_rows), range(n_cols))][:n_fighters]
+    fighters_df['row_number'], fighters_df['col_number'] = zip(*row_cols, strict=True)
+
+    return fighters_df
+
+
+def append_img_urls(fighters_df):
+    clean_fighter_names = (
+        fighters_df['fighter']
+        .str.lower()
+        .str.replace(' ', '_', regex=False)
+        .str.replace('&', 'and', regex=False)
+        .str.replace(r'\.|\(|\)', '', regex=True)
+    )
+
+    fighters_df['img_url'] = (
+        IMG_DIR
+        + '/heads/'
+        + fighters_df['fighter_number']
+        + '_'
+        + clean_fighter_names
+        + '.png'
+    )
+
+    return fighters_df
 
 
 def get_correlations_df():
-    fighter_attributes_df = get_fighter_attributes_df(
-        data_type='continuous',
-    ).drop(columns=['row_number', 'col_number'])
+    fighter_attributes_df = get_fighter_attributes_df().drop(
+        columns=['row_number', 'col_number', 'number_of_jumps', 'jump_frames'],
+        errors='ignore',
+    )
 
     column_names = fighter_attributes_df.columns.tolist()
     formatted_names = [format_attribute_name(column_name) for column_name in column_names]
@@ -319,11 +324,7 @@ def get_correlations_df():
 
 
 def get_dropdown_options(data_type, game):
-    fighter_attributes_df = get_fighter_attributes_df(data_type=data_type, game=game)
-
-    # The first 2 columns are 'fighter_number' and 'fighter'.
-    # The last 3 columns are 'img_url', 'row_number', and 'col_number'.
-    attribute_columns = fighter_attributes_df.columns.to_series().iloc[2:-3]
+    attribute_columns = get_valid_attributes(data_type, game)
     attribute_names = [
         format_attribute_name(column_name) for column_name in attribute_columns
     ]
@@ -334,23 +335,21 @@ def get_dropdown_options(data_type, game):
     ]
 
 
+def get_valid_attributes(data_type, game):
+    attributes_df = pd.read_csv(f'{DATA_DIR}/{game}_attribute_lookup_table.csv')
+
+    if data_type == 'continuous':
+        attributes_df = attributes_df[attributes_df['type'] == 'C']
+    elif data_type == 'all':
+        pass
+    else:
+        raise ValueError("data_type should be either 'continuous' or 'all'.")
+
+    return attributes_df['attribute'].tolist()
+
+
 def format_attribute_name(column_name):
     return column_name.replace('_', ' ').title()
-
-
-def append_row_col_for_fighter_selector(fighter_df):
-    fighter_df = fighter_df.sort_values(by='fighter_number', ignore_index=True)
-
-    # Calculate number of rows and columns needed for a square grid
-    n_fighters = len(fighter_df)
-    n_rows = math.ceil(math.sqrt(n_fighters))
-    n_cols = math.ceil(n_fighters / n_rows)
-
-    # Generate row-column pairs and add them as new columns
-    row_cols = [*product(range(n_rows), range(n_cols))][:n_fighters]
-    fighter_df['row_number'], fighter_df['col_number'] = zip(*row_cols, strict=True)
-
-    return fighter_df
 
 
 def get_excluded_fighter_ids(excluded_fighter_ids_mem):

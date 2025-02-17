@@ -160,3 +160,18 @@ cleaned_fighter_params_filename <- file.path(
   DATA_DIR, 'clean/ultimate_fighter_params.csv'
 )
 write_csv(cleaned_fighter_params, cleaned_fighter_params_filename)
+
+# attribute lookup table
+attribute_lookup_table <- tibble(
+  attribute = names(select(cleaned_fighter_params, -c(fighter_number, fighter)))
+) |>
+  mutate(
+    type = purrr::map_chr(attribute, ~ class(pull(cleaned_fighter_params, .))),
+    type = case_match(
+      type, 'integer' ~ 'O', 'numeric' ~ 'C'  # O --> ordinal; C --> continuous
+    )
+)
+attribute_lookup_table_filename <- file.path(
+  DATA_DIR, 'clean/ultimate_attribute_lookup_table.csv'
+)
+write_csv(attribute_lookup_table, attribute_lookup_table_filename)

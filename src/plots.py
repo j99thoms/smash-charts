@@ -28,7 +28,6 @@ def get_scatter_plot(
 
     # Retrieve the data needed for the scatter plot
     plot_df = get_fighter_attributes_df(
-        data_type='continuous',
         excluded_fighter_ids=excluded_fighter_ids,
         game=selected_game,
     )

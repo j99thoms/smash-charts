@@ -14,8 +14,8 @@ from plots import (
 from utils import (
     get_attribute_selector_dropdown,
     get_excluded_fighter_ids,
-    get_fighter_attributes_df,
     get_screen_width,
+    get_valid_attributes,
     get_vertical_spacer,
     get_window_title,
 )
@@ -163,7 +163,7 @@ layout = html.Div(
     State('scatter-plot-params', 'data'),
 )
 def update_scatter_dropdowns(selected_game, scatter_plot_params):
-    valid_attributes = get_fighter_attributes_df(game=selected_game).columns
+    valid_attributes = get_valid_attributes(data_type='continuous', game=selected_game)
     prev_scatter_var_1 = scatter_plot_params['var_1']
     prev_scatter_var_2 = scatter_plot_params['var_2']
 

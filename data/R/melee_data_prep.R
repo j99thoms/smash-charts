@@ -56,7 +56,7 @@ raw_fighter_params <- read_csv(
 cleaned_fighter_params <- raw_fighter_params |>
   select(!matches('\\.\\.\\.')) |>
   janitor::clean_names() |>
-  select(
+  transmute(
     codename = char, # lets us join to the lookup table of English names
     weight,
     max_fall_speed = term_vel,
@@ -65,14 +65,14 @@ cleaned_fighter_params <- raw_fighter_params |>
     run_speed,
     air_speed = airspeed,
     air_acceleration = air_accel,
-    jump_frames,
+    jump_frames = as.integer(jump_frames),
     run_acceleration = run_accel,
     jump_height = jump_v,
     hop_height = hop_v,
     air_friction = air_fric,
     gravity,
     ledge_jump_height = edge_jump_v,
-    number_of_jumps = jumps,
+    number_of_jumps = as.integer(jumps),
     shield_size
   ) |>
   inner_join(fighter_lookup_table, by = 'codename') |>
@@ -85,3 +85,18 @@ cleaned_fighter_params_filename <- file.path(
   DATA_DIR, 'clean/melee_fighter_params.csv'
 )
 write_csv(cleaned_fighter_params, cleaned_fighter_params_filename)
+
+# attribute lookup table
+attribute_lookup_table <- tibble(
+  attribute = names(select(cleaned_fighter_params, -c(fighter_number, fighter)))
+) |>
+  mutate(
+    type = purrr::map_chr(attribute, ~ class(pull(cleaned_fighter_params, .))),
+    type = case_match(
+      type, 'integer' ~ 'O', 'numeric' ~ 'C'  # O --> ordinal; C --> continuous
+    )
+  )
+attribute_lookup_table_filename <- file.path(
+  DATA_DIR, 'clean/melee_attribute_lookup_table.csv'
+)
+write_csv(attribute_lookup_table, attribute_lookup_table_filename)

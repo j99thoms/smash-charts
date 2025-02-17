@@ -8,8 +8,8 @@ from plots import DEFAULT_BAR_CHART_ATTRIBUTE, get_bar_chart, get_bar_chart_titl
 from utils import (
     get_attribute_selector_dropdown,
     get_excluded_fighter_ids,
-    get_fighter_attributes_df,
     get_screen_width,
+    get_valid_attributes,
     get_vertical_spacer,
     get_window_title,
 )
@@ -96,7 +96,7 @@ layout = html.Div(
 def update_bar_dropdown(selected_game, bar_chart_params):
     prev_selected_var = bar_chart_params['var']
 
-    if prev_selected_var in get_fighter_attributes_df(game=selected_game).columns:
+    if prev_selected_var in get_valid_attributes(data_type='all', game=selected_game):
         default_value = prev_selected_var
     else:
         default_value = DEFAULT_BAR_CHART_ATTRIBUTE
