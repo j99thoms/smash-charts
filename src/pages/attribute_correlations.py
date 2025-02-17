@@ -13,7 +13,7 @@ from plots import (
 )
 from utils import (
     get_attribute_selector_dropdown,
-    get_excluded_char_ids,
+    get_excluded_fighter_ids,
     get_fighter_attributes_df,
     get_screen_width,
     get_vertical_spacer,
@@ -202,7 +202,7 @@ def update_scatter_dropdowns(selected_game, scatter_plot_params):
     Input('scatter-dropdown-1', 'value'),
     Input('scatter-dropdown-2', 'value'),
     Input('display-size', 'children'),
-    Input('excluded-char-ids-mem', 'data'),
+    Input('excluded-fighter-ids-mem', 'data'),
     Input('game-selector-buttons', 'value'),
     Input('scatter-image-size-slider', 'value'),
     State('scatter-plot-params', 'data'),
@@ -211,19 +211,19 @@ def update_scatter_plot_params(
     scatter_var_1,
     scatter_var_2,
     display_size_str,
-    excluded_char_ids_mem,
+    excluded_fighter_ids_mem,
     selected_game,
     image_size_slider_val,
     scatter_plot_params,
 ):
     screen_width = get_screen_width(display_size_str)
-    excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
+    excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
     image_size_multiplier = calc_image_size_multiplier(image_size_slider_val)
 
     prev_scatter_var_1 = scatter_plot_params['var_1']
     prev_scatter_var_2 = scatter_plot_params['var_2']
     prev_screen_width = scatter_plot_params['screen_width']
-    prev_excluded_char_ids = scatter_plot_params['excluded_fighter_ids']
+    prev_excluded_fighter_ids = scatter_plot_params['excluded_fighter_ids']
     prev_selected_game = scatter_plot_params['selected_game']
     prev_image_size_multiplier = scatter_plot_params['image_size_multiplier']
 
@@ -241,7 +241,7 @@ def update_scatter_plot_params(
         scatter_var_1 == prev_scatter_var_1
         and scatter_var_2 == prev_scatter_var_2
         and screen_width == prev_screen_width
-        and set(excluded_char_ids) == set(prev_excluded_char_ids)
+        and set(excluded_fighter_ids) == set(prev_excluded_fighter_ids)
         and selected_game == prev_selected_game
         and round(image_size_multiplier, 2) == round(prev_image_size_multiplier, 2)
     ):
@@ -251,7 +251,7 @@ def update_scatter_plot_params(
         'var_1': scatter_var_1,
         'var_2': scatter_var_2,
         'screen_width': screen_width,
-        'excluded_fighter_ids': excluded_char_ids,
+        'excluded_fighter_ids': excluded_fighter_ids,
         'selected_game': selected_game,
         'image_size_multiplier': image_size_multiplier,
     }

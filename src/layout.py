@@ -96,8 +96,8 @@ def get_settings_menu():
                 style={'z-index': '9999'},
             ),
             dcc.Store(id='cache-breaker', storage_type='memory', data=999),
-            dcc.Store(id='char-selector-mem', storage_type='memory'),
-            dcc.Store(id='excluded-char-ids-mem', storage_type='memory'),
+            dcc.Store(id='fighter-selector-mem', storage_type='memory'),
+            dcc.Store(id='excluded-fighter-ids-mem', storage_type='memory'),
             dcc.Store(id='skip-next-selector-update', storage_type='memory', data=False),
             dcc.Store(
                 id='excluded-fighter-numbers',

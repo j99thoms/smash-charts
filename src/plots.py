@@ -346,7 +346,7 @@ def get_horizontal_bar_chart(var, screen_width, plot_df):
     bars = bars.properties(height=plot_height, width=plot_width)
     icons = icons.properties(width=plot_width)
 
-    # Charcter icons appear below each bar
+    # Fighter icons appear below each bar
     plot = alt.vconcat(bars, icons)
 
     axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
@@ -408,7 +408,7 @@ def get_vertical_bar_chart(var, screen_width, plot_df):
     bars = bars.properties(height=plot_height, width=plot_width)
     icons = icons.properties(height=plot_height)
 
-    # Charcter icons appear to the left of each bar
+    # Fighter icons appear to the left of each bar
     plot = alt.hconcat(icons, bars).configure_concat(spacing=image_size - 32)
 
     axis_title_size, axis_label_size = get_bar_chart_font_sizes(plot_width)
@@ -473,12 +473,12 @@ def get_vertical_bar_chart_sizes(screen_width):
 
 
 def get_fighter_selector_chart(
-    excluded_char_ids=None, selected_game='ultimate', cache_breaker=999
+    excluded_fighter_ids=None, selected_game='ultimate', cache_breaker=999
 ):
-    if excluded_char_ids is None:
-        excluded_char_ids = []
+    if excluded_fighter_ids is None:
+        excluded_fighter_ids = []
     fighter_df = get_fighter_attributes_df(game=selected_game)
-    fighter_df['excluded'] = fighter_df.index.isin(excluded_char_ids)
+    fighter_df['excluded'] = fighter_df.index.isin(excluded_fighter_ids)
 
     fighter_selector = alt.selection_point(
         name='fighter_selector',

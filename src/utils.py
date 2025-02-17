@@ -374,15 +374,15 @@ def append_row_col_for_fighter_selector(fighter_df):
     return fighter_df
 
 
-def get_excluded_char_ids(excluded_char_ids_mem):
-    if excluded_char_ids_mem is None:
+def get_excluded_fighter_ids(excluded_fighter_ids_mem):
+    if excluded_fighter_ids_mem is None:
         return []
 
-    ids = excluded_char_ids_mem['ids']
+    ids = excluded_fighter_ids_mem['ids']
     return [] if ids is None else ids
 
 
-def convert_excluded_char_ids(excluded_fighter_numbers, selected_game):
+def convert_excluded_fighter_ids(excluded_fighter_numbers, selected_game):
     excluded_fighter_numbers_df = pd.DataFrame(excluded_fighter_numbers)
     fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
 

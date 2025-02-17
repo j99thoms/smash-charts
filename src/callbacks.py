@@ -4,9 +4,9 @@ from dash.exceptions import PreventUpdate
 from navigation import get_page_container_style, get_sidebar_style_outputs
 from plots import get_fighter_selector_chart
 from utils import (
-    convert_excluded_char_ids,
+    convert_excluded_fighter_ids,
     get_app_title,
-    get_excluded_char_ids,
+    get_excluded_fighter_ids,
     get_fighter_attributes_df,
     get_page_title,
     get_screen_width,
@@ -213,7 +213,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
 
         return is_opened, button_style
 
-    # First update for excluded_char_ids after opening the setting menu
+    # First update for excluded_fighter_ids after opening the setting menu
     # needs to be skipped:
     @app.callback(
         Output('skip-next-selector-update', 'data', allow_duplicate=True),
@@ -226,13 +226,13 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     # Update fighter selector chart
     @app.callback(
         Output('fighter-selector-chart', 'spec'),
-        Output('excluded-char-ids-mem', 'data'),
+        Output('excluded-fighter-ids-mem', 'data'),
         Output('cache-breaker', 'data'),
         Input('settings-menu-drawer', 'opened'),
         Input('game-selector-buttons', 'value'),
         Input('fighter-selector-select-all-button', 'n_clicks'),
         Input('fighter-selector-clear-all-button', 'n_clicks'),
-        State('excluded-char-ids-mem', 'data'),
+        State('excluded-fighter-ids-mem', 'data'),
         State('excluded-fighter-numbers', 'data'),
         State('cache-breaker', 'data'),
     )
@@ -241,40 +241,40 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         selected_game,
         select_all_click,
         clear_all_click,
-        excluded_char_ids_mem,
+        excluded_fighter_ids_mem,
         excluded_fighter_numbers,
         cache_breaker,
     ):
         if ctx.triggered_id == 'fighter-selector-select-all-button':
             cache_breaker += 1
-            excluded_char_ids = []
+            excluded_fighter_ids = []
         elif ctx.triggered_id == 'fighter-selector-clear-all-button':
             cache_breaker += 1
-            excluded_char_ids = [*get_fighter_attributes_df(game=selected_game).index]
+            excluded_fighter_ids = [*get_fighter_attributes_df(game=selected_game).index]
         elif ctx.triggered_id == 'game-selector-buttons':
-            excluded_char_ids = convert_excluded_char_ids(
+            excluded_fighter_ids = convert_excluded_fighter_ids(
                 excluded_fighter_numbers, selected_game
             )
         else:
-            excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
+            excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
 
         chart = get_fighter_selector_chart(
-            excluded_char_ids, selected_game, cache_breaker
+            excluded_fighter_ids, selected_game, cache_breaker
         )
 
-        return chart.to_dict(), {'ids': excluded_char_ids}, cache_breaker
+        return chart.to_dict(), {'ids': excluded_fighter_ids}, cache_breaker
 
     # Update excluded fighters
     @app.callback(
-        Output('char-selector-mem', 'data'),
-        Output('excluded-char-ids-mem', 'data', allow_duplicate=True),
+        Output('fighter-selector-mem', 'data'),
+        Output('excluded-fighter-ids-mem', 'data', allow_duplicate=True),
         Output('excluded-fighter-numbers', 'data'),
         Output('skip-next-selector-update', 'data'),
         Input('fighter-selector-chart', 'signalData'),
         Input('fighter-selector-select-all-button', 'n_clicks'),
         Input('fighter-selector-clear-all-button', 'n_clicks'),
-        State('char-selector-mem', 'data'),
-        State('excluded-char-ids-mem', 'data'),
+        State('fighter-selector-mem', 'data'),
+        State('excluded-fighter-ids-mem', 'data'),
         State('skip-next-selector-update', 'data'),
         State('game-selector-buttons', 'value'),
         State('excluded-fighter-numbers', 'data'),
@@ -286,7 +286,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         select_all_click,
         clear_all_click,
         selector_mem,
-        excluded_char_ids_mem,
+        excluded_fighter_ids_mem,
         skip_update,
         selected_game,
         excluded_fighter_numbers,
@@ -311,65 +311,65 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
 
         selector_dict = selector_signal['fighter_selector']
         if '_vgsid_' in selector_dict:
-            selected_char_ids_string = selector_dict['_vgsid_'].strip('Set()')
+            selected_fighter_ids_string = selector_dict['_vgsid_'].strip('Set()')
         else:
-            selected_char_ids_string = ''
+            selected_fighter_ids_string = ''
 
-        # First update for excluded_char_ids after the setting menu is opened needs to be
-        # skipped so we can instead reset the char_selector_mem to empty:
-        if skip_update and (selected_char_ids_string in (str(cache_breaker), '')):
+        # First update for excluded_fighter_ids after the setting menu is opened needs to
+        # be skipped so we can instead reset the fighter_selector_mem to empty:
+        if skip_update and (selected_fighter_ids_string in (str(cache_breaker), '')):
             return (
                 {'selected': []},
-                excluded_char_ids_mem,
+                excluded_fighter_ids_mem,
                 excluded_fighter_numbers,
                 False,
             )
 
         # Get fighter ids currently selected in the chart's selection_point:
-        if not selected_char_ids_string:
-            selected_char_ids = []
+        if not selected_fighter_ids_string:
+            selected_fighter_ids = []
         else:
-            char_ids = selected_char_ids_string.split(',')
-            selected_char_ids = [
-                int(char_id) - 1  # Altair off-by-one
-                for char_id in char_ids
-                if int(char_id) < 100 and int(char_id) >= 1
+            fighter_ids = selected_fighter_ids_string.split(',')
+            selected_fighter_ids = [
+                int(fighter_id) - 1  # Altair off-by-one
+                for fighter_id in fighter_ids
+                if int(fighter_id) < 100 and int(fighter_id) >= 1
             ]
 
         # Get fighter ids previously selected in the chart's selection_point:
         if not selector_mem:
-            prev_selected_char_ids = []
+            prev_selected_fighter_ids = []
         else:
-            prev_selected_char_ids = selector_mem['selected']
+            prev_selected_fighter_ids = selector_mem['selected']
 
         # All changes between new/old selections:
-        diff = list(set(selected_char_ids) ^ set(prev_selected_char_ids))
+        diff = list(set(selected_fighter_ids) ^ set(prev_selected_fighter_ids))
         if len(diff) != 1:
             # Should not have > 1 change except if chart was reset,
             # which is already dealt with above
             return (
-                {'selected': selected_char_ids},
-                excluded_char_ids_mem,
+                {'selected': selected_fighter_ids},
+                excluded_fighter_ids_mem,
                 excluded_fighter_numbers,
                 False,
             )
         pressed_id = diff[0]
 
-        excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
-        if pressed_id in excluded_char_ids:
-            excluded_char_ids.remove(pressed_id)
+        excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
+        if pressed_id in excluded_fighter_ids:
+            excluded_fighter_ids.remove(pressed_id)
         else:
-            excluded_char_ids.append(pressed_id)
+            excluded_fighter_ids.append(pressed_id)
 
         excluded_fighter_numbers = update_excluded_fighter_numbers(
             excluded_fighter_numbers,
-            excluded_char_ids,
+            excluded_fighter_ids,
             selected_game,
         )
 
         return (
-            {'selected': selected_char_ids},
-            {'ids': excluded_char_ids},
+            {'selected': selected_fighter_ids},
+            {'ids': excluded_fighter_ids},
             excluded_fighter_numbers,
             False,
         )

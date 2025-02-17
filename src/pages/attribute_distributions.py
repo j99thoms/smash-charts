@@ -7,7 +7,7 @@ from dash.exceptions import PreventUpdate
 from plots import DEFAULT_BAR_CHART_ATTRIBUTE, get_bar_chart, get_bar_chart_title
 from utils import (
     get_attribute_selector_dropdown,
-    get_excluded_char_ids,
+    get_excluded_fighter_ids,
     get_fighter_attributes_df,
     get_screen_width,
     get_vertical_spacer,
@@ -115,23 +115,23 @@ def update_bar_dropdown(selected_game, bar_chart_params):
     Output('bar-chart-params', 'data'),
     Input('bar-dropdown', 'value'),
     Input('display-size', 'children'),
-    Input('excluded-char-ids-mem', 'data'),
+    Input('excluded-fighter-ids-mem', 'data'),
     Input('game-selector-buttons', 'value'),
     State('bar-chart-params', 'data'),
 )
 def update_scatter_plot_params(
     selected_var,
     display_size_str,
-    excluded_char_ids_mem,
+    excluded_fighter_ids_mem,
     selected_game,
     bar_chart_params,
 ):
     screen_width = get_screen_width(display_size_str)
-    excluded_char_ids = get_excluded_char_ids(excluded_char_ids_mem)
+    excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
 
     prev_selected_var = bar_chart_params['var']
     prev_screen_width = bar_chart_params['screen_width']
-    prev_excluded_char_ids = bar_chart_params['excluded_fighter_ids']
+    prev_excluded_fighter_ids = bar_chart_params['excluded_fighter_ids']
     prev_selected_game = bar_chart_params['selected_game']
 
     if selected_var is None:
@@ -143,7 +143,7 @@ def update_scatter_plot_params(
     if (
         selected_var == prev_selected_var
         and screen_width == prev_screen_width
-        and set(excluded_char_ids) == set(prev_excluded_char_ids)
+        and set(excluded_fighter_ids) == set(prev_excluded_fighter_ids)
         and selected_game == prev_selected_game
     ):
         raise PreventUpdate
@@ -151,7 +151,7 @@ def update_scatter_plot_params(
     return {
         'var': selected_var,
         'screen_width': screen_width,
-        'excluded_fighter_ids': excluded_char_ids,
+        'excluded_fighter_ids': excluded_fighter_ids,
         'selected_game': selected_game,
     }
 
