@@ -525,6 +525,44 @@ def initialize_excluded_fighters(excluded=None):
     return df.to_dict()
 
 
+def parse_altair_fighter_selection(selector_signal):
+    selector_dict = selector_signal['fighter_selector']
+    if '_vgsid_' in selector_dict:
+        selected_fighter_ids_string = selector_dict['_vgsid_'].strip('Set()')
+    else:
+        selected_fighter_ids_string = ''
+
+    # Get fighter ids currently selected in the chart's selection_point:
+    if not selected_fighter_ids_string:
+        selected_fighter_ids = []
+    else:
+        fighter_ids = selected_fighter_ids_string.split(',')
+        selected_fighter_ids = [
+            int(fighter_id) - 1  # Altair off-by-one
+            for fighter_id in fighter_ids
+            if int(fighter_id) < 100 and int(fighter_id) >= 1
+        ]
+
+    return selected_fighter_ids
+
+
+def determine_clicked_id(selected_fighter_ids=None, selector_mem=None):
+    if selected_fighter_ids is None:
+        selected_fighter_ids = []
+
+    if selector_mem is None or 'selected' not in selector_mem:
+        prev_selected_fighter_ids = []
+    else:
+        prev_selected_fighter_ids = selector_mem['selected']
+
+    # All changes between new/old selections:
+    diff = list(set(selected_fighter_ids) ^ set(prev_selected_fighter_ids))
+
+    if len(diff) != 1:
+        return None  # Should not have > 1 difference unless the chart was reset
+    return diff[0]
+
+
 def make_dash_table(df):
     """Return a dash definition of an HTML table for a Pandas dataframe"""
     table = []

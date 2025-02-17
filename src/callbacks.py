@@ -5,12 +5,14 @@ from navigation import get_page_container_style, get_sidebar_style_outputs
 from plots import get_fighter_selector_chart
 from utils import (
     convert_excluded_fighter_ids,
+    determine_clicked_id,
     get_app_title,
     get_excluded_fighter_ids,
     get_fighter_attributes_df,
     get_page_title,
     get_screen_width,
     initialize_excluded_fighters,
+    parse_altair_fighter_selection,
     update_excluded_fighter_numbers,
 )
 
@@ -294,15 +296,11 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if 'fighter_selector' not in selector_signal:
             raise PreventUpdate
 
-        selector_dict = selector_signal['fighter_selector']
-        if '_vgsid_' in selector_dict:
-            selected_fighter_ids_string = selector_dict['_vgsid_'].strip('Set()')
-        else:
-            selected_fighter_ids_string = ''
+        selected_fighter_ids = parse_altair_fighter_selection(selector_signal)
 
         # First update for excluded_fighter_ids after the setting menu is opened needs to
         # be skipped so we can instead reset the fighter_selector_mem to empty:
-        if skip_update and (selected_fighter_ids_string in (str(cache_breaker), '')):
+        if skip_update and len(selected_fighter_ids) == 0:
             return (
                 {'selected': []},
                 excluded_fighter_ids_mem,
@@ -310,41 +308,20 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
                 False,
             )
 
-        # Get fighter ids currently selected in the chart's selection_point:
-        if not selected_fighter_ids_string:
-            selected_fighter_ids = []
-        else:
-            fighter_ids = selected_fighter_ids_string.split(',')
-            selected_fighter_ids = [
-                int(fighter_id) - 1  # Altair off-by-one
-                for fighter_id in fighter_ids
-                if int(fighter_id) < 100 and int(fighter_id) >= 1
-            ]
-
-        # Get fighter ids previously selected in the chart's selection_point:
-        if not selector_mem:
-            prev_selected_fighter_ids = []
-        else:
-            prev_selected_fighter_ids = selector_mem['selected']
-
-        # All changes between new/old selections:
-        diff = list(set(selected_fighter_ids) ^ set(prev_selected_fighter_ids))
-        if len(diff) != 1:
-            # Should not have > 1 change except if chart was reset,
-            # which is already dealt with above
+        clicked_id = determine_clicked_id(selected_fighter_ids, selector_mem)
+        if clicked_id is None:
             return (
                 {'selected': selected_fighter_ids},
                 excluded_fighter_ids_mem,
                 excluded_fighter_numbers,
                 False,
             )
-        pressed_id = diff[0]
 
         excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
-        if pressed_id in excluded_fighter_ids:
-            excluded_fighter_ids.remove(pressed_id)
+        if clicked_id in excluded_fighter_ids:
+            excluded_fighter_ids.remove(clicked_id)
         else:
-            excluded_fighter_ids.append(pressed_id)
+            excluded_fighter_ids.append(clicked_id)
 
         excluded_fighter_numbers = update_excluded_fighter_numbers(
             excluded_fighter_numbers,
