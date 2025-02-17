@@ -2,7 +2,14 @@ import math
 
 import altair as alt
 
-from utils import format_attribute_name, get_correlations_df, get_fighter_attributes_df
+from utils import (
+    append_img_urls,
+    append_row_col_for_fighter_selector,
+    format_attribute_name,
+    get_correlations_df,
+    get_fighter_attributes_df,
+    get_fighter_lookup_table,
+)
 
 DEFAULT_BAR_CHART_ATTRIBUTE = 'weight'
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = 'fastfall_speed'
@@ -447,7 +454,10 @@ def get_fighter_selector_chart(
 ):
     if excluded_fighter_ids is None:
         excluded_fighter_ids = []
-    fighter_df = get_fighter_attributes_df(game=selected_game)
+
+    fighter_df = get_fighter_lookup_table(game=selected_game)
+    fighter_df = append_row_col_for_fighter_selector(fighter_df)
+    fighter_df = append_img_urls(fighter_df)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_fighter_ids)
 
     fighter_selector = alt.selection_point(

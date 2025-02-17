@@ -251,7 +251,7 @@ def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwar
             ~fighter_attributes_df.index.isin(excluded_fighter_ids)
         ]
 
-    return append_row_col_for_fighter_selector(append_img_urls(fighter_attributes_df))
+    return append_img_urls(fighter_attributes_df)
 
 
 def append_row_col_for_fighter_selector(fighters_df):
@@ -360,9 +360,15 @@ def get_excluded_fighter_ids(excluded_fighter_ids_mem):
     return [] if ids is None else ids
 
 
+def get_fighter_lookup_table(game='ultimate'):
+    fighter_lookup_table = pd.read_csv(f'{DATA_DIR}/{game}_fighter_lookup_table.csv')
+
+    return fighter_lookup_table.iloc[:-1]  # rm Giga Bowser
+
+
 def convert_excluded_fighter_ids(excluded_fighter_numbers, selected_game):
     excluded_fighter_numbers_df = pd.DataFrame(excluded_fighter_numbers)
-    fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
+    fighter_df = get_fighter_lookup_table(game=selected_game)[['fighter_number']]
 
     excluded_mask = excluded_fighter_numbers_df['excluded']
     excluded_numbers = excluded_fighter_numbers_df.loc[excluded_mask, 'fighter_number']
@@ -378,7 +384,7 @@ def update_excluded_fighter_numbers(
     selected_game,
 ):
     cur_excluded_fighters_df = pd.DataFrame(cur_excluded_fighter_numbers)
-    fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
+    fighter_df = get_fighter_lookup_table(game=selected_game)[['fighter_number']]
 
     fighter_df['excluded_in_selected'] = fighter_df.index.isin(excluded_fighter_ids)
 

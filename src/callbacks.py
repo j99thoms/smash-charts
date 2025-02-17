@@ -8,7 +8,7 @@ from utils import (
     determine_clicked_id,
     get_app_title,
     get_excluded_fighter_ids,
-    get_fighter_attributes_df,
+    get_fighter_lookup_table,
     get_page_title,
     get_screen_width,
     initialize_excluded_fighters,
@@ -237,7 +237,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             excluded_fighter_ids = []
         elif ctx.triggered_id == 'fighter-selector-clear-all-button':
             cache_breaker += 1
-            excluded_fighter_ids = [*get_fighter_attributes_df(game=selected_game).index]
+            excluded_fighter_ids = [*get_fighter_lookup_table(game=selected_game).index]
         elif ctx.triggered_id == 'game-selector-buttons':
             excluded_fighter_ids = convert_excluded_fighter_ids(
                 excluded_fighter_numbers, selected_game
@@ -289,7 +289,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if ctx.triggered_id == 'fighter-selector-clear-all-button':
             return (
                 {'selected': []},
-                {'ids': [*get_fighter_attributes_df(game=selected_game).index]},
+                {'ids': [*get_fighter_lookup_table(game=selected_game).index]},
                 initialize_excluded_fighters(excluded='all'),
                 False,
             )
