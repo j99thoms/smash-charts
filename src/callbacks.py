@@ -287,7 +287,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if ctx.triggered_id == 'fighter-selector-clear-all-button':
             return (
                 {'selected': []},
-                {'ids': []},
+                {'ids': [*get_fighter_attributes_df(game=selected_game).index]},
                 initialize_excluded_fighters(excluded='all'),
                 False,
             )
