@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from dash import Input, Output, State, ctx, html
 from dash.exceptions import PreventUpdate
 
@@ -215,14 +213,15 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
 
         return is_opened, button_style
 
-    # Record the last time the user pressed the settings menu button
+    # First update for excluded_char_ids after opening the setting menu
+    # needs to be skipped:
     @app.callback(
-        Output('settings-btn-last-press', 'data'),
+        Output('skip-next-selector-update', 'data', allow_duplicate=True),
         Input('settings-menu-button', 'n_clicks'),
         prevent_initial_call=True,
     )
-    def record_settings_btn_last_press(n_clicks):
-        return {'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    def skip_next_selector_update(n_clicks):
+        return n_clicks > 0
 
     # Update fighter selector chart
     @app.callback(
@@ -270,14 +269,16 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('char-selector-mem', 'data'),
         Output('excluded-char-ids-mem', 'data', allow_duplicate=True),
         Output('excluded-fighter-numbers', 'data'),
+        Output('skip-next-selector-update', 'data'),
         Input('fighter-selector-chart', 'signalData'),
         Input('fighter-selector-select-all-button', 'n_clicks'),
         Input('fighter-selector-clear-all-button', 'n_clicks'),
         State('char-selector-mem', 'data'),
         State('excluded-char-ids-mem', 'data'),
-        State('settings-btn-last-press', 'data'),
+        State('skip-next-selector-update', 'data'),
         State('game-selector-buttons', 'value'),
         State('excluded-fighter-numbers', 'data'),
+        State('cache-breaker', 'data'),
         prevent_initial_call=True,
     )
     def update_selected_fighters(
@@ -286,21 +287,24 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         clear_all_click,
         selector_mem,
         excluded_char_ids_mem,
-        settings_btn_last_press,
+        skip_update,
         selected_game,
         excluded_fighter_numbers,
+        cache_breaker,
     ):
         if ctx.triggered_id == 'fighter-selector-select-all-button':
             return (
                 {'selected': []},
                 {'ids': []},
                 initialize_excluded_fighters(excluded=None),
+                False,
             )
         if ctx.triggered_id == 'fighter-selector-clear-all-button':
             return (
                 {'selected': []},
                 {'ids': []},
                 initialize_excluded_fighters(excluded='all'),
+                False,
             )
         if 'fighter_selector' not in selector_signal:
             raise PreventUpdate
@@ -311,15 +315,15 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         else:
             selected_char_ids_string = ''
 
-        # See https://github.com/j99thoms/smash-charts/issues/18:
-        if settings_btn_last_press is not None and (
-            selected_char_ids_string in ('999', '')
-        ):
-            last_press_time = settings_btn_last_press['time']
-            last_press_time = datetime.strptime(last_press_time, '%Y-%m-%d %H:%M:%S')
-            delta = timedelta(seconds=2.5)
-            if last_press_time <= datetime.now() <= (last_press_time + delta):
-                return {'selected': []}, excluded_char_ids_mem, excluded_fighter_numbers
+        # First update for excluded_char_ids after the setting menu is opened needs to be
+        # skipped so we can instead reset the char_selector_mem to empty:
+        if skip_update and (selected_char_ids_string in (str(cache_breaker), '')):
+            return (
+                {'selected': []},
+                excluded_char_ids_mem,
+                excluded_fighter_numbers,
+                False,
+            )
 
         # Get fighter ids currently selected in the chart's selection_point:
         if not selected_char_ids_string:
@@ -347,6 +351,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
                 {'selected': selected_char_ids},
                 excluded_char_ids_mem,
                 excluded_fighter_numbers,
+                False,
             )
         pressed_id = diff[0]
 
@@ -366,6 +371,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             {'selected': selected_char_ids},
             {'ids': excluded_char_ids},
             excluded_fighter_numbers,
+            False,
         )
 
     # Keep track of the user's screen width
