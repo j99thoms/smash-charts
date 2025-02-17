@@ -72,7 +72,6 @@ def get_game_selector_buttons():
         },
         value='ultimate',
         id='game-selector-buttons',
-        style={'display': 'none'},  # Just for the initial load
     )
 
     return game_selector_buttons
