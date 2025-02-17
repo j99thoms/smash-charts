@@ -395,11 +395,15 @@ def convert_excluded_fighter_ids(excluded_fighter_numbers, selected_game):
     return excluded_ids
 
 
-def update_excluded_fighter_numbers(cur_excluded_fighters, ids, selected_game):
-    cur_excluded_fighters_df = pd.DataFrame(cur_excluded_fighters)
+def update_excluded_fighter_numbers(
+    cur_excluded_fighter_numbers,
+    excluded_fighter_ids,
+    selected_game,
+):
+    cur_excluded_fighters_df = pd.DataFrame(cur_excluded_fighter_numbers)
     fighter_df = get_fighter_attributes_df(game=selected_game)[['fighter_number']]
 
-    fighter_df['excluded_in_selected'] = fighter_df.index.isin(ids)
+    fighter_df['excluded_in_selected'] = fighter_df.index.isin(excluded_fighter_ids)
 
     excluded_fighters_df = pd.merge(
         cur_excluded_fighters_df,
