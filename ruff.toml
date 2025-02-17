@@ -59,22 +59,18 @@ ignore = [
     "COM812",  # trailing comma, conflicts with `ruff format`
     "FBT002",  # don't report boolean default function arguments
     "PLR2004", # don't report magic numbers
-    "RET504",  # don't report unnecessary variable assignment before return
-    "SIM108",  # don't prefer inline if/else statements over if-else blocks
 ]
 
 # Avoid trying to fix violations of these rules:
 unfixable = [
     "B905",    # zip-without-explicit-strict
-    "RET504",  # variable assignment before return
-    "SIM108",  # simple if-else blocks
 ]
 
 # Use single quotes for strings:
 flake8-quotes.inline-quotes = "single"
 
-# Allow up to 10 arguments in a function definition:
-pylint.max-args = 10
+# Allow up to 9 arguments in a function definition:
+pylint.max-args = 9
 
 [format]
 # Use single quotes for strings:
