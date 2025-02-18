@@ -1,8 +1,12 @@
+import os
+from datetime import datetime
+
 import dash
 import dash_breakpoints
 import dash_mantine_components as dmc
 from dash import Dash, dcc, html
 from dash_bootstrap_components import themes
+from werkzeug.middleware.profiler import ProfilerMiddleware
 
 from callbacks import get_callbacks
 from layout import get_app_html
@@ -74,4 +78,16 @@ get_callbacks(
 )
 
 if __name__ == '__main__':
+    if os.getenv('PROFILER'):
+        # https://community.plotly.com/t/performance-profiling-dash-apps-with-werkzeug/65199
+        profile_dir = f'../profiler/{datetime.now().strftime("%Y-%m-%d_%H%M")}'
+        os.makedirs(profile_dir, exist_ok=True)
+        app.server.config['PROFILE'] = True
+        app.server.wsgi_app = ProfilerMiddleware(
+            app.server.wsgi_app,
+            sort_by=('cumtime', 'tottime'),
+            restrictions=[60],
+            stream=None,
+            profile_dir=profile_dir,
+        )
     app.run(debug=True)
