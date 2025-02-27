@@ -136,6 +136,9 @@ def get_scatter_plot_sizes(screen_width):
 def get_corr_matrix_plot(var_1, var_2, screen_width):
     correlations_df = get_correlations_df()
 
+    var_1 = format_attribute_name(var_1)
+    var_2 = format_attribute_name(var_2)
+
     num_attributes = len(correlations_df) ** (1 / 2)
     plot_height, plot_width, circle_size = get_corr_matrix_plot_sizes(
         screen_width,
