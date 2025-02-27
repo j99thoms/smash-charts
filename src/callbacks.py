@@ -204,11 +204,14 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     # needs to be skipped:
     @app.callback(
         Output('skip-next-selector-update', 'data', allow_duplicate=True),
+        Output('fighter-selector-mem', 'data', allow_duplicate=True),
         Input('settings-menu-button', 'n_clicks'),
         prevent_initial_call=True,
     )
     def skip_next_selector_update(n_clicks):
-        return n_clicks > 0
+        if n_clicks > 0:
+            return True, []
+        raise PreventUpdate
 
     # Update fighter selector chart
     @app.callback(
@@ -253,7 +256,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
 
     # Update excluded fighters
     @app.callback(
-        Output('fighter-selector-mem', 'data'),
+        Output('fighter-selector-mem', 'data', allow_duplicate=True),
         Output('excluded-fighter-ids-mem', 'data', allow_duplicate=True),
         Output('excluded-fighter-numbers', 'data'),
         Output('skip-next-selector-update', 'data'),
@@ -266,6 +269,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         State('game-selector-buttons', 'value'),
         State('excluded-fighter-numbers', 'data'),
         State('cache-breaker', 'data'),
+        State('settings-menu-drawer', 'opened'),
         prevent_initial_call=True,
     )
     def update_selected_fighters(
@@ -278,6 +282,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         selected_game,
         excluded_fighter_numbers,
         cache_breaker,
+        is_opened,
     ):
         if ctx.triggered_id == 'fighter-selector-select-all-button':
             return (
@@ -293,7 +298,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
                 initialize_excluded_fighters(excluded='all'),
                 False,
             )
-        if 'fighter_selector' not in selector_signal:
+        if 'fighter_selector' not in selector_signal or not is_opened:
             raise PreventUpdate
 
         selected_fighter_ids = parse_altair_fighter_selection(selector_signal)
@@ -301,12 +306,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         # First update for excluded_fighter_ids after the setting menu is opened needs to
         # be skipped so we can instead reset the fighter_selector_mem to empty:
         if skip_update and len(selected_fighter_ids) == 0:
-            return (
-                {'selected': []},
-                excluded_fighter_ids_mem,
-                excluded_fighter_numbers,
-                False,
-            )
+            raise PreventUpdate
 
         clicked_id = determine_clicked_id(selected_fighter_ids, selector_mem)
         if clicked_id is None:
