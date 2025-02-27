@@ -269,7 +269,7 @@ def update_scatter_plot(scatter_plot_params):
     }
 
     return (
-        get_scatter_plot(**scatter_plot_params).to_dict(),
+        get_scatter_plot(**scatter_plot_params),
         get_scatter_plot_title(**title_params),
     )
 
@@ -286,7 +286,7 @@ def update_corr_matrix_plot(scatter_plot_params):
         if key in scatter_plot_params
     }
 
-    return get_corr_matrix_plot(**corr_matrix_params).to_dict()
+    return get_corr_matrix_plot(**corr_matrix_params)
 
 
 def calc_image_size_multiplier(x):

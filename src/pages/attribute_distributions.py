@@ -162,6 +162,6 @@ def update_scatter_plot_params(
 )
 def update_bar_chart(bar_chart_params):
     return (
-        get_bar_chart(**bar_chart_params).to_dict(),
+        get_bar_chart(**bar_chart_params),
         get_bar_chart_title(bar_chart_params['var']),
     )

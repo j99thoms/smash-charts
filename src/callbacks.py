@@ -249,7 +249,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             excluded_fighter_ids, selected_game, cache_breaker
         )
 
-        return chart.to_dict(), {'ids': excluded_fighter_ids}, cache_breaker
+        return chart, {'ids': excluded_fighter_ids}, cache_breaker
 
     # Update excluded fighters
     @app.callback(
