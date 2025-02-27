@@ -508,7 +508,7 @@ def initialize_excluded_fighters(excluded=None):
     return df.to_dict()
 
 
-def parse_altair_fighter_selection(selector_signal):
+def parse_vega_fighter_selection(selector_signal):
     selector_dict = selector_signal['fighter_selector']
     if '_vgsid_' in selector_dict:
         selected_fighter_ids_string = selector_dict['_vgsid_'].strip('Set()')

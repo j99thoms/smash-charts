@@ -12,7 +12,7 @@ from utils import (
     get_page_title,
     get_screen_width,
     initialize_excluded_fighters,
-    parse_altair_fighter_selection,
+    parse_vega_fighter_selection,
     update_excluded_fighter_numbers,
 )
 
@@ -301,7 +301,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if 'fighter_selector' not in selector_signal or not is_opened:
             raise PreventUpdate
 
-        selected_fighter_ids = parse_altair_fighter_selection(selector_signal)
+        selected_fighter_ids = parse_vega_fighter_selection(selector_signal)
 
         # First update for excluded_fighter_ids after the setting menu is opened needs to
         # be skipped so we can instead reset the fighter_selector_mem to empty:
