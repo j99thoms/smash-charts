@@ -1,7 +1,5 @@
 import math
 
-import altair as alt
-
 from utils import (
     append_img_urls,
     append_row_col_for_fighter_selector,
