@@ -251,7 +251,7 @@ def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwar
             ~fighter_attributes_df.index.isin(excluded_fighter_ids)
         ]
 
-    return append_img_urls(fighter_attributes_df)
+    return append_img_urls(fighter_attributes_df, game=game)
 
 
 def append_row_col_for_fighter_selector(fighters_df):

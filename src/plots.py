@@ -528,7 +528,7 @@ def get_fighter_selector_chart(
 
     fighter_df = get_fighter_lookup_table(game=selected_game)
     fighter_df = append_row_col_for_fighter_selector(fighter_df)
-    fighter_df = append_img_urls(fighter_df)
+    fighter_df = append_img_urls(fighter_df, game=selected_game)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_fighter_ids)
 
     n_rows, n_cols = fighter_df[['row_number', 'col_number']].max()
