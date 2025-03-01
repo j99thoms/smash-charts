@@ -40,7 +40,7 @@ fighter_lookup_table <- tibble::tribble(
   'DM',       'Dr. Mario',               '18',
   'Pi',       'Pichu',                   '19',
   'Fc',       'Falco',                   '20',
-  'Mh',       'Marth',                   '21',
+  'Ms',       'Marth',                   '21',
   'YL',       'Young Link',              '22',
   'Gn',       'Ganondorf',               '23',
   'Mw',       'Mewtwo',                  '24',
