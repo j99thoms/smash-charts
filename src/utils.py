@@ -269,7 +269,7 @@ def append_row_col_for_fighter_selector(fighters_df):
     return fighters_df
 
 
-def append_img_urls(fighters_df):
+def append_img_urls(fighters_df, game='ultimate'):
     clean_fighter_names = (
         fighters_df['fighter']
         .str.lower()
@@ -280,7 +280,7 @@ def append_img_urls(fighters_df):
 
     fighters_df['img_url'] = (
         IMG_DIR
-        + '/heads/'
+        + f'/heads/{game}/'
         + fighters_df['fighter_number']
         + '_'
         + clean_fighter_names
