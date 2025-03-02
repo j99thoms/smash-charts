@@ -173,3 +173,25 @@ melee_img_urls <- paste0(
 )
 
 download_fighter_head_images(melee_img_urls, game = 'melee')
+
+# ---- Smash 64 ----
+ssb_img_urls <- paste0(
+  'https://www.ssbwiki.com/images/',
+  c(
+    'a/aa/MarioHeadSSB',
+    'a/af/DonkeyKongHeadSSB',
+    '3/3b/LinkHeadSSB',
+    '1/14/SamusHeadSSB',
+    '4/44/YoshiHeadSSB',
+    'e/e0/KirbyHeadSSB',
+    '8/80/FoxHeadSSB',
+    '8/80/PikachuHeadSSB',
+    '6/69/LuigiHeadSSB',
+    'c/cd/NessHeadSSB',
+    '7/75/CaptainFalconHeadSSB',
+    '8/84/JigglypuffHeadSSB'
+  ),
+  '.png'
+)
+
+download_fighter_head_images(ssb_img_urls, game = '64')
