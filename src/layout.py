@@ -65,6 +65,7 @@ def get_game_selector_buttons():
         options={
             'ultimate': 'SSB Ultimate',
             'melee': 'SSB Melee',
+            '64': 'SSB 64',
         },
         value='ultimate',
         id='game-selector-buttons',

@@ -242,7 +242,9 @@ def get_screen_width(display_size_str):
 
 
 def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwargs):
-    fighter_attributes_df = pd.read_csv(f'{DATA_DIR}/{game}_fighter_params.csv', **kwargs)
+    fighter_attributes_df = pd.read_csv(
+        f'{DATA_DIR}/{game}_fighter_params.csv', dtype={'fighter_number': str}, **kwargs
+    )
 
     fighter_attributes_df = fighter_attributes_df.iloc[:-1]  # rm Giga Bowser
 
@@ -361,7 +363,9 @@ def get_excluded_fighter_ids(excluded_fighter_ids_mem):
 
 
 def get_fighter_lookup_table(game='ultimate'):
-    fighter_lookup_table = pd.read_csv(f'{DATA_DIR}/{game}_fighter_lookup_table.csv')
+    fighter_lookup_table = pd.read_csv(
+        f'{DATA_DIR}/{game}_fighter_lookup_table.csv', dtype={'fighter_number': str}
+    )
 
     return fighter_lookup_table.iloc[:-1]  # rm Giga Bowser
 
