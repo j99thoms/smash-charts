@@ -1,0 +1,585 @@
+Character Attributes,,,,,,Mario
+"Walk
+1.1","Initial dash 
+1.5","Dash
+1.5","Traction
+0.06","Weight
+98","Jumpsquat
+5 frames",Mario
+"Gravity
+0.075","Fall speed
+1.28","Fast fall
+1.792","Air accel
+0.09","Air speed
+0.94","Meteor cancel
+25 frames",Mario
+Character Attributes,,,,,,Donkey Kong
+"Walk
+1.2","Initial dash 
+1.6","Dash
+1.622","Traction
+0.0529","Weight
+116","Jumpsquat
+6 frames",Donkey Kong
+"Gravity
+0.081","Fall speed
+1.65","Fast fall
+2.212","Air accel
+0.06","Air speed
+1.081","Meteor cancel
+25 frames",Donkey Kong
+Character Attributes,,,,,,Link
+"Walk
+1.2","Initial dash 
+1.3","Dash
+1.328","Traction
+0.064","Weight
+104","Jumpsquat
+7 frames",Link
+"Gravity
+0.089","Fall speed
+1.6","Fast fall
+2.666","Air accel
+0.05","Air speed
+0.8084","Meteor cancel
+25 frames",Link
+Character Attributes,,,,,,Samus
+"Walk
+1.05","Initial dash 
+1.86","Dash
+1.445","Traction
+0.0585","Weight
+108","Jumpsquat
+4 frames",Samus
+"Gravity
+0.058","Fall speed
+1.07","Fast fall
+1.498","Air accel
+0.09","Air speed
+0.987","Meteor cancel
+25 frames",Samus
+Character Attributes,,,,,,Yoshi
+"Walk
+1.15","Initial dash 
+1.33","Dash
+1.68","Traction
+0.0426","Weight
+107","Jumpsquat
+6 frames",Yoshi
+"Gravity
+0.07347","Fall speed
+1.29","Fast fall
+1.806","Air accel
+0.08","Air speed
+1.316","Meteor cancel
+20 frames",Yoshi
+Character Attributes,,,,,,Kirby
+"Walk
+0.95","Initial dash 
+1.4","Dash
+1.371","Traction
+0.0493","Weight
+78","Jumpsquat
+4 frames",Kirby
+"Gravity
+0.061","Fall speed
+1.2","Fast fall
+1.9","Air accel
+0.11","Air speed
+0.85","Meteor cancel
+25 frames",Kirby
+Character Attributes,,,,,,Fox
+"Walk
+1.45","Initial dash 
+2.1","Dash
+2.08","Traction
+0.06","Weight
+80","Jumpsquat
+4 frames",Fox
+"Gravity
+0.175","Fall speed
+1.831","Fast fall
+2.5634","Air accel
+0.09","Air speed
+0.89","Meteor cancel
+25 frames",Fox
+Character Attributes,,,,,,Pikachu
+"Walk
+1.24","Initial dash 
+1.8","Dash
+1.765","Traction
+0.0596","Weight
+79","Jumpsquat
+4 frames",Pikachu
+"Gravity
+0.087","Fall speed
+1.5","Fast fall
+2.379","Air accel
+0.1","Air speed
+0.9118","Meteor cancel
+25 frames",Pikachu
+Character Attributes,,,,,,Luigi
+"Walk
+1.08","Initial dash 
+1.28","Dash
+1.34","Traction
+0.022","Weight
+97","Jumpsquat
+5 frames",Luigi
+"Gravity
+0.065","Fall speed
+1.22","Fast fall
+1.708","Air accel
+0.075","Air speed
+0.7332","Meteor cancel
+25 frames",Luigi
+Character Attributes,,,,,,Ness
+"Walk
+0.86","Initial dash 
+1.3","Dash
+1.393","Traction
+0.0546","Weight
+94","Jumpsquat
+5 frames",Ness
+"Gravity
+0.0711","Fall speed
+1.31","Fast fall
+1.834","Air accel
+0.1","Air speed
+0.9588","Meteor cancel
+25 frames",Ness
+Character Attributes,,,,,,Captain Falcon
+"Walk
+0.85","Initial dash 
+2.05","Dash
+2.18","Traction
+0.05","Weight
+104","Jumpsquat
+5 frames",Captain Falcon
+"Gravity
+0.1027","Fall speed
+1.837","Fast fall
+2.5718","Air accel
+0.06","Air speed
+1.18","Meteor cancel
+25 frames",Captain Falcon
+Character Attributes,,,,,,Jigglypuff
+"Walk
+0.7","Initial dash 
+1.4","Dash
+1.1","Traction
+0.0718","Weight
+68","Jumpsquat
+6 frames",Jigglypuff
+"Gravity
+0.05056","Fall speed
+0.98","Fast fall
+1.372","Air accel
+0.13","Air speed
+1.269","Meteor cancel
+25 frames",Jigglypuff
+Character Attributes,,,,,,Peach
+"Walk
+0.86","Initial dash 
+1.5","Dash
+1.35","Traction
+0.068","Weight
+90","Jumpsquat
+5 frames",Peach
+"Gravity
+0.0632","Fall speed
+1.05","Fast fall
+1.47","Air accel
+0.11","Air speed
+0.893","Meteor cancel
+25 frames",Peach
+Character Attributes,,,,,,Bowser
+"Walk
+0.8","Initial dash 
+1","Dash
+1.527","Traction
+0.577","Weight
+120","Jumpsquat
+8 frames",Bowser
+"Gravity
+0.1027","Fall speed
+1.39","Fast fall
+1.946","Air accel
+0.05","Air speed
+1.034","Meteor cancel
+25 frames",Bowser
+Character Attributes,,,,,,Ice Climbers (leader)
+"Walk
+0.96","Initial dash 
+1.4","Dash
+1.388","Traction
+0.035","Weight
+92","Jumpsquat
+4 frames",Ice Climbers (leader)
+"Gravity
+0.077","Fall speed
+1.2","Fast fall
+1.68","Air accel
+0.09","Air speed
+0.7708","Meteor cancel
+25 frames",Ice Climbers (leader)
+Character Attributes,,,,,,Sheik
+"Walk
+1.3","Initial dash 
+1.7","Dash
+1.92","Traction
+0.06","Weight
+85","Jumpsquat
+4 frames",Sheik
+"Gravity
+0.1409","Fall speed
+1.58","Fast fall
+2.212","Air accel
+0.09","Air speed
+0.846","Meteor cancel
+25 frames",Sheik
+Character Attributes,,,,,,Zelda
+"Walk
+0.8","Initial dash 
+1.25","Dash
+1.224","Traction
+0.054","Weight
+85","Jumpsquat
+6 frames",Zelda
+"Gravity
+0.067","Fall speed
+1.13","Fast fall
+1.582","Air accel
+0.1","Air speed
+0.987","Meteor cancel
+25 frames",Zelda
+Character Attributes,,,,,,Falco
+"Walk
+1.28","Initial dash 
+1.9","Dash
+1.432","Traction
+0.065","Weight
+82","Jumpsquat
+6 frames",Falco
+"Gravity
+0.112","Fall speed
+1.708","Fast fall
+2.3912","Air accel
+0.08","Air speed
+0.893","Meteor cancel
+25 frames",Falco
+Character Attributes,,,,,,Marth
+"Walk
+1.5","Initial dash 
+1.5","Dash
+1.7","Traction
+0.055","Weight
+87","Jumpsquat
+5 frames",Marth
+"Gravity
+0.06715","Fall speed
+1.5","Fast fall
+2.1","Air accel
+0.08","Air speed
+1.034","Meteor cancel
+25 frames",Marth
+Character Attributes,,,,,,Ganondorf
+"Walk
+0.73","Initial dash 
+1.3","Dash
+1.18","Traction
+0.068","Weight
+109","Jumpsquat
+7 frames",Ganondorf
+"Gravity
+0.1027","Fall speed
+1.65","Fast fall
+2.31","Air accel
+0.04","Air speed
+0.846","Meteor cancel
+25 frames",Ganondorf
+Character Attributes,,,,,,Mr. Game & Watch
+"Walk
+1.1","Initial dash 
+1.5","Dash
+1.553","Traction
+0.06","Weight
+75","Jumpsquat
+5 frames",Mr. Game & Watch
+"Gravity
+0.07505","Fall speed
+1.24","Fast fall
+1.736","Air accel
+0.1","Air speed
+1.081","Meteor cancel
+25 frames",Mr. Game & Watch
+Character Attributes,,,,,,Meta Knight
+"Walk
+1.22","Initial dash 
+1.75","Dash
+1.847","Traction
+0.04","Weight
+79","Jumpsquat
+4 frames",Meta Knight
+"Gravity
+0.0956","Fall speed
+1.39","Fast fall
+1.946","Air accel
+0.08","Air speed
+0.752","Meteor cancel
+32 frames",Meta Knight
+Character Attributes,,,,,,Pit
+"Walk
+1.18","Initial dash 
+1.5","Dash
+1.583","Traction
+0.0505","Weight
+94","Jumpsquat
+5 frames",Pit
+"Gravity
+0.075","Fall speed
+1.42","Fast fall
+1.988","Air accel
+0.075","Air speed
+0.893","Meteor cancel
+32 frames",Pit
+Character Attributes,,,,,,Zero Suit Samus
+"Walk
+1.33","Initial dash 
+1.7","Dash
+1.93","Traction
+0.07","Weight
+81","Jumpsquat
+4 frames",Zero Suit Samus
+"Gravity
+0.0884","Fall speed
+1.43","Fast fall
+2.002","Air accel
+0.1","Air speed
+1.034","Meteor cancel
+15 frames",Zero Suit Samus
+Character Attributes,,,,,,Wario
+"Walk
+0.85","Initial dash 
+1.3","Dash
+1.35","Traction
+0.07","Weight
+107","Jumpsquat
+6 frames",Wario
+"Gravity
+0.0842","Fall speed
+1.4","Fast fall
+1.96","Air accel
+0.34","Air speed
+1.222","Meteor cancel
+25 frames",Wario
+Character Attributes,,,,,,Snake
+"Walk
+0.84","Initial dash 
+1.1","Dash
+1.35","Traction
+0.0542","Weight
+113","Jumpsquat
+9 frames",Snake
+"Gravity
+0.08","Fall speed
+1.73","Fast fall
+2.422","Air accel
+0.03","Air speed
+0.94","Meteor cancel
+25 frames",Snake
+Character Attributes,,,,,,Ike
+"Walk
+0.88","Initial dash 
+1.5","Dash
+1.371","Traction
+0.044","Weight
+105","Jumpsquat
+7 frames",Ike
+"Gravity
+0.0837","Fall speed
+1.65","Fast fall
+2.31","Air accel
+0.05","Air speed
+0.9212","Meteor cancel
+25 frames",Ike
+Character Attributes,,,,,,Squirtle
+"Walk
+1.2","Initial dash 
+1.6","Dash
+1.37","Traction
+0.042","Weight
+75","Jumpsquat
+4 frames",Squirtle
+"Gravity
+0.1067","Fall speed
+1.3","Fast fall
+2.1","Air accel
+0.12","Air speed
+1.081","Meteor cancel
+25 frames",Squirtle
+Character Attributes,,,,,,Ivysaur
+"Walk
+1.05","Initial dash 
+1.4","Dash
+1.5","Traction
+0.0532","Weight
+100","Jumpsquat
+5 frames",Ivysaur
+"Gravity
+0.07","Fall speed
+1.35","Fast fall
+1.89","Air accel
+0.095","Air speed
+0.752","Meteor cancel
+15 frames",Ivysaur
+Character Attributes,,,,,,Charizard
+"Walk
+0.7","Initial dash 
+1.3","Dash
+1.8","Traction
+0.055","Weight
+110","Jumpsquat
+ 7 frames",Charizard
+"Gravity
+0.085","Fall speed
+1.35","Fast fall
+1.89","Air accel
+0.06","Air speed
+0.987","Meteor cancel
+30 frames",Charizard
+Character Attributes,,,,,,Diddy Kong
+"Walk
+1.25","Initial dash 
+1.7","Dash
+1.721","Traction
+0.484","Weight
+92","Jumpsquat
+4 frames",Diddy Kong
+"Gravity
+0.092","Fall speed
+1.43","Fast fall
+2.002","Air accel
+0.05","Air speed
+0.8272","Meteor cancel
+25 frames",Diddy Kong
+Character Attributes,,,,,,Lucas
+"Walk
+0.82","Initial dash 
+1.3","Dash
+1.5","Traction
+0.045","Weight
+94","Jumpsquat
+5 frames",Lucas
+"Gravity
+0.9","Fall speed
+1.37","Fast fall
+1.918","Air accel
+0.095","Air speed
+1.05","Meteor cancel
+25 frames",Lucas
+Character Attributes,,,,,,Sonic
+"Walk
+1.4","Initial dash 
+1.5","Dash
+3.5","Traction
+0.07","Weight
+92","Jumpsquat
+5 frames",Sonic
+"Gravity
+0.085","Fall speed
+1.45","Fast fall
+2","Air accel
+0.05","Air speed
+1.1092","Meteor cancel
+25 frames",Sonic
+Character Attributes,,,,,,King Dedede
+"Walk
+0.95","Initial dash 
+1.4","Dash
+1.22","Traction
+0.0484","Weight
+112","Jumpsquat
+6 frames",King Dedede
+"Gravity
+0.0837","Fall speed
+1.95","Fast fall
+2.73","Air accel
+0.05","Air speed
+0.658","Meteor cancel
+25 frames",King Dedede
+Character Attributes,,,,,,Olimar
+"Walk
+0.9","Initial dash 
+1.4","Dash
+1.4","Traction
+0.06","Weight
+82","Jumpsquat
+5 frames",Olimar
+"Gravity
+0.06","Fall speed
+1.3","Fast fall
+1.82","Air accel
+0.08","Air speed
+0.82","Meteor cancel
+15 frames",Olimar
+Character Attributes,,,,,,Lucario
+"Walk
+1","Initial dash 
+1.8","Dash
+1.414","Traction
+0.0736","Weight
+100","Jumpsquat
+5 frames",Lucario
+"Gravity
+0.0625","Fall speed
+1.2","Fast fall
+1.68","Air accel
+0.07","Air speed
+0.987","Meteor cancel
+25 frames",Lucario
+Character Attributes,,,,,,R.O.B.
+"Walk
+1.1","Initial dash 
+1.3","Dash
+1.5","Traction
+0.06","Weight
+106","Jumpsquat
+5 frames",R.O.B.
+"Gravity
+0.065","Fall speed
+1.2","Fast fall
+1.68","Air accel
+0.046","Air speed
+0.89","Meteor cancel
+25 frames",R.O.B.
+Character Attributes,,,,,,Toon Link
+"Walk
+1.22","Initial dash 
+1.5","Dash
+1.65","Traction
+0.0547","Weight
+92","Jumpsquat
+5 frames",Toon Link
+"Gravity
+0.07","Fall speed
+1.28","Fast fall
+1.9","Air accel
+0.09","Air speed
+0.94","Meteor cancel
+25 frames",Toon Link
+Character Attributes,,,,,,Wolf
+"Walk
+1.3","Initial dash 
+1.7","Dash
+1.4","Traction
+0.07","Weight
+102","Jumpsquat
+5 frames",Wolf
+"Gravity
+0.13","Fall speed
+1.8","Fast fall
+1.9","Air accel
+0.09","Air speed
+1.222","Meteor cancel
+60 frames",Wolf

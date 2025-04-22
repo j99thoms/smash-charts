@@ -1,0 +1,13 @@
+attribute,type
+weight,C
+max_fall_speed,C
+fastfall_speed,C
+walk_speed,C
+initial_dash_speed,C
+run_speed,C
+horizontal_air_speed,C
+horizontal_air_acceleration,C
+gravity,C
+traction,C
+jumpsquat_frames,O
+meteor_cancel_frames,O
