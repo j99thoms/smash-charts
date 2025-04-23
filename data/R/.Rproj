@@ -3,7 +3,7 @@ ProjectId: 270c0605-1eae-4d50-bcf1-5063f40de7f0
 
 RestoreWorkspace: No
 SaveWorkspace: No
-AlwaysSaveHistory: Default
+AlwaysSaveHistory: No
 
 EnableCodeIndexing: Yes
 UseSpacesForTab: Yes
@@ -16,3 +16,5 @@ LaTeX: pdfLaTeX
 AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
 LineEndingConversion: Posix
+
+ProjectName: smash-charts
