@@ -62,12 +62,12 @@ def get_header():
 
 def get_game_selector_buttons():
     return dcc.RadioItems(
-        options={
-            'ultimate': 'SSB Ultimate',
-            'brawl': 'SSB Brawl',
-            'melee': 'SSB Melee',
-            '64': 'SSB 64',
-        },
+        options=[
+            {'label': 'SSB Ultimate', 'value': 'ultimate'},
+            {'label': 'SSB Brawl', 'value': 'brawl'},
+            {'label': 'SSB Melee', 'value': 'melee'},
+            {'label': 'SSB 64', 'value': '64'},
+        ],
         value='ultimate',
         id='game-selector-buttons',
     )
