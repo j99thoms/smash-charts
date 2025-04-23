@@ -137,6 +137,55 @@ ultimate_img_urls <- paste0(
 
 download_fighter_head_images(ultimate_img_urls, game = 'ultimate')
 
+# ---- Smash Brawl ----
+brawl_img_urls <- paste0(
+  'https://www.ssbwiki.com/images/',
+  c(
+    '0/07/MarioHeadSSBB',
+    '0/0b/DonkeyKongHeadSSBB',
+    '2/28/LinkHeadSSBB',
+    'e/ee/SamusHeadSSBB',
+    'a/ab/YoshiHeadSSBB',
+    'c/ca/KirbyHeadSSBB',
+    '1/15/FoxHeadSSBB',
+    'c/ca/PikachuHeadSSBB',
+    'a/af/LuigiHeadSSBB',
+    '5/51/NessHeadSSBB',
+    '6/61/CaptainFalconHeadSSBB',
+    '4/4a/JigglypuffHeadSSBB',
+    '0/0c/PeachHeadSSBB',
+    '0/05/BowserHeadSSBB',
+    'e/e4/IceClimbersHeadSSBB',
+    '2/2e/SheikHeadSSBB',
+    '5/59/ZeldaHeadSSBB',
+    '4/4b/FalcoHeadSSBB',
+    '5/52/MarthHeadSSBB',
+    '8/82/GanondorfHeadSSBB',
+    '4/48/MrGame%26WatchHeadSSBB',
+    'f/f1/MetaKnightHeadSSBB',
+    'c/c8/PitHeadSSBB',
+    '8/8e/ZeroSuitSamusHeadSSBB',
+    'e/e1/WarioHeadSSBB',
+    '6/6b/SnakeHeadSSBB',
+    '3/32/IkeHeadSSBB',
+    'd/d6/SquirtleHeadSSBB',
+    'c/c7/IvysaurHeadSSBB',
+    '3/3f/CharizardHeadSSBB',
+    '1/1c/DiddyKongHeadSSBB',
+    'e/e6/LucasHeadSSBB',
+    '4/4a/SonicHeadSSBB',
+    '6/6b/KingDededeHeadSSBB',
+    'f/fd/OlimarHeadSSBB',
+    'e/e3/LucarioHeadSSBB',
+    'c/cb/ROBHeadSSBB',
+    '6/66/ToonLinkHeadSSBB',
+    '6/63/WolfHeadSSBB'
+  ),
+  '.png'
+)
+
+download_fighter_head_images(brawl_img_urls, game = 'brawl')
+
 # ---- Smash Melee ----
 melee_img_urls <- paste0(
   'https://www.ssbwiki.com/images/',
