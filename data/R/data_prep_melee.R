@@ -76,6 +76,7 @@ cleaned_fighter_params <- raw_fighter_params |>
     shield_size
   ) |>
   inner_join(fighter_lookup_table, by = 'codename') |>
+  filter(fighter != 'Giga Bowser') |>
   select(-codename) |>
   select(fighter_number = number, fighter, everything()) |>
   arrange(fighter_number)

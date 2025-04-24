@@ -246,8 +246,6 @@ def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwar
         f'{DATA_DIR}/{game}_fighter_params.csv', dtype={'fighter_number': str}, **kwargs
     )
 
-    fighter_attributes_df = fighter_attributes_df.iloc[:-1]  # rm Giga Bowser
-
     if excluded_fighter_ids is not None:
         fighter_attributes_df = fighter_attributes_df.loc[
             ~fighter_attributes_df.index.isin(excluded_fighter_ids)

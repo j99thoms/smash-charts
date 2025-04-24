@@ -151,6 +151,7 @@ cleaned_fighter_params <- raw_fighter_params |>
     )
   ) |>
   inner_join(map_fighter_id_to_name_and_number, by = 'id') |>
+  filter(fighter != 'Giga Bowser') |>
   select(-id) |>
   select(fighter_number = number, fighter, everything()) |>
   arrange(fighter_number)
