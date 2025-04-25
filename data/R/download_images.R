@@ -137,6 +137,74 @@ ultimate_img_urls <- paste0(
 
 download_fighter_head_images(ultimate_img_urls, game = 'ultimate')
 
+# ---- Smash 4 ----
+sm4sh_img_urls <- paste0(
+  'https://www.ssbwiki.com/images/',
+  c(
+    '2/2b/MarioHeadSSB4-U',
+    'b/b2/DonkeyKongHeadSSB4-U',
+    'e/ea/LinkHeadSSB4-U',
+    'b/b9/SamusHeadSSB4-U',
+    'c/c2/YoshiHeadSSB4-U',
+    'b/bd/KirbyHeadSSB4-U',
+    '4/40/FoxHeadSSB4-U',
+    'd/d6/PikachuHeadSSB4-U',
+    'd/d4/LuigiHeadSSB4-U',
+    'c/c6/NessHeadSSB4-U',
+    '4/4d/CaptainFalconHeadSSB4-U',
+    '5/53/JigglypuffHeadSSB4-U',
+    '5/50/PeachHeadSSB4-U',
+    '4/44/BowserHeadSSB4-U',
+    '6/6f/SheikHeadSSB4-U',
+    '5/50/ZeldaHeadSSB4-U',
+    '5/5d/DrMarioHeadSSB4-U',
+    'e/ee/FalcoHeadSSB4-U',
+    '4/47/MarthHeadSSB4-U',
+    'e/e2/LucinaHeadSSB4-U',
+    'f/fd/GanondorfHeadSSB4-U',
+    '1/12/MewtwoHeadSSB4-U',
+    '5/58/RoyHeadSSB4-U',
+    'e/ea/MrGame%26WatchHeadSSB4-U',
+    '6/65/MetaKnightHeadSSB4-U',
+    '7/7a/PitHeadSSB4-U',
+    '9/9b/DarkPitHeadSSB4-U',
+    'c/c1/ZeroSuitSamusHeadSSB4-U',
+    'e/e6/WarioHeadSSB4-U',
+    'd/dd/IkeHeadSSB4-U',
+    '7/7d/CharizardHeadSSB4-U',
+    'a/a3/DiddyKongHeadSSB4-U',
+    'c/cf/LucasHeadSSB4-U',
+    'd/de/SonicHeadSSB4-U',
+    'b/bf/KingDededeHeadSSB4-U',
+    '7/74/OlimarHeadSSB4-U',
+    '4/49/LucarioHeadSSB4-U',
+    'c/c6/ROBHeadGreySSB4-U',
+    'a/a0/ToonLinkHeadSSB4-U',
+    '5/5d/VillagerHeadSSB4-U',
+    '0/0d/MegaManHeadSSB4-U',
+    '8/85/WiiFitTrainerHeadSSB4-U',
+    '2/2d/Rosalina%26LumaHeadSSB4-U',
+    '0/06/LittleMacHeadSSB4-U',
+    'b/b0/GreninjaHeadSSB4-U',
+    'b/bd/MiiBrawlerHeadSSB4-U',
+    '5/56/MiiSwordfighterHeadSSB4-U',
+    'b/b2/MiiGunnerHeadSSB4-U',
+    'a/ad/PalutenaHeadSSB4-U',
+    'b/bb/Pac-ManHeadSSB4-U',
+    'e/ef/RobinHeadSSB4-U',
+    '9/9d/ShulkHeadSSB4-U',
+    'f/fa/BowserJrHeadSSB4-U',
+    '1/15/DuckHuntHeadSSB4-U',
+    'f/f1/RyuHeadSSB4-U',
+    '2/2a/CloudHeadSSB4-U',
+    '8/89/CorrinHeadSSB4-U',
+    'b/b4/BayonettaHeadSSB4-U'
+  ),
+  '.png'
+)
+
+download_fighter_head_images(sm4sh_img_urls, game = 'sm4sh')
+
 # ---- Smash Brawl ----
 brawl_img_urls <- paste0(
   'https://www.ssbwiki.com/images/',
