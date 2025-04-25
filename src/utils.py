@@ -361,11 +361,9 @@ def get_excluded_fighter_ids(excluded_fighter_ids_mem):
 
 
 def get_fighter_lookup_table(game='ultimate'):
-    fighter_lookup_table = pd.read_csv(
+    return pd.read_csv(
         f'{DATA_DIR}/{game}_fighter_lookup_table.csv', dtype={'fighter_number': str}
     )
-
-    return fighter_lookup_table.iloc[:-1]  # rm Giga Bowser
 
 
 def convert_excluded_fighter_ids(excluded_fighter_numbers, selected_game):
