@@ -531,9 +531,11 @@ def get_fighter_selector_chart(
     fighter_df = append_img_urls(fighter_df, game=selected_game)
     fighter_df['excluded'] = fighter_df.index.isin(excluded_fighter_ids)
 
-    n_rows, n_cols = fighter_df[['row_number', 'col_number']].max()
+    n_rows, n_cols = fighter_df[['row_number', 'col_number']].max() + 1
 
-    plot_height = plot_width = 270
+    plot_width = 275
+    image_size = min(plot_width // n_cols, 40)  # width and height of each fighter head
+    plot_height = image_size * n_rows if n_rows > 2 else image_size
 
     selected_fighter_test = {
         # fighter_selector XOR datum.excluded
@@ -553,8 +555,8 @@ def get_fighter_selector_chart(
         },
         'mark': {
             'type': 'image',
-            'height': plot_height // n_rows,
-            'width': plot_width // n_cols,
+            'height': image_size,
+            'width': image_size,
         },
         'encoding': {
             'tooltip': {'field': 'fighter', 'title': None},

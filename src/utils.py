@@ -257,10 +257,10 @@ def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwar
 def append_row_col_for_fighter_selector(fighters_df):
     fighters_df = fighters_df.sort_values(by='fighter_number', ignore_index=True)
 
-    # Calculate number of rows and columns needed for a square grid
+    # Calculate number of rows needed for a grid layout
     n_fighters = len(fighters_df)
-    n_rows = math.ceil(math.sqrt(n_fighters))
-    n_cols = math.ceil(n_fighters / n_rows)
+    n_cols = 8 if n_fighters <= 64 else 9
+    n_rows = math.ceil(n_fighters / n_cols)
 
     # Generate row-column pairs and add them as new columns
     row_cols = [*product(range(n_rows), range(n_cols))][:n_fighters]
