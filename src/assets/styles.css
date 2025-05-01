@@ -198,6 +198,11 @@
     display: none;
 }
 
+.mantine-Drawer-drawer {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 #settings-menu-wrapper h3 {
     position: absolute;
     top: 10px;
