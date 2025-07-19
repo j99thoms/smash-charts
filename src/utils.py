@@ -127,6 +127,22 @@ def get_attribute_selector_dropdown(
     )
 
 
+def get_fighter_selector_dropdown(div_id, default_value, game='ultimate'):
+    fighter_lookup = get_fighter_lookup_table(game=game)
+
+    options = [
+        {'label': row['fighter'], 'value': row['fighter_number']}
+        for _, row in fighter_lookup.iterrows()
+    ]
+
+    return dcc.Dropdown(
+        id=div_id,
+        options=options,
+        value=default_value,
+        placeholder='Select fighter...',
+    )
+
+
 def get_vertical_spacer(height):
     return html.Div(style={'height': f'{height}px'})
 

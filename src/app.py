@@ -36,6 +36,7 @@ pages = [*dash.page_registry.values()]
 drawer_pages = [
     '/attribute-correlations',
     '/attribute-distributions',
+    '/fighter-comparisons',
 ]
 sidebar_pages = [
     page['relative_path'] for page in pages if page['relative_path'] not in drawer_pages

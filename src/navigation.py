@@ -54,6 +54,7 @@ def get_page_icon(page_name, height=24, variant=None):
         'Attribute correlations': f'ph:chart-scatter{variant}',
         'Attribute distributions': f'ph:chart-bar{variant}',
         'Attribute info': f'ph:info{variant}',
+        'Fighter comparisons': f'ph:users{variant}',
     }
 
     icon = icons_dict.get(page_name, f'ph:square{variant}')

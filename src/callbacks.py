@@ -35,6 +35,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         specific_title_pages = [
             '/attribute-correlations',
             '/attribute-distributions',
+            '/fighter-comparisons',
         ]
 
         if page_url in specific_title_pages:
@@ -55,10 +56,12 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('sidebar-navlink-/attribute-correlations', 'active'),
         Output('sidebar-navlink-/attribute-distributions', 'active'),
         Output('sidebar-navlink-/attribute-info', 'active'),
+        Output('sidebar-navlink-/fighter-comparisons', 'active'),
         Output('drawer-navlink-/', 'active'),
         Output('drawer-navlink-/attribute-correlations', 'active'),
         Output('drawer-navlink-/attribute-distributions', 'active'),
         Output('drawer-navlink-/attribute-info', 'active'),
+        Output('drawer-navlink-/fighter-comparisons', 'active'),
         Input('url', 'pathname'),
     )
     def update_active_navlink(page_url):
@@ -66,12 +69,14 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         correlations_active = page_url == '/attribute-correlations'
         distributions_active = page_url == '/attribute-distributions'
         info_active = page_url == '/attribute-info'
+        comparisons_active = page_url == '/fighter-comparisons'
 
         return 2 * (
             home_active,
             correlations_active,
             distributions_active,
             info_active,
+            comparisons_active,
         )
 
     # Update the sidebar's status (expanded / collapsed / hidden)
@@ -81,10 +86,12 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('sidebar-navlink-/attribute-correlations', 'styles'),
         Output('sidebar-navlink-/attribute-distributions', 'styles'),
         Output('sidebar-navlink-/attribute-info', 'styles'),
+        Output('sidebar-navlink-/fighter-comparisons', 'styles'),
         Output('sidebar-navlink-/', 'style'),
         Output('sidebar-navlink-/attribute-correlations', 'style'),
         Output('sidebar-navlink-/attribute-distributions', 'style'),
         Output('sidebar-navlink-/attribute-info', 'style'),
+        Output('sidebar-navlink-/fighter-comparisons', 'style'),
         Output('sidebar', 'style'),
         Output('dummy-sidebar', 'style'),
         Output('page-container', 'style'),
