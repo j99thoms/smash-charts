@@ -1,8 +1,15 @@
 import dash
 import dash_bootstrap_components as dbc
+import dash_vega_components as dvc
 from dash import Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
 
+from plots import (
+    DEFAULT_FIGHTER_1,
+    DEFAULT_FIGHTER_2,
+    get_comparison_plot,
+    get_comparison_plot_title,
+)
 from utils import (
     get_fighter_lookup_table,
     get_fighter_selector_dropdown,
@@ -10,9 +17,6 @@ from utils import (
     get_vertical_spacer,
     get_window_title,
 )
-
-DEFAULT_FIGHTER_1 = '01'  # Mario
-DEFAULT_FIGHTER_2 = '09'  # Luigi
 
 dash.register_page(__name__, title=get_window_title(__name__))
 
@@ -62,8 +66,20 @@ layout = html.Div(
         ),
         dbc.Row(
             [
-                # Plots - TODO: Add comparison chart
-                get_vertical_spacer(height=250),  # Placeholder for comparison chart
+                # Comparison plot
+                html.H3(
+                    id='comparison-plot-title',
+                    style={
+                        'height': '6%',
+                        'width': '100%',
+                        'text-align': 'center',
+                    },
+                ),
+                dvc.Vega(
+                    id='comparison-plot',
+                    className='comparison-plot-frame',
+                    opt={'renderer': 'svg', 'actions': False},
+                ),
             ],
         ),
         dcc.Store(
@@ -162,3 +178,22 @@ def update_comparison_params(
         'screen_width': screen_width,
         'selected_game': selected_game,
     }
+
+
+# Update the comparison plot
+@callback(
+    Output('comparison-plot', 'spec'),
+    Output('comparison-plot-title', 'children'),
+    Input('comparison-plot-params', 'data'),
+)
+def update_comparison_plot(comparison_plot_params):
+    title_params = {
+        key: comparison_plot_params[key]
+        for key in ['fighter_1', 'fighter_2', 'selected_game']
+        if key in comparison_plot_params
+    }
+
+    return (
+        get_comparison_plot(**comparison_plot_params),
+        get_comparison_plot_title(**title_params),
+    )

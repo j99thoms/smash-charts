@@ -7,11 +7,14 @@ from utils import (
     get_correlations_df,
     get_fighter_attributes_df,
     get_fighter_lookup_table,
+    get_valid_attributes,
 )
 
 DEFAULT_BAR_CHART_ATTRIBUTE = 'weight'
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_1 = 'fastfall_speed'
 DEFAULT_SCATTER_PLOT_ATTRIBUTE_2 = 'run_speed'
+DEFAULT_FIGHTER_1 = '01'  # Mario
+DEFAULT_FIGHTER_2 = '09'  # Luigi
 
 
 def get_scatter_plot(
@@ -589,3 +592,38 @@ def get_fighter_selector_chart(
         ],
         'data': {'values': fighter_df.to_dict(orient='records')},
     }
+
+
+def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_width=900):
+    if fighter_1 is None:
+        fighter_1 = DEFAULT_FIGHTER_1
+    if fighter_2 is None:
+        fighter_2 = DEFAULT_FIGHTER_2
+
+    # Retrieve the data needed for the comparison plot
+    fighter_df = get_fighter_attributes_df(game=selected_game)
+    plot_df = fighter_df[fighter_df['fighter_number'].isin([fighter_1, fighter_2])]
+    valid_attributes = get_valid_attributes(data_type='continuous', game=selected_game)
+    plot_df = plot_df[['fighter', 'img_url', 'fighter_number', *valid_attributes]]
+    plot_df = plot_df.dropna()
+
+    # Vega-Lite specification
+    return {}  # TODO
+
+
+def get_comparison_plot_title(fighter_1, fighter_2, selected_game):
+    fighter_lookup = get_fighter_lookup_table(game=selected_game)
+
+    if fighter_2 and fighter_2 == fighter_1:
+        fighter_2 = None
+
+    fighter_1_name = fighter_lookup[fighter_lookup['fighter_number'] == fighter_1][
+        'fighter'
+    ].iloc[0]
+
+    if fighter_2:
+        fighter_2_name = fighter_lookup[fighter_lookup['fighter_number'] == fighter_2][
+            'fighter'
+        ].iloc[0]
+        return f'{fighter_1_name} vs {fighter_2_name}'
+    return f'{fighter_1_name} - Character Profile'

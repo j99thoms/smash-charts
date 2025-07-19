@@ -92,6 +92,10 @@
     height: 600px;
 }
 
+.comparison-plot-frame {
+    height: 600px;
+}
+
 .bar-chart-frame {
     height: 400px;
 }
