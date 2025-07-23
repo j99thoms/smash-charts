@@ -607,8 +607,147 @@ def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_w
     plot_df = plot_df[['fighter', 'img_url', 'fighter_number', *valid_attributes]]
     plot_df = plot_df.dropna()
 
-    # Vega-Lite specification
-    return {}  # TODO
+    # Transform data from wide to long format for the bar chart
+    comparison_data = [
+        {
+            'fighter': row['fighter'],
+            'fighter_number': row['fighter_number'],
+            'img_url': row['img_url'],
+            'attribute': attribute,
+            'attribute_display': format_attribute_name(attribute),
+            'value': row[attribute],
+            'color': '#5B9BD5' if row['fighter_number'] == fighter_1 else '#FF8C42',
+        }
+        for _, row in plot_df.iterrows()
+        for attribute in valid_attributes
+    ]
+
+    # Fixed sizing for initial implementation - TODO: Make responsive to user screen size
+    plot_height = 600
+    plot_width = 700
+
+    # Main comparison bars
+    comparison_bar_chart = {
+        'height': plot_height,
+        'width': plot_width,
+        'mark': {'type': 'bar', 'opacity': 0.8},
+        'encoding': {
+            'tooltip': [
+                {'field': 'fighter', 'type': 'nominal'},
+                {'field': 'attribute_display', 'type': 'nominal', 'title': 'Attribute'},
+                {'field': 'value', 'type': 'quantitative', 'title': 'Value'},
+            ],
+            'y': {
+                'field': 'attribute_display',
+                'type': 'nominal',
+                'title': 'Attribute',
+                'sort': {'field': 'value', 'op': 'mean', 'order': 'descending'},
+                'axis': {'labelFontSize': 11},
+            },
+            'x': {
+                'field': 'value',
+                'type': 'quantitative',
+                'title': 'Value',
+                'scale': {'zero': True},
+            },
+            'color': {
+                'field': 'color',
+                'type': 'nominal',
+                'scale': None,  # The colors are specified directly in the data
+                'legend': None,  # We'll create a custom legend below
+            },
+            'yOffset': {'field': 'fighter', 'type': 'nominal'},
+        },
+        'data': {'values': comparison_data},
+    }
+
+    # Create fighter info for legend with images
+    fighter_info = []
+    if fighter_1 == fighter_2:
+        # Single fighter case - just show one fighter centered
+        fighter_row = plot_df[['fighter', 'img_url', 'fighter_number']].iloc[0]
+        fighter_info.append(
+            {
+                'fighter': fighter_row['fighter'],
+                'img_url': fighter_row['img_url'],
+                'x_position': plot_width / 2,
+                'color': '#5B9BD5',
+            }
+        )
+    else:
+        # Two different fighters - show both with "vs." in between
+        for _, fighter_row in plot_df[
+            ['fighter', 'img_url', 'fighter_number']
+        ].iterrows():
+            is_fighter_1 = fighter_row['fighter_number'] == fighter_1
+            x_offset = -100 if is_fighter_1 else 100
+
+            fighter_info.append(
+                {
+                    'fighter': fighter_row['fighter'],
+                    'img_url': fighter_row['img_url'],
+                    'x_position': plot_width / 2 + x_offset,
+                    'color': '#5B9BD5' if is_fighter_1 else '#FF8C42',
+                }
+            )
+
+        # Add "vs." image in the middle
+        fighter_info.append(
+            {
+                'fighter': '',
+                'img_url': 'assets/img/vs.png',
+                'x_position': plot_width / 2,
+            }
+        )
+
+    # Fighter head images for legend
+    fighter_images = {
+        'width': plot_width,
+        'height': 0,
+        'mark': {'type': 'image', 'height': 40, 'width': 40},
+        'encoding': {
+            'url': {'field': 'img_url', 'type': 'nominal'},
+            'x': {
+                'field': 'x_position',
+                'type': 'quantitative',
+                'axis': None,
+                'scale': {'domain': [0, plot_width]},
+            },
+        },
+        'data': {'values': fighter_info},
+    }
+
+    # Fighter name labels for legend
+    fighter_labels = {
+        'width': plot_width,
+        'height': 0,
+        'mark': {'type': 'text', 'fontSize': 14, 'fontWeight': 'bold'},
+        'encoding': {
+            'text': {'field': 'fighter', 'type': 'nominal'},
+            'x': {
+                'field': 'x_position',
+                'type': 'quantitative',
+                'axis': None,
+                'scale': {'domain': [0, plot_width]},
+            },
+            'color': {'field': 'color', 'type': 'nominal', 'scale': None},
+        },
+        'data': {'values': fighter_info},
+    }
+
+    # Vega-Lite specification with vertical concatenation
+    return {
+        '$schema': 'https://vega.github.io/schema/vega-lite/v5.15.1.json',
+        'config': {
+            'axis': {'labelFontSize': 12, 'titleFontSize': 14},
+            'view': {'continuousHeight': 300, 'continuousWidth': 300, 'strokeOpacity': 0},
+        },
+        'vconcat': [
+            fighter_images,
+            fighter_labels,
+            comparison_bar_chart,
+        ],
+    }
 
 
 def get_comparison_plot_title(fighter_1, fighter_2, selected_game):

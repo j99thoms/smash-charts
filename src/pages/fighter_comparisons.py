@@ -8,7 +8,6 @@ from plots import (
     DEFAULT_FIGHTER_1,
     DEFAULT_FIGHTER_2,
     get_comparison_plot,
-    get_comparison_plot_title,
 )
 from utils import (
     get_fighter_lookup_table,
@@ -67,18 +66,21 @@ layout = html.Div(
         dbc.Row(
             [
                 # Comparison plot
-                html.H3(
-                    id='comparison-plot-title',
+                html.Div(
+                    [
+                        dvc.Vega(
+                            id='comparison-plot',
+                            className='comparison-plot-frame',
+                            opt={'renderer': 'svg', 'actions': False},
+                        ),
+                    ],
                     style={
-                        'height': '6%',
+                        'display': 'flex',
+                        'flex-direction': 'column',
+                        'align-items': 'center',
                         'width': '100%',
-                        'text-align': 'center',
+                        'margin-bottom': '50px',
                     },
-                ),
-                dvc.Vega(
-                    id='comparison-plot',
-                    className='comparison-plot-frame',
-                    opt={'renderer': 'svg', 'actions': False},
                 ),
             ],
         ),
@@ -183,17 +185,7 @@ def update_comparison_params(
 # Update the comparison plot
 @callback(
     Output('comparison-plot', 'spec'),
-    Output('comparison-plot-title', 'children'),
     Input('comparison-plot-params', 'data'),
 )
 def update_comparison_plot(comparison_plot_params):
-    title_params = {
-        key: comparison_plot_params[key]
-        for key in ['fighter_1', 'fighter_2', 'selected_game']
-        if key in comparison_plot_params
-    }
-
-    return (
-        get_comparison_plot(**comparison_plot_params),
-        get_comparison_plot_title(**title_params),
-    )
+    return get_comparison_plot(**comparison_plot_params)
