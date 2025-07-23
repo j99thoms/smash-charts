@@ -3,7 +3,7 @@ from dash import html
 
 from utils import get_attribute_info_block, get_window_title
 
-dash.register_page(__name__, title=get_window_title(__name__))
+dash.register_page(__name__, title=get_window_title(__name__), order=5)
 
 layout = html.Div(
     className='inner-page-container',

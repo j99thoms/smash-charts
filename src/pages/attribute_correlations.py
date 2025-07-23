@@ -20,7 +20,7 @@ from utils import (
     get_window_title,
 )
 
-dash.register_page(__name__, title=get_window_title(__name__))
+dash.register_page(__name__, title=get_window_title(__name__), order=3)
 
 layout = html.Div(
     className='inner-page-container',
