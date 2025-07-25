@@ -49,6 +49,27 @@ layout = html.Div(
                             ],
                             style={'width': '270px'},
                         ),
+                        get_vertical_spacer(height=20),
+                        html.Div(
+                            children=[
+                                html.H4('Normalization:', style={'margin-bottom': '8px'}),
+                                dcc.RadioItems(
+                                    id='normalization-selector',
+                                    options=[
+                                        {'label': 'None', 'value': 'none'},
+                                        {'label': 'Min-Max (0-1)', 'value': 'minmax'},
+                                        {'label': 'Z-Score', 'value': 'zscore'},
+                                    ],
+                                    value='none',
+                                    style={
+                                        'display': 'flex',
+                                        'flex-direction': 'column',
+                                        'gap': '4px',
+                                    },
+                                ),
+                            ],
+                            style={'width': '270px', 'padding-left': '5px'},
+                        ),
                     ],
                     style={
                         'width': '95%',
