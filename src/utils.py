@@ -263,7 +263,7 @@ def get_fighter_attributes_df(
     # Determine which CSV file to load based on normalization method
     if normalization == 'none' or normalization is None:
         file = f'{DATA_DIR}/{game}_fighter_params.csv'
-    elif normalization in ['minmax', 'zcore']:
+    elif normalization in ['minmax', 'zscore']:
         file = f'{DATA_DIR}/normalized/{game}_fighter_params_{normalization}.csv'
     else:
         raise ValueError(
