@@ -257,10 +257,21 @@ def get_screen_width(display_size_str):
     return screen_width
 
 
-def get_fighter_attributes_df(game='ultimate', excluded_fighter_ids=None, **kwargs):
-    fighter_attributes_df = pd.read_csv(
-        f'{DATA_DIR}/{game}_fighter_params.csv', dtype={'fighter_number': str}, **kwargs
-    )
+def get_fighter_attributes_df(
+    game='ultimate', excluded_fighter_ids=None, normalization=None, **kwargs
+):
+    # Determine which CSV file to load based on normalization method
+    if normalization == 'none' or normalization is None:
+        file = f'{DATA_DIR}/{game}_fighter_params.csv'
+    elif normalization in ['minmax', 'zcore']:
+        file = f'{DATA_DIR}/normalized/{game}_fighter_params_{normalization}.csv'
+    else:
+        raise ValueError(
+            f'Invalid normalization method: {normalization}. '
+            'Must be one of "none", "minmax", or "zscore".'
+        )
+
+    fighter_attributes_df = pd.read_csv(file, dtype={'fighter_number': str}, **kwargs)
 
     if excluded_fighter_ids is not None:
         fighter_attributes_df = fighter_attributes_df.loc[
