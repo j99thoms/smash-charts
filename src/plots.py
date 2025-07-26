@@ -594,18 +594,32 @@ def get_fighter_selector_chart(
     }
 
 
-def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_width=900):
+def get_comparison_plot(
+    fighter_1, fighter_2, selected_game='ultimate', screen_width=900, normalization='none'
+):
     if fighter_1 is None:
         fighter_1 = DEFAULT_FIGHTER_1
     if fighter_2 is None:
         fighter_2 = DEFAULT_FIGHTER_2
+    if normalization is None:
+        normalization = 'none'
 
     # Retrieve the data needed for the comparison plot
-    fighter_df = get_fighter_attributes_df(game=selected_game)
+    fighter_df = get_fighter_attributes_df(
+        game=selected_game, normalization=normalization
+    )
     plot_df = fighter_df[fighter_df['fighter_number'].isin([fighter_1, fighter_2])]
     valid_attributes = get_valid_attributes(data_type='continuous', game=selected_game)
     plot_df = plot_df[['fighter', 'img_url', 'fighter_number', *valid_attributes]]
     plot_df = plot_df.dropna()
+
+    # Also get raw data for dual tooltips if using normalized data
+    raw_fighter_df = get_fighter_attributes_df(game=selected_game, normalization='none')
+    raw_plot_df = raw_fighter_df[
+        raw_fighter_df['fighter_number'].isin([fighter_1, fighter_2])
+    ]
+    raw_plot_df = raw_plot_df[['fighter', 'img_url', 'fighter_number', *valid_attributes]]
+    raw_plot_df = raw_plot_df.dropna()
 
     # Transform data from wide to long format for the bar chart
     comparison_data = [
@@ -617,6 +631,10 @@ def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_w
             'attribute_display': format_attribute_name(attribute),
             'value': row[attribute],
             'color': '#5B9BD5' if row['fighter_number'] == fighter_1 else '#FF8C42',
+            # Add raw value for dual tooltips
+            'raw_value': raw_plot_df[
+                raw_plot_df['fighter_number'] == row['fighter_number']
+            ][attribute].iloc[0],
         }
         for _, row in plot_df.iterrows()
         for attribute in valid_attributes
@@ -625,6 +643,8 @@ def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_w
     # Fixed sizing for initial implementation - TODO: Make responsive to user screen size
     plot_height = 600
     plot_width = 700
+
+    value_title = 'Value' if normalization == 'none' else f'Value ({normalization})'
 
     # Main comparison bars
     comparison_bar_chart = {
@@ -635,7 +655,15 @@ def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_w
             'tooltip': [
                 {'field': 'fighter', 'type': 'nominal'},
                 {'field': 'attribute_display', 'type': 'nominal', 'title': 'Attribute'},
-                {'field': 'value', 'type': 'quantitative', 'title': 'Value'},
+                {
+                    'field': 'value',
+                    'type': 'quantitative',
+                    'title': value_title,
+                    'format': '.2f' if normalization != 'none' else None,
+                },
+                {'field': 'raw_value', 'type': 'quantitative', 'title': 'Raw Value'}
+                if normalization != 'none'
+                else None,
             ],
             'y': {
                 'field': 'attribute_display',
@@ -647,8 +675,11 @@ def get_comparison_plot(fighter_1, fighter_2, selected_game='ultimate', screen_w
             'x': {
                 'field': 'value',
                 'type': 'quantitative',
-                'title': 'Value',
-                'scale': {'zero': True},
+                'title': value_title,
+                'scale': {
+                    'zero': True,
+                    'domain': [0, 1] if normalization == 'minmax' else None,
+                },
             },
             'color': {
                 'field': 'color',

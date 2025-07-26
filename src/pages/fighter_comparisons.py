@@ -113,6 +113,7 @@ layout = html.Div(
                 'fighter_2': DEFAULT_FIGHTER_2,
                 'screen_width': 900,
                 'selected_game': 'ultimate',
+                'normalization': 'none',
             },
         ),
     ],
@@ -163,6 +164,7 @@ def update_fighter_dropdowns(selected_game, comparison_plot_params):
     Input('fighter-comparison-dropdown-2', 'value'),
     Input('display-size', 'children'),
     Input('game-selector-buttons', 'value'),
+    Input('normalization-selector', 'value'),
     State('comparison-plot-params', 'data'),
 )
 def update_comparison_params(
@@ -170,6 +172,7 @@ def update_comparison_params(
     fighter_2,
     display_size_str,
     selected_game,
+    normalization,
     comparison_plot_params,
 ):
     screen_width = get_screen_width(display_size_str)
@@ -178,6 +181,7 @@ def update_comparison_params(
     prev_fighter_2 = comparison_plot_params['fighter_2']
     prev_screen_width = comparison_plot_params['screen_width']
     prev_selected_game = comparison_plot_params['selected_game']
+    prev_normalization = comparison_plot_params['normalization']
 
     if fighter_1 is None:
         fighter_1 = prev_fighter_1
@@ -185,6 +189,8 @@ def update_comparison_params(
         fighter_2 = prev_fighter_2
     if screen_width is None:
         screen_width = prev_screen_width
+    if normalization is None:
+        normalization = prev_normalization
 
     # Prevent unnecessary updates
     if (
@@ -192,6 +198,7 @@ def update_comparison_params(
         and fighter_2 == prev_fighter_2
         and screen_width == prev_screen_width
         and selected_game == prev_selected_game
+        and normalization == prev_normalization
     ):
         raise PreventUpdate
 
@@ -200,6 +207,7 @@ def update_comparison_params(
         'fighter_2': fighter_2,
         'screen_width': screen_width,
         'selected_game': selected_game,
+        'normalization': normalization,
     }
 
 
