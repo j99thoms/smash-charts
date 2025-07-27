@@ -692,6 +692,27 @@ def get_comparison_plot(
         'data': {'values': comparison_data},
     }
 
+    # Add reference line for normalized data
+    baseline_x_values = {'minmax': 0.5, 'zscore': 0}
+    if normalization in baseline_x_values:
+        reference_line = {
+            'height': plot_height,
+            'width': plot_width,
+            'mark': {
+                'type': 'rule',
+                'color': 'gray',
+                'strokeDash': [3, 3],
+                'opacity': 0.7,
+            },
+            'encoding': {'x': {'datum': baseline_x_values[normalization]}},
+            'data': {'values': [{}]},
+        }
+        comparison_bar_chart = {
+            'height': plot_height,
+            'width': plot_width,
+            'layer': [comparison_bar_chart, reference_line],
+        }
+
     # Create fighter info for legend with images
     fighter_info = []
     if fighter_1 == fighter_2:
