@@ -343,7 +343,7 @@ def get_horizontal_bar_chart(var, screen_width, plot_df):
 
     tooltip = [
         {'field': 'fighter', 'type': 'nominal'},
-        {'field': 'weight', 'type': 'quantitative'},
+        {'field': var, 'type': 'quantitative'},
     ]
 
     bars = {
@@ -413,7 +413,7 @@ def get_vertical_bar_chart(var, screen_width, plot_df):
 
     tooltip = [
         {'field': 'fighter', 'type': 'nominal'},
-        {'field': 'weight', 'type': 'quantitative'},
+        {'field': var, 'type': 'quantitative'},
     ]
 
     bars = {
