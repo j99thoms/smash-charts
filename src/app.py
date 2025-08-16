@@ -45,7 +45,16 @@ sidebar_pages = [
 # Window size breakpoints - used for dynamic layout updates based on screen size
 window_size_breakpoints = dash_breakpoints.WindowBreakpoints(
     id='breakpoints',
-    widthBreakpointThresholdsPx=[*range(400, 1800, 50)],
+    # width breakpoint every 50px, plus common bootstrap breakpoints
+    widthBreakpointThresholdsPx=[
+        *range(400, 550, 50),
+        576,
+        *range(600, 750, 50),
+        768,
+        *range(800, 950, 50),
+        992,
+        *range(1000, 1800, 50),
+    ],
 )
 
 app_html = get_app_html(pages, dash.page_container)
