@@ -604,6 +604,8 @@ def get_comparison_plot(
     if normalization is None:
         normalization = 'none'
 
+    plot_height, plot_width, image_size = get_comparison_plot_sizes(screen_width)
+
     # Retrieve the data needed for the comparison plot
     fighter_df = get_fighter_attributes_df(
         game=selected_game, normalization=normalization
@@ -639,10 +641,6 @@ def get_comparison_plot(
         for _, row in plot_df.iterrows()
         for attribute in valid_attributes
     ]
-
-    # Fixed sizing for initial implementation - TODO: Make responsive to user screen size
-    plot_height = 600
-    plot_width = 700
 
     value_title = 'Value' if normalization == 'none' else f'Value ({normalization})'
 
@@ -756,7 +754,7 @@ def get_comparison_plot(
     fighter_images = {
         'width': plot_width,
         'height': 0,
-        'mark': {'type': 'image', 'height': 40, 'width': 40},
+        'mark': {'type': 'image', 'height': image_size, 'width': image_size},
         'encoding': {
             'url': {'field': 'img_url', 'type': 'nominal'},
             'x': {
@@ -800,3 +798,16 @@ def get_comparison_plot(
             comparison_bar_chart,
         ],
     }
+
+
+def get_comparison_plot_sizes(screen_width):
+    if screen_width >= 992:
+        plot_width = int(screen_width * 0.45)
+        plot_height = int(plot_width * 0.75)
+        image_size = 45
+    else:
+        plot_width = int(screen_width * 0.55)
+        plot_height = int(plot_width * 0.85)
+        image_size = 40
+
+    return plot_height, plot_width, image_size
