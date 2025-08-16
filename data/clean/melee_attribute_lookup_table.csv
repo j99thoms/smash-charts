@@ -7,7 +7,6 @@ run_speed,C
 air_speed,C
 air_acceleration,C
 jump_frames,O
-run_acceleration,C
 jump_height,C
 hop_height,C
 air_friction,C
