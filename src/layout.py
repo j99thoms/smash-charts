@@ -22,6 +22,10 @@ def get_app_html(pages, dash_page_container):
                 sidebar,
                 page_container,
                 footer,
+                # Store for game selection synchronization
+                dcc.Store(
+                    id='selected-game-store', storage_type='session', data='ultimate'
+                ),
             ],
         ),
     ]
@@ -60,7 +64,7 @@ def get_header():
     )
 
 
-def get_game_selector_buttons():
+def get_game_selector_buttons(button_id='game-selector-buttons'):
     return dcc.RadioItems(
         options=[
             {'label': 'SSB Ultimate', 'value': 'ultimate'},
@@ -70,7 +74,7 @@ def get_game_selector_buttons():
             {'label': 'SSB 64', 'value': '64'},
         ],
         value='ultimate',
-        id='game-selector-buttons',
+        id=button_id,
     )
 
 

@@ -4,6 +4,7 @@ import dash_vega_components as dvc
 from dash import Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
 
+from layout import get_game_selector_buttons
 from plots import (
     DEFAULT_FIGHTER_1,
     DEFAULT_FIGHTER_2,
@@ -52,6 +53,25 @@ layout = html.Div(
                                         ),
                                     ],
                                     style={'width': '270px'},
+                                ),
+                                get_vertical_spacer(height=20),
+                                html.Div(
+                                    children=[
+                                        html.H4(
+                                            'Select Game:', style={'margin-bottom': '8px'}
+                                        ),
+                                        html.Div(
+                                            get_game_selector_buttons(
+                                                'game-selector-buttons-comparison'
+                                            ),
+                                            style={
+                                                'display': 'flex',
+                                                'flex-direction': 'column',
+                                                'gap': '4px',
+                                            },
+                                        ),
+                                    ],
+                                    style={'width': '270px', 'padding-left': '5px'},
                                 ),
                                 get_vertical_spacer(height=20),
                                 html.Div(
@@ -153,10 +173,29 @@ layout = html.Div(
 )
 
 
+# Sync local game selector with global store
+@callback(
+    Output('game-selector-buttons-comparison', 'value'),
+    Input('selected-game-store', 'data'),
+)
+def sync_game_selector_from_store(selected_game):
+    return selected_game if selected_game else 'ultimate'
+
+
+# Update global store when local game selector changes
+@callback(
+    Output('selected-game-store', 'data', allow_duplicate=True),
+    Input('game-selector-buttons-comparison', 'value'),
+    prevent_initial_call=True,
+)
+def update_store_from_local_selector(selected_game):
+    return selected_game
+
+
 # Update fighter dropdown list when game is changed
 @callback(
     Output('comparison-dropdown-container', 'children'),
-    Input('game-selector-buttons', 'value'),
+    Input('game-selector-buttons-comparison', 'value'),
     State('comparison-plot-params', 'data'),
 )
 def update_fighter_dropdowns(selected_game, comparison_plot_params):
@@ -196,7 +235,7 @@ def update_fighter_dropdowns(selected_game, comparison_plot_params):
     Input('fighter-comparison-dropdown-1', 'value'),
     Input('fighter-comparison-dropdown-2', 'value'),
     Input('display-size', 'children'),
-    Input('game-selector-buttons', 'value'),
+    Input('game-selector-buttons-comparison', 'value'),
     Input('normalization-selector', 'value'),
     State('comparison-plot-params', 'data'),
 )

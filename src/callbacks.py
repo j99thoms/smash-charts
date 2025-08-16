@@ -200,7 +200,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         if ctx.triggered_id == 'settings-menu-button':
             # Menu button was clicked
             is_opened = not is_opened
-        elif page_url in sidebar_pages:
+        elif page_url in sidebar_pages or page_url == '/fighter-comparisons':
             # The user has navigated to a page that does not display the settings menu
             is_opened = False
             button_style = {'display': 'none'}
@@ -353,3 +353,20 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Input('breakpoints', 'widthBreakpoint'),
         State('breakpoints', 'width'),
     )
+
+    # Sync settings menu game selector with global store
+    @app.callback(
+        Output('game-selector-buttons', 'value'),
+        Input('selected-game-store', 'data'),
+    )
+    def sync_settings_game_selector_from_store(selected_game):
+        return selected_game if selected_game else 'ultimate'
+
+    # Update global store when settings menu game selector changes
+    @app.callback(
+        Output('selected-game-store', 'data', allow_duplicate=True),
+        Input('game-selector-buttons', 'value'),
+        prevent_initial_call=True,
+    )
+    def update_store_from_settings_selector(selected_game):
+        return selected_game
