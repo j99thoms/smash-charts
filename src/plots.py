@@ -612,6 +612,11 @@ def get_comparison_plot(
     )
     plot_df = fighter_df[fighter_df['fighter_number'].isin([fighter_1, fighter_2])]
     valid_attributes = get_valid_attributes(data_type='continuous', game=selected_game)
+    if '05' in [fighter_1, fighter_2] and selected_game == '64':
+        # If Yoshi is selected in Smash 64, exclude shield size
+        # since he has no shield size value in that game.
+        # https://www.nintendo.co.jp/n01/n64/software/nus_p_nalj/smash/M_AbilityAll.html
+        valid_attributes.remove('shield_size')
     plot_df = plot_df[['fighter', 'img_url', 'fighter_number', *valid_attributes]]
     plot_df = plot_df.dropna()
 
