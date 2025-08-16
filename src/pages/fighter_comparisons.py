@@ -12,6 +12,8 @@ from plots import (
 from utils import (
     get_fighter_lookup_table,
     get_fighter_selector_dropdown,
+    get_icon,
+    get_normalization_tooltip,
     get_screen_width,
     get_vertical_spacer,
     get_window_title,
@@ -54,9 +56,30 @@ layout = html.Div(
                                 get_vertical_spacer(height=20),
                                 html.Div(
                                     children=[
-                                        html.H4(
-                                            'Normalization:',
-                                            style={'margin-bottom': '8px'},
+                                        html.Div(
+                                            [
+                                                html.H4(
+                                                    'Normalization:',
+                                                    style={
+                                                        'display': 'inline-block',
+                                                        'margin-bottom': '8px',
+                                                    },
+                                                ),
+                                                html.Span(
+                                                    get_icon(
+                                                        'mdi:information-outline',
+                                                        height=20,
+                                                    ),
+                                                    id='normalization-info-icon',
+                                                    style={
+                                                        'margin-left': '8px',
+                                                        'cursor': 'help',
+                                                        'vertical-align': 'middle',
+                                                        'opacity': 0.7,
+                                                    },
+                                                ),
+                                                get_normalization_tooltip(),
+                                            ],
                                         ),
                                         dcc.RadioItems(
                                             id='normalization-selector',

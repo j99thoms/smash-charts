@@ -2,6 +2,7 @@ import math
 import re
 from itertools import product
 
+import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import dcc, html
 from dash_iconify import DashIconify
@@ -590,3 +591,39 @@ def get_window_title(page_name):
     if page_title == 'Home':
         return 'Smash Charts'
     return page_title + ' | Smash Charts'
+
+
+def get_normalization_tooltip():
+    tooltip_content = [
+        html.Div(
+            [
+                html.B('None: '),
+                'The raw attribute values as they appear in the game data.',
+            ]
+        ),
+        html.Br(),
+        html.Div(
+            [
+                html.B('Min-Max (0-1): '),
+                'Scales all attributes to a 0-1 range, where 0 is the minimum ',
+                'value across all fighters, 0.5 is the midpoint, and 1 is the ',
+                'maximum value.',
+            ]
+        ),
+        html.Br(),
+        html.Div(
+            [
+                html.B('Z-Score: '),
+                'Shows how many standard deviations each value is from the ',
+                'average. 0 means average, positive values are above average, ',
+                'negative are below.',
+            ]
+        ),
+    ]
+
+    return dbc.Tooltip(
+        tooltip_content,
+        target='normalization-info-icon',
+        placement='right',
+        style={'max-width': '350px'},
+    )
