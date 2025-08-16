@@ -800,21 +800,3 @@ def get_comparison_plot(
             comparison_bar_chart,
         ],
     }
-
-
-def get_comparison_plot_title(fighter_1, fighter_2, selected_game):
-    fighter_lookup = get_fighter_lookup_table(game=selected_game)
-
-    if fighter_2 and fighter_2 == fighter_1:
-        fighter_2 = None
-
-    fighter_1_name = fighter_lookup[fighter_lookup['fighter_number'] == fighter_1][
-        'fighter'
-    ].iloc[0]
-
-    if fighter_2:
-        fighter_2_name = fighter_lookup[fighter_lookup['fighter_number'] == fighter_2][
-            'fighter'
-        ].iloc[0]
-        return f'{fighter_1_name} vs {fighter_2_name}'
-    return f'{fighter_1_name} - Character Profile'
