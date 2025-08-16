@@ -31,7 +31,7 @@ games <- c('64', 'melee', 'brawl', 'sm4sh', 'ultimate')
 methods <- c('minmax', 'zscore')
 
 for (game in games) {
-  input_file <- file.path(DATA_DIR, glue::glue('clean/{game_name}_fighter_params.csv'))
+  input_file <- file.path(DATA_DIR, glue::glue('clean/{game}_fighter_params.csv'))
 
   if (!file.exists(input_file)) {
     warning(glue::glue('{input_file} not found.'))
