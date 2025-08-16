@@ -22,88 +22,98 @@ dash.register_page(__name__, title=get_window_title(__name__), order=4)
 layout = html.Div(
     className='inner-page-container',
     children=[
-        dbc.Row(
+        html.Div(
             [
-                # Fighter selection (2x dropdown lists)
-                html.Div(
-                    children=[
-                        html.Div(
-                            children=html.H4('Choose two fighters:'),
-                            style={
-                                'width': '270px',
-                                'padding-left': '5px',
-                            },
-                        ),
-                        html.Div(
-                            id='comparison-dropdown-container',
-                            children=[
-                                get_fighter_selector_dropdown(
-                                    div_id='fighter-comparison-dropdown-1',
-                                    default_value=DEFAULT_FIGHTER_1,
-                                ),
-                                get_vertical_spacer(height=8),
-                                get_fighter_selector_dropdown(
-                                    div_id='fighter-comparison-dropdown-2',
-                                    default_value=DEFAULT_FIGHTER_2,
-                                ),
-                            ],
-                            style={'width': '270px'},
-                        ),
-                        get_vertical_spacer(height=20),
-                        html.Div(
-                            children=[
-                                html.H4('Normalization:', style={'margin-bottom': '8px'}),
-                                dcc.RadioItems(
-                                    id='normalization-selector',
-                                    options=[
-                                        {'label': 'None', 'value': 'none'},
-                                        {'label': 'Min-Max (0-1)', 'value': 'minmax'},
-                                        {'label': 'Z-Score', 'value': 'zscore'},
-                                    ],
-                                    value='none',
+                dbc.Row(
+                    [
+                        # Left column: Fighter selection and normalization controls
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    children=html.H4('Choose two fighters:'),
                                     style={
-                                        'display': 'flex',
-                                        'flex-direction': 'column',
-                                        'gap': '4px',
+                                        'width': '270px',
+                                        'padding-left': '5px',
                                     },
                                 ),
+                                html.Div(
+                                    id='comparison-dropdown-container',
+                                    children=[
+                                        get_fighter_selector_dropdown(
+                                            div_id='fighter-comparison-dropdown-1',
+                                            default_value=DEFAULT_FIGHTER_1,
+                                        ),
+                                        get_vertical_spacer(height=8),
+                                        get_fighter_selector_dropdown(
+                                            div_id='fighter-comparison-dropdown-2',
+                                            default_value=DEFAULT_FIGHTER_2,
+                                        ),
+                                    ],
+                                    style={'width': '270px'},
+                                ),
+                                get_vertical_spacer(height=20),
+                                html.Div(
+                                    children=[
+                                        html.H4(
+                                            'Normalization:',
+                                            style={'margin-bottom': '8px'},
+                                        ),
+                                        dcc.RadioItems(
+                                            id='normalization-selector',
+                                            options=[
+                                                {'label': 'None', 'value': 'none'},
+                                                {
+                                                    'label': 'Min-Max (0-1)',
+                                                    'value': 'minmax',
+                                                },
+                                                {'label': 'Z-Score', 'value': 'zscore'},
+                                            ],
+                                            value='none',
+                                            style={
+                                                'display': 'flex',
+                                                'flex-direction': 'column',
+                                                'gap': '4px',
+                                            },
+                                        ),
+                                    ],
+                                    style={'width': '270px', 'padding-left': '5px'},
+                                ),
                             ],
-                            style={'width': '270px', 'padding-left': '5px'},
+                            width=12,
+                            md=12,
+                            lg=4,
+                            style={'margin-bottom': '20px'},
+                        ),
+                        # Right column: Comparison plot
+                        dbc.Col(
+                            [
+                                dvc.Vega(
+                                    id='comparison-plot',
+                                    className='comparison-plot-frame',
+                                    opt={'renderer': 'svg', 'actions': False},
+                                ),
+                            ],
+                            width=12,
+                            md=12,
+                            lg=8,
+                            style={
+                                'display': 'flex',
+                                'flex-direction': 'column',
+                                'align-items': 'center',
+                                'padding-top': '20px',
+                                'padding-bottom': '100px',
+                            },
                         ),
                     ],
-                    style={
-                        'width': '95%',
-                        'float': 'right',
-                    },
+                    style={'margin-bottom': '80px'},
                 ),
             ],
-        ),
-        dbc.Row(
-            [
-                # Spacer
-                get_vertical_spacer(height=20),
-            ],
-        ),
-        dbc.Row(
-            [
-                # Comparison plot
-                html.Div(
-                    [
-                        dvc.Vega(
-                            id='comparison-plot',
-                            className='comparison-plot-frame',
-                            opt={'renderer': 'svg', 'actions': False},
-                        ),
-                    ],
-                    style={
-                        'display': 'flex',
-                        'flex-direction': 'column',
-                        'align-items': 'center',
-                        'width': '100%',
-                        'margin-bottom': '50px',
-                    },
-                ),
-            ],
+            style={
+                'max-width': '1400px',
+                'margin': '0 auto',
+                'width': '100%',
+                'float': 'left',
+            },
         ),
         dcc.Store(
             id='comparison-plot-params',
