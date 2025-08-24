@@ -47,16 +47,16 @@ window_size_breakpoints = dash_breakpoints.WindowBreakpoints(
     id='breakpoints',
     # width breakpoint every 50px, plus common bootstrap breakpoints
     widthBreakpointThresholdsPx=[
-        *range(400, 550, 50),
+        *range(400, 576, 50),
         576,
-        *range(600, 750, 50),
+        *range(600, 768, 50),
         768,
-        *range(800, 950, 50),
+        *range(800, 992, 50),
         992,
-        *range(1000, 1800, 50),
+        *range(1000, 2100, 50),
     ],
     # height breakpoint every 50px
-    heightBreakpointThresholdsPx=[*range(400, 1200, 50)],
+    heightBreakpointThresholdsPx=[*range(400, 1300, 50)],
 )
 
 app_html = get_app_html(pages, dash.page_container)
