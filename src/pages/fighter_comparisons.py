@@ -234,7 +234,7 @@ def update_fighter_dropdowns(selected_game, comparison_plot_params):
     Output('comparison-plot-params', 'data'),
     Input('fighter-comparison-dropdown-1', 'value'),
     Input('fighter-comparison-dropdown-2', 'value'),
-    Input('display-size', 'children'),
+    Input('display-size-width', 'children'),
     Input('game-selector-buttons-comparison', 'value'),
     Input('normalization-selector', 'value'),
     State('comparison-plot-params', 'data'),
@@ -242,12 +242,12 @@ def update_fighter_dropdowns(selected_game, comparison_plot_params):
 def update_comparison_params(
     fighter_1,
     fighter_2,
-    display_size_str,
+    display_size_width_str,
     selected_game,
     normalization,
     comparison_plot_params,
 ):
-    screen_width = get_screen_width(display_size_str)
+    screen_width = get_screen_width(display_size_width_str)
 
     prev_fighter_1 = comparison_plot_params['fighter_1']
     prev_fighter_2 = comparison_plot_params['fighter_2']

@@ -199,7 +199,7 @@ def update_scatter_dropdowns(selected_game, scatter_plot_params):
     Output('scatter-plot-params', 'data'),
     Input('scatter-dropdown-1', 'value'),
     Input('scatter-dropdown-2', 'value'),
-    Input('display-size', 'children'),
+    Input('display-size-width', 'children'),
     Input('excluded-fighter-ids-mem', 'data'),
     Input('game-selector-buttons', 'value'),
     Input('scatter-image-size-slider', 'value'),
@@ -208,13 +208,13 @@ def update_scatter_dropdowns(selected_game, scatter_plot_params):
 def update_scatter_plot_params(
     scatter_var_1,
     scatter_var_2,
-    display_size_str,
+    display_size_width_str,
     excluded_fighter_ids_mem,
     selected_game,
     image_size_slider_val,
     scatter_plot_params,
 ):
-    screen_width = get_screen_width(display_size_str)
+    screen_width = get_screen_width(display_size_width_str)
     excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
     image_size_multiplier = calc_image_size_multiplier(image_size_slider_val)
 

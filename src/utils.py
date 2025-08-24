@@ -247,15 +247,26 @@ def get_app_title(screen_width):
     return app_title
 
 
-def get_screen_width(display_size_str):
-    # display_size_str looks like "Breakpoint name: <=1500px, width: 1440px"
+def get_screen_width(display_size_width_str):
+    # display_size_width_str looks like "Breakpoint name: <=1500px, width: 1440px"
     try:
-        screen_width = display_size_str.split(' ')[4]  # Looks like "1440px"
+        screen_width = display_size_width_str.split(' ')[4]  # Looks like "1440px"
         screen_width = int(screen_width.strip('px'))
     except (IndexError, ValueError):
         return None
 
     return screen_width
+
+
+def get_screen_height(display_size_height_str):
+    # display_size_height_str looks like "Breakpoint name: <=800px, height: 750px"
+    try:
+        screen_height = display_size_height_str.split(' ')[4]  # Looks like "750px"
+        screen_height = int(screen_height.strip('px'))
+    except (IndexError, ValueError):
+        return None
+
+    return screen_height
 
 
 def get_fighter_attributes_df(

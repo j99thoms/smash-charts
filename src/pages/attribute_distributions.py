@@ -112,19 +112,19 @@ def update_bar_dropdown(selected_game, bar_chart_params):
 @callback(
     Output('bar-chart-params', 'data'),
     Input('bar-dropdown', 'value'),
-    Input('display-size', 'children'),
+    Input('display-size-width', 'children'),
     Input('excluded-fighter-ids-mem', 'data'),
     Input('game-selector-buttons', 'value'),
     State('bar-chart-params', 'data'),
 )
 def update_scatter_plot_params(
     selected_var,
-    display_size_str,
+    display_size_width_str,
     excluded_fighter_ids_mem,
     selected_game,
     bar_chart_params,
 ):
-    screen_width = get_screen_width(display_size_str)
+    screen_width = get_screen_width(display_size_width_str)
     excluded_fighter_ids = get_excluded_fighter_ids(excluded_fighter_ids_mem)
 
     prev_selected_var = bar_chart_params['var']

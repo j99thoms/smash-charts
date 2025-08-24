@@ -198,7 +198,11 @@
 
 
 /*--- Misc. ---*/
-#display-size {
+#display-size-width {
+    display: none;
+}
+
+#display-size-height {
     display: none;
 }
 

@@ -55,12 +55,15 @@ window_size_breakpoints = dash_breakpoints.WindowBreakpoints(
         992,
         *range(1000, 1800, 50),
     ],
+    # height breakpoint every 50px
+    heightBreakpointThresholdsPx=[*range(400, 1200, 50)],
 )
 
 app_html = get_app_html(pages, dash.page_container)
 app_html += [
     dcc.Location(id='url'),
-    html.Div(id='display-size'),
+    html.Div(id='display-size-width'),
+    html.Div(id='display-size-height'),
     window_size_breakpoints,
 ]
 

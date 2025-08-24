@@ -23,9 +23,9 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
     @app.callback(
         Output('page-title-container', 'children'),
         Input('url', 'pathname'),
-        Input('display-size', 'children'),
+        Input('display-size-width', 'children'),
     )
-    def update_page_title(page_url, display_size_str):
+    def update_page_title(page_url, display_size_width_str):
         # Some pages use the app's title as the page title,
         # other pages have a specific title for that page instead.
         app_title_pages = [
@@ -42,7 +42,7 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             page_title = get_page_title(page_url)
         elif page_url in app_title_pages:
             # Choose the size of the app title based on the user's screen width
-            screen_width = get_screen_width(display_size_str)
+            screen_width = get_screen_width(display_size_width_str)
             page_title = get_app_title(screen_width)
         else:
             page_title = html.H1('404 - Page not found', id='page-title')
@@ -98,11 +98,11 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
         Output('sidebar-container', 'style'),
         Output('dummy-sidebar-container', 'style'),
         Output('hamburger-menu-button-drawer-outer', 'style'),
-        Input('display-size', 'children'),
+        Input('display-size-width', 'children'),
         Input('url', 'pathname'),
     )
-    def update_sidebar_status(display_size_str, page_url):
-        screen_width = get_screen_width(display_size_str)
+    def update_sidebar_status(display_size_width_str, page_url):
+        screen_width = get_screen_width(display_size_width_str)
 
         # Collapse / expand the sidebar depending on the user's screen width.
         # If the user is on a page with a drawer (no sidebar),
@@ -349,9 +349,20 @@ def get_callbacks(app, num_pages, drawer_pages, sidebar_pages):  # noqa: PLR0915
             console.log("Width breakpoint threshold crossed.")
             return `Breakpoint name: ${wBreakpoint}, width: ${w}px`
         }""",
-        Output('display-size', 'children'),
+        Output('display-size-width', 'children'),
         Input('breakpoints', 'widthBreakpoint'),
         State('breakpoints', 'width'),
+    )
+
+    # Keep track of the user's screen height
+    app.clientside_callback(
+        """(hBreakpoint, h) => {
+            console.log("Height breakpoint threshold crossed.")
+            return `Breakpoint name: ${hBreakpoint}, height: ${h}px`
+        }""",
+        Output('display-size-height', 'children'),
+        Input('breakpoints', 'heightBreakpoint'),
+        State('breakpoints', 'height'),
     )
 
     # Sync settings menu game selector with global store
