@@ -16,6 +16,7 @@ def get_app_html(pages, dash_page_container):
     return [
         html.Div(
             id='user-window',
+            style={'minHeight': '100vh'},
             children=[
                 header,
                 drawer,
