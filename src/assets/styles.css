@@ -89,7 +89,7 @@
 
 /*--- Plots ---*/
 .scatter-plot-frame {
-    height: 600px;
+    overflow: hidden;
 }
 
 .comparison-plot-frame {
@@ -197,6 +197,10 @@
 
 
 /*--- Misc. ---*/
+.btn {
+    text-transform: none !important;
+}
+
 #display-size-width {
     display: none;
 }

@@ -21,6 +21,7 @@ def get_scatter_plot(
     var_1,
     var_2,
     screen_width,
+    screen_height,
     excluded_fighter_ids,
     selected_game,
     image_size_multiplier=1.0,
@@ -30,7 +31,9 @@ def get_scatter_plot(
     if var_2 is None:
         var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
-    plot_height, plot_width, image_size = get_scatter_plot_sizes(screen_width)
+    plot_height, plot_width, image_size = get_scatter_plot_sizes(
+        screen_width, screen_height
+    )
     axis_title_size, axis_label_size = get_scatter_plot_font_sizes(plot_width)
     image_size = image_size * image_size_multiplier
 
@@ -111,23 +114,28 @@ def get_scatter_plot_font_sizes(plot_width):
     return axis_title_size, axis_label_size
 
 
-def get_scatter_plot_sizes(screen_width):
-    if screen_width > 1200:
-        plot_width = int(screen_width / 2.8)
-    elif screen_width > 900:
-        plot_width = int(screen_width / 3.2)
-    elif screen_width > 650:
-        plot_width = int(screen_width / 3.6)
-    elif screen_width > 450:
-        plot_width = int(screen_width / 4.0)
+def get_scatter_plot_sizes(screen_width, screen_height):
+    if screen_width > 992:
+        # On lg screens (>992px), plot is in a column taking up ~75% of screen
+        available_width = int(screen_width * 0.74) - 150
     else:
-        plot_width = int(screen_width / 4.5)
+        # On smaller screens, use full width minus padding
+        available_width = int(screen_width * 0.99) - 150
 
-    plot_height = plot_width
+    # Account for header, footer, margins, card padding, plot title, etc.
+    available_height = int(screen_height * 0.99) - 260
+
+    min_width = 300
+    max_width = 1400
+    plot_width = min(max(available_width, min_width), max_width)
+
+    min_height = 500
+    max_height = 800
+    plot_height = min(max(available_height, min_height), max_height)
 
     max_image_size = 40
     min_image_size = 15
-    image_size = int(plot_width / 14)
+    image_size = int(min(plot_width, plot_height) / 14)
     image_size = min(image_size, max_image_size)
     image_size = max(image_size, min_image_size)
 
