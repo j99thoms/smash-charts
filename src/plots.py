@@ -185,6 +185,33 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
         {'field': 'Correlation', 'type': 'quantitative'},
     ]
 
+    # Create axis configuration based on screen size
+    # Determine if labels should be shown based on screen width
+    if screen_width > 1950 or screen_width <= 992:
+        x_axis = {
+            'labelAngle': -45,
+            'labelColor': selected_attributes_label_red_color,
+            'labelFontWeight': selected_attributes_label_bold_font,
+            'title': None,
+        }
+        y_axis = {
+            'labelColor': selected_attributes_label_red_color,
+            'labelFontWeight': selected_attributes_label_bold_font,
+            'title': None,
+        }
+    else:
+        # Hide labels and ticks
+        x_axis = {
+            'labels': False,
+            'ticks': False,
+            'title': None,
+        }
+        y_axis = {
+            'labels': False,
+            'ticks': False,
+            'title': None,
+        }
+
     circles_layer = {
         'mark': {'size': circle_size, 'stroke': 'black', 'type': 'circle'},
         'encoding': {
@@ -196,21 +223,12 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
                 'type': 'quantitative',
             },
             'x': {
-                'axis': {
-                    'labelAngle': -45,
-                    'labelColor': selected_attributes_label_red_color,
-                    'labelFontWeight': selected_attributes_label_bold_font,
-                    'title': None,
-                },
+                'axis': x_axis,
                 'field': 'Attribute 1',
                 'type': 'nominal',
             },
             'y': {
-                'axis': {
-                    'labelColor': selected_attributes_label_red_color,
-                    'labelFontWeight': selected_attributes_label_bold_font,
-                    'title': None,
-                },
+                'axis': y_axis,
                 'field': 'Attribute 2',
                 'scale': {'reverse': True},
                 'type': 'nominal',
@@ -246,21 +264,12 @@ def get_corr_matrix_plot(var_1, var_2, screen_width):
             'tooltip': tooltip,
             'text': {'field': corr_text, 'type': 'quantitative'},
             'x': {
-                'axis': {
-                    'labelAngle': -45,
-                    'labelColor': selected_attributes_label_red_color,
-                    'labelFontWeight': selected_attributes_label_bold_font,
-                    'title': None,
-                },
+                'axis': x_axis,
                 'field': 'Attribute 1',
                 'type': 'nominal',
             },
             'y': {
-                'axis': {
-                    'labelColor': selected_attributes_label_red_color,
-                    'labelFontWeight': selected_attributes_label_bold_font,
-                    'title': None,
-                },
+                'axis': y_axis,
                 'field': 'Attribute 2',
                 'scale': {'reverse': True},
                 'type': 'nominal',
@@ -292,16 +301,20 @@ def get_corr_matrix_plot_font_sizes(plot_width):
 
 
 def get_corr_matrix_plot_sizes(screen_width, num_attributes):
-    if screen_width > 1200:
-        plot_width = int(screen_width / 3.2)
-    elif screen_width > 900:
-        plot_width = int(screen_width / 3.6)
-    elif screen_width > 650:
-        plot_width = int(screen_width / 4.0)
-    elif screen_width > 450:
-        plot_width = int(screen_width / 4.4)
+    if screen_width > 1950:
+        # On very large screens, plot is in a column taking up ~25% of screen
+        # also need to account for x-axis labels
+        available_width = int(screen_width * 0.24) - 185
+    elif screen_width > 992:
+        # On lg screens (>992px), plot is in a column taking up ~25% of screen
+        available_width = int(screen_width * 0.24) - 70
     else:
-        plot_width = int(screen_width / 4.5)
+        # On smaller screens, columns stack vertically, so use full width minus padding
+        available_width = int(screen_width * 0.99) - 260
+
+    min_width = 180
+    max_width = 1000
+    plot_width = min(max(available_width, min_width), max_width)
 
     plot_height = plot_width
 
