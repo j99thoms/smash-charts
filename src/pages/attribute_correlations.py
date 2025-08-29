@@ -106,6 +106,22 @@ plot_controls_card = dbc.Card(
                     marks={0: 'S', 1: 'M', 2: 'L'},
                     updatemode='drag',
                 ),
+                get_vertical_spacer(height=15),
+                dbc.Switch(
+                    id='scatter-aspect-mode',
+                    label='Maintain Square Aspect Ratio',
+                    value=True,
+                ),
+                dbc.Tooltip(
+                    [
+                        'When enabled, plot maintains 1:1 aspect ratio. ',
+                        html.Br(),
+                        'When disabled, plot expands to fill available space.',
+                    ],
+                    target='scatter-aspect-mode',
+                    trigger='hover',
+                    placement='right',
+                ),
             ]
         )
     ],
@@ -233,6 +249,7 @@ layout = html.Div(
                 'excluded_fighter_ids': [],
                 'selected_game': 'ultimate',
                 'image_size_multiplier': 1.0,
+                'maintain_square_aspect': True,
             },
         ),
     ],
@@ -349,6 +366,7 @@ def update_scatter_dropdowns(selected_game, scatter_plot_params):
     Input('excluded-fighter-ids-mem', 'data'),
     Input('game-selector-buttons', 'value'),
     Input('scatter-image-size-slider', 'value'),
+    Input('scatter-aspect-mode', 'value'),
     State('scatter-plot-params', 'data'),
 )
 def update_scatter_plot_params(
@@ -359,6 +377,7 @@ def update_scatter_plot_params(
     excluded_fighter_ids_mem,
     selected_game,
     image_size_slider_val,
+    maintain_square_aspect,
     scatter_plot_params,
 ):
     screen_width = get_screen_width(display_size_width_str)
@@ -373,6 +392,7 @@ def update_scatter_plot_params(
     prev_excluded_fighter_ids = scatter_plot_params['excluded_fighter_ids']
     prev_selected_game = scatter_plot_params['selected_game']
     prev_image_size_multiplier = scatter_plot_params['image_size_multiplier']
+    prev_maintain_square_aspect = scatter_plot_params['maintain_square_aspect']
 
     if scatter_var_1 is None:
         scatter_var_1 = prev_scatter_var_1
@@ -384,6 +404,8 @@ def update_scatter_plot_params(
         screen_height = prev_screen_height
     if abs(image_size_multiplier - prev_image_size_multiplier) < 0.02:
         image_size_multiplier = prev_image_size_multiplier
+    if maintain_square_aspect is None:
+        maintain_square_aspect = prev_maintain_square_aspect
 
     # Prevent unnecessary updates:
     if (
@@ -394,6 +416,7 @@ def update_scatter_plot_params(
         and set(excluded_fighter_ids) == set(prev_excluded_fighter_ids)
         and selected_game == prev_selected_game
         and round(image_size_multiplier, 2) == round(prev_image_size_multiplier, 2)
+        and maintain_square_aspect == prev_maintain_square_aspect
     ):
         raise PreventUpdate
 
@@ -405,6 +428,7 @@ def update_scatter_plot_params(
         'excluded_fighter_ids': excluded_fighter_ids,
         'selected_game': selected_game,
         'image_size_multiplier': image_size_multiplier,
+        'maintain_square_aspect': maintain_square_aspect,
     }
 
 

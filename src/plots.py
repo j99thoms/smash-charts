@@ -25,6 +25,7 @@ def get_scatter_plot(
     excluded_fighter_ids,
     selected_game,
     image_size_multiplier=1.0,
+    maintain_square_aspect=True,
 ):
     if var_1 is None:
         var_1 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_1
@@ -32,7 +33,7 @@ def get_scatter_plot(
         var_2 = DEFAULT_SCATTER_PLOT_ATTRIBUTE_2
 
     plot_height, plot_width, image_size = get_scatter_plot_sizes(
-        screen_width, screen_height
+        screen_width, screen_height, maintain_square_aspect
     )
     axis_title_size, axis_label_size = get_scatter_plot_font_sizes(plot_width)
     image_size = image_size * image_size_multiplier
@@ -114,7 +115,7 @@ def get_scatter_plot_font_sizes(plot_width):
     return axis_title_size, axis_label_size
 
 
-def get_scatter_plot_sizes(screen_width, screen_height):
+def get_scatter_plot_sizes(screen_width, screen_height, maintain_square_aspect=True):
     if screen_width > 992:
         # On lg screens (>992px), plot is in a column taking up ~75% of screen
         available_width = int(screen_width * 0.74) - 150
@@ -132,6 +133,11 @@ def get_scatter_plot_sizes(screen_width, screen_height):
     min_height = 500
     max_height = 800
     plot_height = min(max(available_height, min_height), max_height)
+
+    if maintain_square_aspect:
+        # maintain 1:1 aspect ratio
+        plot_size = min(plot_width, plot_height)
+        plot_width = plot_height = plot_size
 
     max_image_size = 40
     min_image_size = 15
